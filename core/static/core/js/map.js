@@ -38,6 +38,7 @@ function buildStyle(tilesUrl) {
       '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a>, ' +
       '<a href="https://protomaps.com">Protomaps</a>',
   };
+  const gold = token("--gold");
   style.layers = [
     // Outside land (the sea) uses the page background.
     { id: "background", type: "background", paint: { "background-color": bg } },
@@ -46,8 +47,9 @@ function buildStyle(tilesUrl) {
       type: "fill",
       source: "protomaps",
       "source-layer": "earth",
-      paint: { "fill-color": "#1f1a16" },
+      paint: { "fill-color": "#261d16" },
     },
+    // Earth tones per land cover kind (Protomaps basemap v4).
     {
       id: "landcover",
       type: "fill",
@@ -57,13 +59,23 @@ function buildStyle(tilesUrl) {
         "fill-color": [
           "match",
           ["get", "kind"],
-          ["forest", "wood"],
-          "#211d17",
-          ["barren", "rock", "sand"],
-          "#2a221b",
-          "#1f1a16",
+          "barren",
+          "#3a2b1e",
+          "scrub",
+          "#30241a",
+          "grassland",
+          "#2d2219",
+          "forest",
+          "#222016",
+          "farmland",
+          "#2a1f17",
+          "glacier",
+          "#9a9184",
+          "urban_area",
+          "#33281f",
+          "#261d16",
         ],
-        "fill-opacity": 0.8,
+        "fill-opacity": ["match", ["get", "kind"], "glacier", 0.55, 0.85],
       },
     },
     {
@@ -72,17 +84,34 @@ function buildStyle(tilesUrl) {
       source: "protomaps",
       "source-layer": "water",
       filter: ["==", ["geometry-type"], "Polygon"],
-      paint: { "fill-color": "#0c1012" },
+      paint: { "fill-color": "#0a0d0f" },
+    },
+    // Fine gold coastlines and lake shores.
+    {
+      id: "shoreline",
+      type: "line",
+      source: "protomaps",
+      "source-layer": "water",
+      filter: ["==", ["geometry-type"], "Polygon"],
+      paint: {
+        "line-color": gold,
+        "line-opacity": ["interpolate", ["linear"], ["zoom"], 4, 0.5, 9, 0.7],
+        "line-width": ["interpolate", ["linear"], ["zoom"], 4, 0.6, 9, 1.2],
+      },
     },
     {
       id: "rivers",
       type: "line",
       source: "protomaps",
       "source-layer": "water",
-      filter: ["==", ["geometry-type"], "LineString"],
+      filter: [
+        "all",
+        ["==", ["geometry-type"], "LineString"],
+        ["in", ["get", "kind"], ["literal", ["river", "canal"]]],
+      ],
       paint: {
-        "line-color": "#22303a",
-        "line-width": ["interpolate", ["linear"], ["zoom"], 5, 0.4, 10, 1.5],
+        "line-color": "#3d5560",
+        "line-width": ["interpolate", ["linear"], ["zoom"], 5, 0.8, 10, 2.2],
       },
     },
   ];
