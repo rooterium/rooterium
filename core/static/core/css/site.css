@@ -844,6 +844,98 @@ a.chip[aria-current="page"] {
   margin: 0;
 }
 
+/* --- Forms -------------------------------------------------------------- */
+
+.submission-form {
+  max-width: 40rem;
+}
+
+.form-field {
+  margin-bottom: 1.5rem;
+}
+
+.form-field label {
+  display: block;
+  margin-bottom: 0.375rem;
+  font-weight: 600;
+}
+
+.optional {
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+  width: 100%;
+  min-height: var(--touch);
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--muted);
+  border-radius: var(--radius);
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+}
+
+.form-field textarea {
+  resize: vertical;
+}
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+  border-color: var(--accent-2);
+}
+
+.form-field .help,
+.submission-form .help {
+  margin: 0.375rem 0 0;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.submission-form .help {
+  margin-bottom: 1.5rem;
+}
+
+/* Errors: text with an "Error:" prefix plus a thicker border, not colour alone. */
+.has-error input,
+.has-error select,
+.has-error textarea {
+  border: 2px solid var(--accent-2);
+}
+
+.field-error,
+.form-errors {
+  color: var(--text);
+}
+
+.field-error {
+  margin: 0 0 0.375rem;
+  font-size: 0.9375rem;
+}
+
+.form-errors {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  border: 2px solid var(--accent-2);
+  border-radius: var(--radius);
+}
+
+.form-errors p:last-child {
+  margin-bottom: 0;
+}
+
+/* Honeypot: off-screen, not focusable by keyboard (tabindex -1). */
+.form-trap {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
 /* --- Story page --------------------------------------------------------- */
 
 .story-header {

@@ -25,6 +25,7 @@ urlpatterns = [
     path("stories/", include("stories.urls")),
     path("events/", include("events.urls")),
     path("projects/", include("projects.urls")),
+    path("suggest/", include("submissions.urls")),
     path("", include("core.urls")),
     # Wagtail pages last: it catches every remaining path.
     path("", include(wagtail_urls)),

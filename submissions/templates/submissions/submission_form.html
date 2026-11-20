@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+  <header class="page-header">
+    <h1>{{ page_title }}</h1>
+    <p class="lead">{{ intro }}</p>
+  </header>
+
+  <form class="submission-form card" method="post" novalidate>
+    {% csrf_token %}
+    {% if form.errors %}
+      <div class="form-errors" role="alert">
+        <p><strong>{% translate "Error:" %}</strong> {% translate "Please correct the marked fields." %}</p>
+        {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+      </div>
+    {% endif %}
+
+    {% for field in form.visible_fields %}
+      {% if field.name == "website" %}
+        {# Honeypot: hidden from people and screen readers; bots fill it in. #}
+        <div class="form-trap" aria-hidden="true">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+        </div>
+      {% else %}
+        {% include "submissions/includes/field.html" %}
+      {% endif %}
+    {% endfor %}
+    <input type="hidden" name="started" value="{{ started_token }}">
+
+    <p class="help">{% translate "Your suggestion is saved as a draft. It only appears on the site after the editor has checked and published it." %}</p>
+    <p><button class="button" type="submit">{% translate "Send suggestion" %}</button></p>
+  </form>
+
+  <p class="page-footer-link"><a href="{{ back_url }}">← {{ back_label }}</a></p>
+{% endblock %}

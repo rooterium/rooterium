@@ -1,0 +1,9 @@
+{% load i18n %}{% autoescape off %}{% blocktranslate with kind=kind %}A new {{ kind }} has been suggested on Rooterium and waits for your review.{% endblocktranslate %}
+
+{% for label, value in summary %}{{ label|capfirst }}: {{ value|default:'–' }}
+{% endfor %}
+{% if edit_url %}{% translate "Review and publish it here:" %}
+{{ edit_url }}
+{% endif %}
+{% translate "Nothing appears on the site until you publish it. If it is spam, simply delete the draft." %}
+{% endautoescape %}

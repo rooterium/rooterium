@@ -112,6 +112,7 @@ Edit `.env` for production:
 | `ROBOTS_TAG` | `noindex, nofollow` (test phase), `all` when live |
 | `POSTGRES_PASSWORD` | new random password, same in `DATABASE_URL` |
 | `EMAIL_*`, `DEFAULT_FROM_EMAIL` | SMTP server and the website's own mailbox |
+| `EDITOR_NOTIFICATION_EMAIL` | The editor's address for suggested events and projects; empty = no notification |
 
 Secrets are entered on the server by the maintainer, never passed through
 chat, issues or the repo. Put passwords in **single quotes**
