@@ -681,6 +681,45 @@ main {
   text-decoration: underline;
 }
 
+/* The whole card or row is the tap target (at least 44 px, --touch): the
+   title link stretches over its container. Other links inside stay on top. */
+.story-card,
+.event-item,
+.project-card,
+.item-list li {
+  position: relative;
+}
+
+.story-card h3 a::after,
+.event-title a::after,
+.project-title a::after,
+.item-list li > a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+}
+
+.story-card h3 a:focus-visible,
+.event-title a:focus-visible,
+.project-title a:focus-visible,
+.item-list li > a:focus-visible {
+  outline: none;
+}
+
+.story-card h3 a:focus-visible::after,
+.event-title a:focus-visible::after,
+.project-title a:focus-visible::after,
+.item-list li > a:focus-visible::after {
+  outline: 3px solid var(--accent-2);
+  outline-offset: -3px;
+}
+
+.event-map-link a {
+  position: relative;
+  z-index: 1;
+}
+
 .home-columns {
   display: grid;
   gap: 1rem;
@@ -981,6 +1020,10 @@ a.chip[aria-current="page"] {
 }
 
 .story-header .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touch);
+  margin-bottom: 0.25rem;
   text-decoration: none;
 }
 
