@@ -6,7 +6,11 @@ it: [ADR 0014](decisions/0014-content-model.md).
 
 > Status: everything below is **built** (milestone 2, issue #2). Placeholder
 > content for the prototype: `manage.py seed_demo` (refuses to run with
-> `DEBUG` off unless `--allow-production`; safe to run twice).
+> `DEBUG` off unless `--allow-production`; safe to run twice). Example
+> content with real photos and checked facts on top of it:
+> `manage.py load_example_content` (same flag; data in
+> `core/example_content.py`, photos from Wikimedia Commons with author,
+> licence and source; replaces only `[placeholder]` objects).
 
 Conventions: all labels and help texts in English and translatable; every
 image is a `CustomImage`; "live" means published in Wagtail (`live=True`).

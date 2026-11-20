@@ -412,6 +412,12 @@ async function init() {
   if (entry) {
     map.jumpTo({ center: [entry.feature.lng, entry.feature.lat], zoom: 8 });
     select(entry);
+  } else if (features.length > 1) {
+    // Start view: all markers, as close as possible (Armenia-sized, as in
+    // the mockup), instead of the whole region.
+    const bounds = new maplibregl.LngLatBounds();
+    features.forEach((f) => bounds.extend([f.lng, f.lat]));
+    map.fitBounds(bounds, { padding: 70, maxZoom: 8, duration: 0 });
   }
 
   section.classList.add("has-map");
