@@ -6,16 +6,18 @@ from core.forms import SpamCheckForm
 # Stored with every sign-up (as shown, in the visitor's language), so the
 # consent can be proven later (ADR 0013).
 CONSENT_TEXT = _(
-    "Yes, I would like to receive the Rooterium newsletter by email – a new "
-    "story about every ten days. My email address is used only for the "
-    "newsletter. I can unsubscribe at any time with the link in every email."
+    "Yes, send me the Rooterium newsletter: a new story about every ten "
+    "days. My address is used for nothing else; I can unsubscribe at any "
+    "time."
 )
 
 
 class SignupForm(SpamCheckForm):
     email = forms.EmailField(
         label=_("Your email"),
-        widget=forms.EmailInput(attrs={"autocomplete": "email"}),
+        widget=forms.EmailInput(
+            attrs={"autocomplete": "email", "placeholder": "your@email.com"}
+        ),
     )
     consent = forms.BooleanField(
         label=CONSENT_TEXT,

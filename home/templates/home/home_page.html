@@ -8,33 +8,29 @@
 {% endblock %}
 
 {% block content %}
-  <section class="hero">
-    <span class="eyebrow">{% translate "Armenian history, traditions, myths, symbols and music" %}</span>
-    <h1>{% translate "Find your way back to your roots." %}</h1>
-    <p class="lead">{% translate "A place for every Armenian who grew up far from Armenia, and for everyone curious about its culture. Choose a place on the map and start exploring." %}</p>
-    <p><a class="button" href="#explore">{% translate "Start exploring" %}</a></p>
-  </section>
-
+  {# Layout of the variant B mockup (design/mockup-2b-map.png): text, theme chips and the place card on the left, the map on the right. #}
   <section id="explore" class="explore" aria-labelledby="explore-heading"
            data-map
            data-tiles="{{ map_tiles_url|default:'' }}"
            data-worker="{% static 'core/vendor/maplibre-gl-6.16.0/maplibre-gl-worker.mjs' %}"
            data-maplibre="{% static 'core/vendor/maplibre-gl-6.16.0/maplibre-gl.mjs' %}">
-    <h2 id="explore-heading" class="visually-hidden">{% translate "Explore the map" %}</h2>
+    <div class="explore-intro">
+      <span class="eyebrow">{% translate "Explore Armenia on the map" %}</span>
+      <h1 id="explore-heading">{% translate "Every root has a place." %}</h1>
+      <p class="lead">{% translate "Mountains, monasteries, legends and the people who keep traditions alive. Choose a theme, then a place on the map." %}</p>
+    </div>
 
-    <div class="explore-toolbar">
+    <div class="chips explore-chips" role="group" aria-label="{% translate 'Filter by theme' %}">
+      {% for value, label in map_filters %}
+        <button type="button" class="chip" data-filter="{{ value }}" aria-pressed="{% if value == 'all' %}true{% else %}false{% endif %}">{{ label }}</button>
+      {% endfor %}
+    </div>
+
+    <div class="explore-map">
       <div class="segmented" role="group" aria-label="{% translate 'Map view' %}">
         <button type="button" class="segmented-option" data-view="homeland" aria-pressed="true">{% translate "Homeland" %}</button>
         <button type="button" class="segmented-option" data-view="diaspora" aria-pressed="false">{% translate "Diaspora worldwide" %}</button>
       </div>
-      <div class="chips" role="group" aria-label="{% translate 'Filter by theme' %}">
-        {% for value, label in map_filters %}
-          <button type="button" class="chip" data-filter="{{ value }}" aria-pressed="{% if value == 'all' %}true{% else %}false{% endif %}">{{ label }}</button>
-        {% endfor %}
-      </div>
-    </div>
-
-    <div class="explore-body">
       <div class="map-frame">
         <div class="map" data-map-canvas role="region" aria-label="{% translate 'Map of historic Armenia and the South Caucasus' %}"></div>
         <div class="map-diaspora" data-diaspora hidden>
@@ -42,15 +38,15 @@
           <p>{% translate "The diaspora world map – Armenian communities, places and stories all over the world – is in preparation." %}</p>
         </div>
       </div>
+    </div>
 
       <aside class="map-card card" data-card aria-live="polite">
         <div data-card-default>
-          <p class="eyebrow">{% translate "Explore" %}</p>
-          <p>{% translate "Choose a marker on the map, or pick a theme above." %}</p>
+          <p>{% translate "Choose a place on the map to read about it." %}</p>
         </div>
         <div data-card-feature hidden>
           <p class="eyebrow" data-card-category></p>
-          <h3 class="map-card-title" data-card-title></h3>
+          <h2 class="map-card-title" data-card-title></h2>
           <p data-card-description></p>
           <p><a data-card-link href=""></a></p>
         </div>
@@ -64,7 +60,6 @@
           {% include "home/includes/project_list.html" %}
         </div>
       </aside>
-    </div>
 
     {# Always rendered: works without JavaScript, WebGL or tiles, and for screen readers. #}
     <details class="place-list">
@@ -85,7 +80,10 @@
   </section>
 
   <section class="home-section" aria-labelledby="stories-heading">
-    <h2 id="stories-heading">{% translate "Latest stories" %}</h2>
+    <div class="section-head">
+      <h2 id="stories-heading">{% translate "Latest stories" %}</h2>
+      <a class="section-head-link" href="{% url 'stories:list' %}">{% translate "All stories" %} →</a>
+    </div>
     <div class="story-grid">
       {% for story in latest_stories %}
         {% include "stories/includes/story_card.html" %}
@@ -93,26 +91,25 @@
         <p>{% translate "No stories yet." %}</p>
       {% endfor %}
     </div>
-    <p class="section-link"><a href="{% url 'stories:list' %}">{% translate "All stories" %} →</a></p>
   </section>
 
   <div class="home-columns">
     <section class="card" aria-labelledby="events-heading">
       <h2 id="events-heading">{% translate "Upcoming events" %}</h2>
       {% include "home/includes/event_list.html" %}
-      <p class="section-link"><a href="{% url 'events:list' %}">{% translate "All events" %} →</a></p>
+      <p class="section-link"><a href="{% url 'events:list' %}">{% translate "All events" %} →</a> <a href="{% url 'submissions:event' %}">{% translate "Suggest an event" %} →</a></p>
     </section>
     <section class="card" aria-labelledby="projects-heading">
       <h2 id="projects-heading">{% translate "Projects we love" %}</h2>
       <p class="meta">{% translate "Shops, start-ups and initiatives that carry Armenian traditions into today." %}</p>
       {% include "home/includes/project_list.html" %}
-      <p class="section-link"><a href="{% url 'projects:list' %}">{% translate "All projects" %} →</a></p>
+      <p class="section-link"><a href="{% url 'projects:list' %}">{% translate "All projects" %} →</a> <a href="{% url 'submissions:project' %}">{% translate "Suggest a project" %} →</a></p>
     </section>
   </div>
 
-  <section class="newsletter-teaser" aria-labelledby="newsletter-heading">
+  <section id="newsletter" class="newsletter-band" aria-labelledby="newsletter-heading">
     <h2 id="newsletter-heading">{% translate "A new story every ten days" %}</h2>
-    <p>{% translate "Get each new story by email. Free, no advertising, unsubscribe at any time." %}</p>
-    {% include "newsletter/includes/signup_form.html" with form=newsletter_form %}
+    <p>{% translate "Get each new story by email. No spam, unsubscribe anytime." %}</p>
+    {% include "newsletter/includes/signup_form.html" with form=newsletter_form inline=True %}
   </section>
 {% endblock %}
