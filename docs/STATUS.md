@@ -4,7 +4,7 @@ Current state of Rooterium and the next steps. **Every PR updates this
 file** (at least "Last updated" and whatever the PR changes). Details live in
 the linked docs; open work lives in GitHub issues.
 
-_Last updated: 2026-11-20 (PR "Record the confirmed email delivery")_
+_Last updated: 2026-11-20 (PR "Record the mail password decision")_
 
 ## Live
 
@@ -207,11 +207,11 @@ Overview: `gh issue list`. At the time of writing:
    (Caddy access logs on stdout, Docker log limit 10 MB × 5). The local
    placeholder lists these facts. The editor also creates the five theme
    pages before the first story.
-3. Email works (#11 closed). Maintainer: change the password of
-   `rooterium@linard.org` at Hostpoint (it was sent through the chat) and
-   enter the new one with `~/set-mail-password.sh`; the unused
-   `rooterium@pocketapp.ch` password was in the chat too. Optional for
-   deliverability: DKIM and a DMARC record (`v=DMARC1; p=none`) for the
+3. Email works (#11 closed). The mailbox password stays as it is
+   (maintainer's decision, 2026-11-20, although it was sent through the
+   chat) – do not raise it again. If it is ever changed at Hostpoint, enter
+   it on the server right away with `~/set-mail-password.sh` (sending fails
+   in between). Optional for deliverability: DKIM and a DMARC record (`v=DMARC1; p=none`) for the
    sender domain. Set `EDITOR_NOTIFICATION_EMAIL` to the editor's address
    when the editor wants the suggestion emails.
 4. Final domain (#9): `A` record, then `SITE_ADDRESS` / `ALLOWED_HOSTS` /
@@ -256,8 +256,8 @@ width.
 - About, Imprint and Privacy written by the editor (#14) – the live
   pages are placeholders from `seed_demo`; all other placeholder content
   replaced or deleted (stories, events, projects, places).
-- Mail password changed (it was in the chat); editor's address in
-  `EDITOR_NOTIFICATION_EMAIL`; DKIM/DMARC for the sender domain.
+- Editor's address in `EDITOR_NOTIFICATION_EMAIL`; DKIM/DMARC for the
+  sender domain.
 - Editor account, UpCloud two-factor authentication, `.env` in the
   password manager (next steps, item 1).
 - Seed place coordinates checked (#15); final domain (#9); `ROBOTS_TAG`
