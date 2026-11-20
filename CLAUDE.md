@@ -1,7 +1,7 @@
 # CLAUDE.md
 
-Guidelines for working on this repository (Rooterium; not live yet – no
-domain or server, see `docs/STATUS.md`).
+Guidelines for working on this repository (Rooterium; test phase on
+https://rooterium.pocketapp.ch, see `docs/STATUS.md`).
 Applies to Claude Code and human contributors.
 
 ## Session start
@@ -18,9 +18,8 @@ conversation history of earlier sessions is not available. Run `/start`
 4. `gh pr list --state open`
 5. `gh issue list --state open`
 6. `gh run list --limit 10` (failed or cancelled runs on `main`?)
-7. Live version: `curl -s {{LIVE_URL}}/version` and compare with
-   `git rev-parse origin/main`. Skip this step while `{{LIVE_URL}}` is still a
-   placeholder (no domain or server yet, issue #8).
+7. Live version: `curl -s https://rooterium.pocketapp.ch/version` and compare
+   with `git rev-parse origin/main`.
 
 Report the result to the maintainer in English before starting new work.
 
@@ -31,8 +30,8 @@ Report the result to the maintainer in English before starting new work.
   diaspora – and anyone curious can learn about their roots. The founder
   ("the editor") owns the idea and writes the content; the technical
   maintainer runs the platform. Full brief: `docs/PROJECT_BRIEF.md`.
-- Live on {{LIVE_URL}} once a domain and server exist (`{{LIVE_URL}}` and
-  `{{SSH_TARGET}}` are deliberately still placeholders, issues #8–#10).
+- Live on https://rooterium.pocketapp.ch (test phase, `noindex`; the final
+  domain is still open, issue #9). Server: UpCloud, `ssh deploy@80.47.231.164`.
   DNS changes are done by the maintainer.
 - Content is maintained through the Wagtail admin (ADR 0009) – it must be
   understandable for non-technical users (clear English `verbose_name`s,
@@ -115,19 +114,14 @@ English everywhere (ADR 0012):
       `Dockerfile`, `deploy/`, `scripts/`, `.github/workflows/`, new or
       changed variables in `.env.example`, or anything that needs manual
       steps on the server (`.env`, cron, packages).
-  - **Until a server runs the app, Claude merges these PRs too** (maintainer's
-    decision, 2026-11-20): with no production database or server, a
-    migration or deployment change cannot break anything live. Still say in
-    the PR description that it would be an exception. When the first server
-    is set up (milestone 8, issue #8), the exceptions apply again; remove this
-    paragraph in that PR.
   - If the PR is already merged, say so and skip the merge command.
 - **Deploying** (after Claude's own merge, if the PR changes the app):
   1. Wait until CI on `main` has pushed the image for the merge commit:
      `gh run list --branch main --limit 1`, then `gh run watch <run-id>`.
-  2. `ssh {{SSH_TARGET}} 'cd /srv/rooterium && scripts/deploy.sh'`
-  3. `curl -s {{LIVE_URL}}/version` must show the merge commit;
-     `curl -s -o /dev/null -w "%{http_code}\n" {{LIVE_URL}}/` must be `200`.
+  2. `ssh deploy@80.47.231.164 'cd /srv/rooterium && scripts/deploy.sh'`
+  3. `curl -s https://rooterium.pocketapp.ch/version` must show the merge
+     commit; `curl -s -o /dev/null -w "%{http_code}\n"
+     https://rooterium.pocketapp.ch/` must be `200`.
   - Docs- or CI-only changes need no deploy (the live commit then lags behind
     `main`). If CI or the deploy fails, report it and stop – no retries that
     change the server.

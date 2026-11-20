@@ -4,15 +4,19 @@ Current state of Rooterium and the next steps. **Every PR updates this
 file** (at least "Last updated" and whatever the PR changes). Details live in
 the linked docs; open work lives in GitHub issues.
 
-_Last updated: 2026-11-20 (PR "Update the session handoff after milestones 6 and 7")_
+_Last updated: 2026-11-20 (PR "Record the first server and the test-phase domain")_
 
 ## Live
 
-- **Not live yet.** No domain and no server (issues #8–#10). The placeholders
-  `{{LIVE_URL}}` and `{{SSH_TARGET}}` are deliberately still in CLAUDE.md,
-  `/start` and `docs/deployment.md`; replace them in milestone 8.
-- Deployed commit: — (nothing deployed). Development happens locally.
-- Search engines: test phase will use `ROBOTS_TAG=noindex, nofollow`.
+- **Test phase on https://rooterium.pocketapp.ch** (a subdomain of the
+  maintainer's domain until the final domain is decided, #9). Public, no
+  password; `ROBOTS_TAG=noindex, nofollow`.
+- Deployed commit: `7b78f31` (2026-11-20). The live database is empty on
+  purpose (no seed data): the editor creates the theme pages, text pages
+  and content in the admin.
+- Map tiles: the maintainer's local build (Protomaps 20261118) copied into
+  the `media` volume (`/app/media/maps/rooterium.pmtiles`, checksum
+  matched).
 
 ## Infrastructure
 
@@ -22,14 +26,14 @@ _Last updated: 2026-11-20 (PR "Update the session handoff after milestones 6 and
 | GitHub settings | Squash merge only (PR title/body), auto-merge allowed, head branches deleted after merge; ruleset "protect main" (id 27710130): PR required (0 approvals), squash only, no force push/deletion, checks "Lint and test" and "Build image (linux/amd64)" required |
 | Labels | `ops`, `content`, `bug`, `enhancement`, `later`, `milestone` |
 | CI | GitHub Actions: lint + tests, `linux/amd64` image to `ghcr.io/rooterium/rooterium` (`latest`, `sha-<commit>`) on `main`; runs on `main` are queued, never cancelled |
-| GHCR package | `ghcr.io/rooterium/rooterium`, private for now; public needs the org setting "Package creation → Public" first, or the server uses a read-only token |
-| Server | _Not decided_ (template default: UpCloud, Ubuntu 26.04, time zone Europe/Vienna) – issue #10 |
-| Access | `ssh {{SSH_TARGET}}` – once a server exists |
+| GHCR package | `ghcr.io/rooterium/rooterium`, **public** (pulled without login) |
+| Server | UpCloud, 1 core, 2 GB RAM (+ 2 GB swap), 20 GB disk (can be enlarged, see UpCloud "Increasing storage size"), Ubuntu 26.04.1 LTS, time zone Europe/Vienna, IPv4 `80.47.231.164` (IPv6 not used); who pays: #10 |
+| Access | `ssh deploy@80.47.231.164` (SSH key only; root and password login off, `00-hardening.conf`); firewall `ufw`: SSH, 80, 443 |
 | App | `/srv/rooterium` (git checkout), `compose.prod.yaml`: `db` (PostgreSQL 18), `web` (GHCR image, Gunicorn), `caddy` (HTTPS) |
 | Secrets | `/srv/rooterium/.env` on the server only |
-| Backups | cron 02:00 `scripts/backup-db.sh` + provider backup – once a server exists |
+| Backups | **not set up yet**: cron 02:00 `scripts/backup-db.sh` (maintainer, see next steps) + UpCloud backups (to be enabled in the control panel, ADR 0008) |
 | Mail | _Not decided_ – issue #11 |
-| DNS | _No domain yet_ – issue #9 |
+| DNS | Hostpoint (`pocketapp.ch`): `A` record `rooterium` → `80.47.231.164`, no `AAAA` (the zone's wildcard no longer applies to it); final domain: #9 |
 
 Runbook: [`deployment.md`](deployment.md). Architecture:
 [`architecture.md`](architecture.md). Decisions: [`decisions/`](decisions/).
@@ -125,6 +129,21 @@ Brief and milestones: [`PROJECT_BRIEF.md`](PROJECT_BRIEF.md).
   (#14) – required before the site goes public. Milestone 7 is complete
   in code; the texts are open.
 
+- **Milestone 8 – first server** (#8, on the server, 2026-11-20): server
+  set up per `deployment.md` section 1 (updates and reboot, unattended
+  upgrades, swap, `ufw`, user `deploy`, SSH hardening verified, Docker
+  29.10 + Compose 5.8 with log limits), repo in `/srv/rooterium`, `.env`
+  with the domain, `DEBUG=false`, random `SECRET_KEY` and database password
+  (generated on the server, never displayed), first deploy, map tiles
+  copied. HTTPS certificate by Caddy, HTTP → HTTPS, headers checked.
+  **Incident, fixed:** the first deploy ran while `.env` still had the
+  `change-me` secrets (the maintainer's command had not changed them, and
+  the deploy did not check); the site was taken offline within minutes,
+  the secrets generated, the empty database volume recreated (PostgreSQL
+  only takes the password at creation) and the site redeployed. No data or
+  accounts existed. Lesson: verify `grep -c change-me .env` is 0 before a
+  first deploy (now in the runbook).
+
 ## Open issues
 
 Overview: `gh issue list`. At the time of writing:
@@ -134,9 +153,9 @@ Overview: `gh issue list`. At the time of writing:
 | #1–#5 | Milestones 1–5 – **closed** | – |
 | #6 | M6: events, projects, submission form – **done**, closed by this PR | – |
 | #7 | M7: newsletter, About/Imprint/Privacy – code done; texts (#14) and real emails (#11) open | Editor / maintainer |
-| #8 | M8: deployment to a test server | Maintainer + Claude (needs #9, #10) |
-| #9 | Register the domain | Maintainer / editor |
-| #10 | Hosting account and who pays | Maintainer / editor |
+| #8 | M8: deployment to a test server – **running**; open: cron jobs, UpCloud backups, admin account | Maintainer |
+| #9 | Register the final domain (test phase runs on `rooterium.pocketapp.ch`) | Maintainer / editor |
+| #10 | Hosting: UpCloud server running; open: who pays | Maintainer / editor |
 | #11 | Email sending service | Maintainer |
 | #12 | Second GitHub owner, shared password manager | Maintainer / editor |
 | #13 | Mockups of design variant B ("Landkarte") – none available; M4 was built from the brief | Maintainer |
@@ -146,27 +165,40 @@ Overview: `gh issue list`. At the time of writing:
 
 ## Next steps
 
-1. **Editor (#14)**: write About, Imprint and Privacy. In the Wagtail
-   admin: Pages → home page → Add child page → "Text page (About, Imprint,
-   Privacy)", one per purpose. The Privacy text must cover the newsletter
-   (consent text, 7-day deletion, unsubscribe = delete), the submitter
-   email of the suggestion forms, YouTube after a click, the email service
-   (#11) and the hosting provider's server logs (#10). The local
-   placeholder lists these facts. Required before the site goes public.
-2. **Milestone 8 (#8)** once domain (#9) and hosting (#10) are decided.
-3. When an email service exists (#11): set `EDITOR_NOTIFICATION_EMAIL`
-   in the server's `.env` so suggestions reach the editor.
-4. GHCR package `ghcr.io/rooterium/rooterium`: still private. Making it
-   public first needs the organisation setting "Package creation → Public"
-   (org settings → Packages); alternatively the server logs in with a
-   read-only token. Only needed for milestone 8.
-5. Editor: check the seed place coordinates and descriptions (#15) – they
-   can be edited in the Wagtail admin under "Map & directory → Places".
+1. **Maintainer, on the server** (Claude's attempt to install the crontab
+   was blocked by the session's permission rules):
+   - cron jobs from `deployment.md` section 5 (`crontab -e` as `deploy`):
+     database dump 02:00, `prune_newsletter_signups` 03:00; run
+     `scripts/backup-db.sh` once by hand to check it;
+   - enable UpCloud backups for the server (ADR 0008), after 02:00;
+   - create the admin account:
+     `ssh -t deploy@80.47.231.164 'cd /srv/rooterium && docker compose -f compose.prod.yaml exec web python manage.py createsuperuser'`,
+     then an editor account (staff, group "Editors", not superuser).
+2. **Editor (#14)**: write and publish About, Imprint and Privacy in the
+   admin (Pages → home page → Add child page → "Text page (About, Imprint,
+   Privacy)"). The site is public now, so the Imprint is needed soon. The
+   Privacy text must cover the newsletter (consent text, 7-day deletion,
+   unsubscribe = delete), the submitter email of the suggestion forms,
+   YouTube after a click, the email service (#11) and the server logs
+   (Caddy access logs on stdout, Docker log limit 10 MB × 5). The local
+   placeholder lists these facts. The editor also creates the five theme
+   pages before the first story.
+3. When an email service exists (#11): SMTP settings and
+   `EDITOR_NOTIFICATION_EMAIL` in the server's `.env`, then
+   `--force-recreate web` and `sendtestemail`. Until then emails only go
+   to the log (`docker compose -f compose.prod.yaml logs web`).
+4. Final domain (#9): `A` record, then `SITE_ADDRESS` / `ALLOWED_HOSTS` /
+   `CSRF_TRUSTED_ORIGINS` in `.env`, the test subdomain in
+   `REDIRECT_ADDRESSES` (permanent redirect), recreate `web` and `caddy`,
+   replace the URL in CLAUDE.md, `/start` and the docs.
+5. Editor: check the seed place coordinates and descriptions (#15) before
+   entering the places in the live admin.
 
 ## Session handoff (2026-11-20, second session)
 
 Where the last session stopped: milestones 1–7 merged (PRs #24–#43), no
-open PRs, all CI runs green, nothing deployed (no server). Milestone 6
+open PRs, all CI runs green. Update: milestone 8 started the same day –
+the site runs on https://rooterium.pocketapp.ch (see Live and Done). Milestone 6
 (#6) is closed; **#7 is still open** although its code is complete – the
 maintainer decides whether to close it (texts are tracked in #14, sending
 the newsletter is an open question below). Everything left in version 1
@@ -192,14 +224,15 @@ width.
 - Real logo: the favicon is an interim "R" mark
   (`design/build_web_assets.py`).
 
-**Before the site goes public** (collected from the milestones):
+**Before the site is announced** (it is reachable but `noindex`):
 
 - About, Imprint and Privacy created and published by the editor in the
   admin (#14); they are not created by a migration.
 - `EDITOR_NOTIFICATION_EMAIL` and the SMTP settings in the server's
   `.env` (#11).
-- Cron for `prune_newsletter_signups` (`docs/deployment.md`, section 5).
-- Seed place coordinates checked (#15); `ROBOTS_TAG` switched to `all`.
+- Cron jobs and UpCloud backups (next steps, item 1).
+- Seed place coordinates checked (#15); final domain (#9); `ROBOTS_TAG`
+  switched to `all`.
 
 **Local development state** (maintainer's machine, not in git):
 
@@ -234,8 +267,7 @@ width.
 - Every change via branch + PR. Claude merges its own PRs with
   `gh pr merge <N> --squash --auto` once the checks are green, verifies with
   `gh pr view` and deploys. PRs with database migrations or server/deployment
-  changes are merged by the maintainer – **except until a server runs the
-  app: then Claude merges those too** (maintainer's decision 2026-11-20,
-  ends with milestone 8). Never pipe `gh` output.
+  changes are merged by the maintainer (the pre-server exception ended with
+  milestone 8). Never pipe `gh` output.
 - Content on the live site lives only in the production database, not in
   git; local data is a playground.
