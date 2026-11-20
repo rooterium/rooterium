@@ -23,3 +23,4 @@ deviations and additions.
 | 0011 | [Interactivity with plain JavaScript modules and htmx](0011-interactivity-without-spa.md) | accepted |
 | 0012 | [English first, translatable from day one](0012-english-and-i18n.md)   | accepted |
 | 0013 | [Privacy by default](0013-privacy-by-default.md)                       | accepted |
+| 0014 | [Content model](0014-content-model.md)                                 | accepted |
