@@ -53,6 +53,7 @@ Requirements: Docker (with the buildx plugin) and [uv](https://docs.astral.sh/uv
 cp .env.example .env          # set SECRET_KEY and passwords, never commit .env
 docker compose up --build     # start web + PostgreSQL, migrations run automatically
 docker compose exec web python manage.py createsuperuser
+docker compose exec web python manage.py seed_demo   # placeholder content (DEBUG only)
 ```
 
 Site: <http://localhost:8000> · Wagtail admin (content): <http://localhost:8000/admin/> ·

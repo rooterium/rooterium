@@ -4,8 +4,9 @@ One section per app with its models, fields and rules (visibility, ordering,
 retention). Keep this file in sync with every model change. Decisions behind
 it: [ADR 0014](decisions/0014-content-model.md).
 
-> Status (milestone 2, issue #2): all models and the editor permissions
-> below are **built**. Still to come: seed data.
+> Status: everything below is **built** (milestone 2, issue #2). Placeholder
+> content for the prototype: `manage.py seed_demo` (refuses to run with
+> `DEBUG` off unless `--allow-production`; safe to run twice).
 
 Conventions: all labels and help texts in English and translatable; every
 image is a `CustomImage`; "live" means published in Wagtail (`live=True`).
