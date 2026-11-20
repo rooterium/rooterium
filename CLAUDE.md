@@ -156,7 +156,8 @@ English everywhere (ADR 0012):
 
 - Small, topic-focused Django apps (e.g. `posts`, `events`, `contact`).
 - Every public page sets `<title>` and `<meta name="description">`: views use
-  `core.seo.SeoMixin` (`page_title`, `meta_description`); the base template
+  `core.seo.SeoMixin` (`page_title`, `meta_description`), Wagtail pages
+  `core.seo.SeoPageMixin` (SEO title / search description); the base template
   renders title, description, canonical and Open Graph tags, falling back to
   `SITE_TITLE` / `SITE_DESCRIPTION` from settings.
 - Templates extend `base.html`. New sections get a main navigation entry in
@@ -169,7 +170,8 @@ English everywhere (ADR 0012):
   web assets are generated from them by a script, not edited by hand. Only
   use images whose usage rights are clear.
 - Never render user content with `|safe`.
-- Images always have an alt text field; it is required when an image is set.
+- Images always use the Wagtail image model `images.CustomImage` (required
+  alt text, credit, licence); never a plain `ImageField`.
 - Editors are staff users in an editor group (never superusers). A new
   content model gets its permissions for that group via a data migration.
 - Uploaded files (images, PDFs) live under `MEDIA_ROOT` on a Docker volume;

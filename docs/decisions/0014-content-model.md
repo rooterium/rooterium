@@ -32,7 +32,8 @@ details live in [`../data-model.md`](../data-model.md).
    field. Submissions from the public form (milestone 6) are created as
    drafts. Only live objects are ever shown on the site.
 6. **Custom image model** (`images.CustomImage`) from the start, with
-   required **alt text**, **credit** and **licence**, plus an optional source
+   required **alt text** (Wagtail's own `description` field, made required
+   and labelled "Alt text"), **credit** and **licence**, plus an optional source
    URL. Every image on the site uses it (hero images, body images, project
    logos).
 7. **Story body as StreamField** with these blocks: paragraph (rich text,

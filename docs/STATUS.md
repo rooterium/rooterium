@@ -4,7 +4,7 @@ Current state of Rooterium and the next steps. **Every PR updates this
 file** (at least "Last updated" and whatever the PR changes). Details live in
 the linked docs; open work lives in GitHub issues.
 
-_Last updated: 2026-11-20 (PR "Add ADR 0014 for the content model")_
+_Last updated: 2026-11-20 (PR "Add Wagtail with custom image model and home page")_
 
 ## Live
 
@@ -44,8 +44,10 @@ Brief and milestones: [`PROJECT_BRIEF.md`](PROJECT_BRIEF.md).
   English + i18n, privacy by default), issues for all milestones and for
   everything outside version 1 (label `later`), design originals in
   `design/` with `design/README.md`.
-- **Milestone 2 – content model decided** (ADR 0014, `docs/data-model.md`
-  planned).
+- **Milestone 2 – content model decided** (ADR 0014, `docs/data-model.md`).
+- **Milestone 2 – Wagtail 7.4 LTS added**: Wagtail admin at `/admin/`,
+  Django admin at `/django-admin/`, custom image model with required alt
+  text, credit and licence, `HomePage` as site root (data migration).
 
 ## Open issues
 
@@ -67,9 +69,9 @@ Overview: `gh issue list`. At the time of writing:
 
 1. Set the GHCR package `ghcr.io/rooterium/rooterium` to public (maintainer,
    package settings on GitHub).
-2. Milestone 2 (#2), in steps: ADR 0014 content model (done) → add Wagtail
-   with the custom image model and `HomePage` → content models → editor group
-   permissions → `seed_demo` command.
+2. Milestone 2 (#2), in steps: ADR 0014 (done) → Wagtail, image model,
+   `HomePage` (this PR, has migrations: maintainer merges) → content models →
+   editor group permissions → `seed_demo` command.
 3. Milestone 3 (#3): design foundation (Palette V2 tokens in `site.css`,
    self-hosted fonts incl. Armenian, base layout). The template's
    `site.css` still has the neutral template colours until then.

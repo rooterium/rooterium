@@ -4,8 +4,8 @@ One section per app with its models, fields and rules (visibility, ordering,
 retention). Keep this file in sync with every model change. Decisions behind
 it: [ADR 0014](decisions/0014-content-model.md).
 
-> Status: **planned** for milestone 2 (issue #2). Sections move from planned
-> to built as the PRs land.
+> Status (milestone 2, issue #2): **built**: `images`, `home`. **Planned**:
+> everything else. Sections move from planned to built as the PRs land.
 
 Conventions: all labels and help texts in English and translatable; every
 image is a `CustomImage`; "live" means published in Wagtail (`live=True`).
@@ -15,20 +15,25 @@ image is a `CustomImage`; "live" means published in Wagtail (`live=True`).
 - `Theme` (`TextChoices`): `history`, `traditions`, `myths`, `symbols`,
   `music`.
 
-## `images` – `CustomImage` (Wagtail image model)
+## `images` – `CustomImage` (Wagtail image model) – built
+
+`WAGTAILIMAGES_IMAGE_MODEL = "images.CustomImage"`, renditions in
+`CustomRendition`.
 
 | Field | Type | Rules |
 |---|---|---|
 | (Wagtail image fields) | | file, title, focal point, tags, … |
-| `alt_text` | text, ≤ 250 | required; describes the image for screen readers |
+| `description` | text, ≤ 255 | labelled **"Alt text"**, required; Wagtail's own field, used as `default_alt_text` and by `ImageBlock` |
 | `credit` | text, ≤ 250 | required; shown under the image, e.g. "Photo: Name" |
 | `licence` | text, ≤ 250 | required, e.g. "CC BY-SA 4.0", "With permission" |
 | `source_url` | URL | optional |
 
-## `home` – `HomePage` (Wagtail page)
+## `home` – `HomePage` (Wagtail page) – built
 
-Site root, at most one. Parent of the theme index pages. Map and teasers
-come in milestone 4.
+Site root, at most one; created by data migration `home.0002` (replaces
+Wagtail's welcome page, default `Site` → `localhost`, default site so every
+host name matches). Will be the parent of the theme index pages. Map and
+teasers come in milestone 4.
 
 ## `stories`
 

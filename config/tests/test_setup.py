@@ -18,8 +18,13 @@ class SettingsTests(TestCase):
 
 
 class AdminTests(TestCase):
-    def test_admin_login_page_is_reachable_and_english(self):
+    def test_wagtail_admin_login_page_is_reachable(self):
         response = self.client.get("/admin/login/")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "wagtail")
+
+    def test_django_admin_login_page_is_reachable_and_english(self):
+        response = self.client.get("/django-admin/login/")
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, f"{settings.SITE_SHORT_NAME} administration")
         self.assertContains(response, 'lang="en"')
