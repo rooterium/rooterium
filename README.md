@@ -54,7 +54,11 @@ cp .env.example .env          # set SECRET_KEY and passwords, never commit .env
 docker compose up --build     # start web + PostgreSQL, migrations run automatically
 docker compose exec web python manage.py createsuperuser
 docker compose exec web python manage.py seed_demo   # placeholder content (DEBUG only)
+scripts/build-map-tiles.sh                           # map tiles -> media/maps/ (ADR 0015)
 ```
+
+Without the tile file the home page map shows only the markers on a plain
+background.
 
 Site: <http://localhost:8000> · Wagtail admin (content): <http://localhost:8000/admin/> ·
 Django admin (technical): <http://localhost:8000/django-admin/>

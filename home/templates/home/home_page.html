@@ -1,11 +1,123 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n static wagtailcore_tags wagtailimages_tags %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'core/vendor/maplibre-gl-6.16.0/maplibre-gl.css' %}">
+  <script src="{% static 'core/vendor/pmtiles-4.5.0/pmtiles.js' %}" defer></script>
+  <script type="module" src="{% static 'core/js/map.js' %}"></script>
+{% endblock %}
 
 {% block content %}
-  {# Placeholder until the map home page (milestone 4). #}
-  <div class="prose">
+  <section class="hero">
     <span class="eyebrow">{% translate "Armenian history, traditions, myths, symbols and music" %}</span>
     <h1>{% translate "Find your way back to your roots." %}</h1>
-    <p class="lead">{{ site_description }}</p>
+    <p class="lead">{% translate "A place for every Armenian who grew up far from Armenia, and for everyone curious about its culture. Choose a place on the map and start exploring." %}</p>
+    <p><a class="button" href="#explore">{% translate "Start exploring" %}</a></p>
+  </section>
+
+  <section id="explore" class="explore" aria-labelledby="explore-heading"
+           data-map
+           data-tiles="{{ map_tiles_url|default:'' }}"
+           data-worker="{% static 'core/vendor/maplibre-gl-6.16.0/maplibre-gl-worker.mjs' %}"
+           data-maplibre="{% static 'core/vendor/maplibre-gl-6.16.0/maplibre-gl.mjs' %}">
+    <h2 id="explore-heading" class="visually-hidden">{% translate "Explore the map" %}</h2>
+
+    <div class="explore-toolbar">
+      <div class="segmented" role="group" aria-label="{% translate 'Map view' %}">
+        <button type="button" class="segmented-option" data-view="homeland" aria-pressed="true">{% translate "Homeland" %}</button>
+        <button type="button" class="segmented-option" data-view="diaspora" aria-pressed="false">{% translate "Diaspora worldwide" %}</button>
+      </div>
+      <div class="chips" role="group" aria-label="{% translate 'Filter by theme' %}">
+        {% for value, label in map_filters %}
+          <button type="button" class="chip" data-filter="{{ value }}" aria-pressed="{% if value == 'all' %}true{% else %}false{% endif %}">{{ label }}</button>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="explore-body">
+      <div class="map-frame">
+        <div class="map" data-map-canvas role="region" aria-label="{% translate 'Map of historic Armenia and the South Caucasus' %}"></div>
+        <div class="map-diaspora" data-diaspora hidden>
+          <p class="eyebrow">{% translate "Coming later" %}</p>
+          <p>{% translate "The diaspora world map – Armenian communities, places and stories all over the world – is in preparation." %}</p>
+        </div>
+      </div>
+
+      <aside class="map-card card" data-card aria-live="polite">
+        <div data-card-default>
+          <p class="eyebrow">{% translate "Explore" %}</p>
+          <p>{% translate "Choose a marker on the map, or pick a theme above." %}</p>
+        </div>
+        <div data-card-feature hidden>
+          <p class="eyebrow" data-card-category></p>
+          <h3 class="map-card-title" data-card-title></h3>
+          <p data-card-description></p>
+          <p><a data-card-link href=""></a></p>
+        </div>
+        <div data-card-panel="events" hidden>
+          <p class="eyebrow">{% translate "Events" %}</p>
+          {% include "home/includes/event_list.html" %}
+        </div>
+        <div data-card-panel="projects" hidden>
+          <p class="eyebrow">{% translate "Projects" %}</p>
+          <p>{% translate "Projects are not on the map yet." %}</p>
+          {% include "home/includes/project_list.html" %}
+        </div>
+      </aside>
+    </div>
+
+    {# Always rendered: works without JavaScript, WebGL or tiles, and for screen readers. #}
+    <details class="place-list">
+      <summary>{% translate "All places as a list" %}</summary>
+      <ul>
+        {% for place in places %}
+          <li data-place-item data-category="{{ place.theme }}">
+            <strong>{{ place.name }}</strong> <span class="meta">({{ place.get_theme_display }})</span><br>
+            {{ place.short_description }}
+          </li>
+        {% empty %}
+          <li>{% translate "No places yet." %}</li>
+        {% endfor %}
+      </ul>
+    </details>
+
+    {{ map_features|json_script:"map-features" }}
+  </section>
+
+  <section class="home-section" aria-labelledby="stories-heading">
+    <h2 id="stories-heading">{% translate "Latest stories" %}</h2>
+    <div class="story-grid">
+      {% for story in latest_stories %}
+        <article class="story-card card">
+          {% image story.hero_image fill-640x400 as thumb %}
+          <img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.height }}" alt="{{ story.hero_image.default_alt_text }}" loading="lazy">
+          <div class="story-card-body">
+            <span class="eyebrow">{{ story.get_theme_display }}</span>
+            <h3><a href="{% pageurl story %}">{{ story.title }}</a></h3>
+            <p>{{ story.teaser }}</p>
+            <p class="meta"><time datetime="{{ story.date|date:'Y-m-d' }}">{{ story.date }}</time></p>
+          </div>
+        </article>
+      {% empty %}
+        <p>{% translate "No stories yet." %}</p>
+      {% endfor %}
+    </div>
+  </section>
+
+  <div class="home-columns">
+    <section class="card" aria-labelledby="events-heading">
+      <h2 id="events-heading">{% translate "Upcoming events" %}</h2>
+      {% include "home/includes/event_list.html" %}
+    </section>
+    <section class="card" aria-labelledby="projects-heading">
+      <h2 id="projects-heading">{% translate "Projects we love" %}</h2>
+      <p class="meta">{% translate "Shops, start-ups and initiatives that carry Armenian traditions into today." %}</p>
+      {% include "home/includes/project_list.html" %}
+    </section>
   </div>
+
+  <section class="newsletter-teaser" aria-labelledby="newsletter-heading">
+    <h2 id="newsletter-heading">{% translate "A new story every ten days" %}</h2>
+    <p>{% translate "The newsletter sign-up is coming soon." %}</p>
+  </section>
 {% endblock %}

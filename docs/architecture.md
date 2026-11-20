@@ -32,6 +32,14 @@ Overview of how the project is built and run. Decisions and their rationale:
   (Wagtail's admin needs inline code and frames the page preview), as are
   500 responses (standalone page with inline styles). The map (milestone 4)
   will likely need `worker-src blob:` for MapLibre.
+- **Home page map** (ADR 0010, 0015): `home.HomePage.get_context()` embeds
+  the markers (live places, upcoming events with coordinates) as JSON;
+  `core/static/core/js/map.js` (ES module) loads the vendored MapLibre
+  (`core/static/core/vendor/`) and the PMTiles file
+  `MEDIA_ROOT/maps/rooterium.pmtiles` (built by
+  `scripts/build-map-tiles.sh`, not in git). In development
+  `core/dev_media.py` serves media with range requests; in production Caddy
+  does. A server-rendered place list is the fallback.
 - `/version` returns the Git commit of the running image as JSON
   (`APP_COMMIT`, set by CI); local builds report `dev`.
 
