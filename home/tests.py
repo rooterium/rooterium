@@ -88,7 +88,12 @@ class HomeMapTests(TestCase):
             Path(media, "maps", "rooterium.pmtiles").write_bytes(b"x")
             with self.settings(MEDIA_ROOT=media):
                 response = self.client.get("/")
+            self.assertContains(response, 'data-terrain=""')
+            Path(media, "maps", "terrain.pmtiles").write_bytes(b"x")
+            with self.settings(MEDIA_ROOT=media):
+                with_terrain = self.client.get("/")
         self.assertContains(response, 'data-tiles="/media/maps/rooterium.pmtiles"')
+        self.assertContains(with_terrain, 'data-terrain="/media/maps/terrain.pmtiles"')
 
     def test_latest_stories_events_and_projects_sections(self):
         response = self.client.get("/")

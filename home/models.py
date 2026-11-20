@@ -12,15 +12,21 @@ from newsletter.forms import SignupForm
 from places.models import Place
 from projects.models import Project
 
-# Map tiles (ADR 0015), built by scripts/build-map-tiles.sh.
+# Map tiles (ADR 0015) and terrain for the relief (ADR 0016), built by
+# scripts/build-map-tiles.sh.
 MAP_TILES = "maps/rooterium.pmtiles"
+MAP_TERRAIN = "maps/terrain.pmtiles"
+
+
+def media_file_url(path: str) -> str | None:
+    """URL of a file in MEDIA_ROOT, or None if it has not been built here."""
+    if (Path(settings.MEDIA_ROOT) / path).is_file():
+        return settings.MEDIA_URL + path
+    return None
 
 
 def map_tiles_url() -> str | None:
-    """URL of the tile file, or None if it has not been built here."""
-    if (Path(settings.MEDIA_ROOT) / MAP_TILES).is_file():
-        return settings.MEDIA_URL + MAP_TILES
-    return None
+    return media_file_url(MAP_TILES)
 
 
 class HomePage(SeoPageMixin, Page):
@@ -80,6 +86,7 @@ class HomePage(SeoPageMixin, Page):
         context = super().get_context(request, *args, **kwargs)
         context["map_features"] = self.map_features(request)
         context["map_tiles_url"] = map_tiles_url()
+        context["map_terrain_url"] = media_file_url(MAP_TERRAIN)
         context["map_filters"] = [
             ("all", _("All")),
             *Theme.choices,

@@ -24,4 +24,5 @@ deviations and additions.
 | 0012 | [English first, translatable from day one](0012-english-and-i18n.md)   | accepted |
 | 0013 | [Privacy by default](0013-privacy-by-default.md)                       | accepted |
 | 0014 | [Content model](0014-content-model.md)                                 | accepted |
-| 0015 | [Map tiles and map style](0015-map-tiles-and-style.md)               | accepted |
+| 0015 | [Map tiles and map style](0015-map-tiles-and-style.md)               | accepted (relief: 0016) |
+| 0016 | [Relief on the home page map](0016-map-relief.md)                     | accepted |
