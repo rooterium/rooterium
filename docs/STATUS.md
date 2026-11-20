@@ -4,7 +4,7 @@ Current state of Rooterium and the next steps. **Every PR updates this
 file** (at least "Last updated" and whatever the PR changes). Details live in
 the linked docs; open work lives in GitHub issues.
 
-_Last updated: 2026-11-20 (PR "Record the mail password decision")_
+_Last updated: 2026-11-20 (PR "Make whole cards the tap target on phones")_
 
 ## Live
 
@@ -229,10 +229,11 @@ day – the site runs on https://rooterium.pocketapp.ch (see Live and Done). Mil
 (#6) is closed; **#7 is still open** although its code is complete – the
 maintainer decides whether to close it (texts are tracked in #14, sending
 the newsletter is an open question below). Everything left in version 1
-now waits on the maintainer or the editor: domain (#9), hosting (#10),
-email service (#11), page texts (#14), then deployment (#8). Without
-those, possible Claude work: a review pass over the whole site at phone
-width.
+now waits on the maintainer or the editor: final domain (#9) and page
+texts (#14). The phone-width review of the live site (390 px, all public
+pages) is done: no horizontal scrolling, no console or CSP errors; card
+and list links were below 44 px and now the whole card or row is the tap
+target (PR "Make whole cards the tap target on phones").
 
 **Open questions for the maintainer/editor:**
 
