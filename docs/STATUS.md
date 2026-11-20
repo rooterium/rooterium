@@ -4,7 +4,7 @@ Current state of Rooterium and the next steps. **Every PR updates this
 file** (at least "Last updated" and whatever the PR changes). Details live in
 the linked docs; open work lives in GitHub issues.
 
-_Last updated: 2026-11-20 (PR "Add the home page with the interactive map")_
+_Last updated: 2026-11-20 (PR "Tune the map style against the real tiles")_
 
 ## Live
 
@@ -72,9 +72,11 @@ Brief and milestones: [`PROJECT_BRIEF.md`](PROJECT_BRIEF.md).
   with gold button markers, theme/events/projects filters, side card,
   Homeland/Diaspora toggle ("coming later"), place list fallback, latest
   stories, events, projects, newsletter teaser. Checked in Chrome at
-  1280 px and 390 px, no CSP violations. **Map tiles not built yet**
-  (`scripts/build-map-tiles.sh` needs to be run once per environment);
-  without them the map shows markers on a plain background.
+  1280 px and 390 px, no CSP violations. Map tiles built locally by the
+  maintainer (Protomaps build 20261118, 40 MB, `media/maps/`, not in git);
+  style tuned against them (earth tones per land cover, pale glaciers, gold
+  shorelines, rivers). Each environment runs `scripts/build-map-tiles.sh`
+  once. **Milestone 4 complete.**
 
 ## Open issues
 
@@ -98,11 +100,9 @@ Overview: `gh issue list`. At the time of writing:
    public first needs the organisation setting "Package creation → Public"
    (org settings → Packages); alternatively the server logs in with a
    read-only token. Only needed for milestone 8.
-2. Build the map tiles locally (`scripts/build-map-tiles.sh`) and check
-   the map style against real tiles (layer names, colours).
-3. Milestone 5 (#5): story pages, theme pages, places linked to stories,
+2. Milestone 5 (#5): story pages, theme pages, places linked to stories,
    YouTube click-to-load.
-4. Editor: check the seed place coordinates and descriptions (#15) – they
+3. Editor: check the seed place coordinates and descriptions (#15) – they
    can be edited in the Wagtail admin under "Map & directory → Places".
 
 ## Working agreements (summary)
