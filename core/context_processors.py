@@ -1,6 +1,7 @@
 """Template context available on every page."""
 
 from django.conf import settings
+from django.templatetags.static import static
 from django.urls import reverse
 
 from .navigation import MAIN_NAVIGATION
@@ -21,5 +22,9 @@ def site(request):
         "site_name": settings.SITE_NAME,
         "site_short_name": settings.SITE_SHORT_NAME,
         "site_description": settings.SITE_DESCRIPTION,
+        # Absolute URL, as Open Graph requires; pages may set `og_image`.
+        "default_og_image": request.build_absolute_uri(
+            static("core/img/og-default.jpg")
+        ),
         "nav_items": nav_items,
     }

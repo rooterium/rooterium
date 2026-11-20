@@ -13,7 +13,12 @@
   <meta property="og:title" content="{{ full_title }}">
   <meta property="og:description" content="{{ meta_description|default:site_description }}">
   <meta property="og:url" content="{{ request.build_absolute_uri }}">
-  {% if og_image %}<meta property="og:image" content="{{ og_image }}">{% endif %}
+  <meta property="og:image" content="{{ og_image|default:default_og_image }}">
+  {% if not og_image %}<meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">{% endif %}
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="{% static 'core/img/favicon-32.png' %}" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="{% static 'core/img/apple-touch-icon.png' %}">
   <link rel="preload" href="{% static 'core/fonts/manrope-latin-wght-normal.woff2' %}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{% static 'core/css/site.css' %}">
   {% block extra_head %}{% endblock %}
