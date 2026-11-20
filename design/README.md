@@ -10,7 +10,24 @@ image; web assets are generated from them by a script (milestone 3).
 | `rooterium_v2_moodboard.png` | Moodboard (khachkar, pomegranate, carpet, duduk, …) | AI-generated mood image | Reference for colour and mood only |
 | `mockup-2a-theme-islands.png` | Home page mockup, design variant A ("Themen-Inseln") | Screenshot of the Claude design canvas "Rooterium – Startseiten-Entwürfe" | Reference only; variant A is out of scope for version 1 (issue #23) |
 
-Rules (`docs/PROJECT_BRIEF.md`, section 6):
+## Fonts
+
+Self-hosted woff2 files in `core/static/core/fonts/` (ADR 0013), taken from
+the Fontsource npm packages 5.3.0, each under the SIL Open Font License 1.1
+(licence files next to the fonts):
+
+| Font | Use | Subsets |
+|---|---|---|
+| Cormorant Garamond 600 | Headings ≥ 28 px | latin, latin-ext |
+| Manrope (variable, 200–800) | Body and UI | latin, latin-ext |
+| Noto Serif Armenian (variable) | Armenian in headings | armenian |
+| Noto Sans Armenian (variable) | Armenian in body text | armenian |
+
+Cyrillic subsets are added together with the Russian translation.
+
+## Rules
+
+From `docs/PROJECT_BRIEF.md`, section 6:
 
 - AI-generated images are for **atmosphere only**, never as illustrations of
   real objects, symbols or places. The objects in them (khachkars, carpets,

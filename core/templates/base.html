@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0a09">
   {% document_title page_title as full_title %}
   <title>{% block title %}{{ full_title }}{% endblock %}</title>
   <meta name="description" content="{{ meta_description|default:site_description }}">
@@ -13,6 +14,7 @@
   <meta property="og:description" content="{{ meta_description|default:site_description }}">
   <meta property="og:url" content="{{ request.build_absolute_uri }}">
   {% if og_image %}<meta property="og:image" content="{{ og_image }}">{% endif %}
+  <link rel="preload" href="{% static 'core/fonts/manrope-latin-wght-normal.woff2' %}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{% static 'core/css/site.css' %}">
   {% block extra_head %}{% endblock %}
 </head>
@@ -39,7 +41,7 @@
     {% if messages %}
       <div class="messages" role="status">
         {% for message in messages %}
-          <p class="message message-{{ message.tags }}">{{ message }}</p>
+          <p class="message message-{{ message.level_tag }}">{% if message.level_tag == "error" %}<strong>{% translate "Error:" %}</strong> {% endif %}{{ message }}</p>
         {% endfor %}
       </div>
     {% endif %}
@@ -47,8 +49,9 @@
   </main>
 
   <footer class="site-footer">
-    <div class="container">
-      © {% now "Y" %} {{ site_name }}
+    <div class="container footer-inner">
+      <p>© {% now "Y" %} {{ site_name }}</p>
+      <p>{% translate "Content in English, more languages to come." %}</p>
     </div>
   </footer>
 </body>

@@ -4,7 +4,7 @@ Current state of Rooterium and the next steps. **Every PR updates this
 file** (at least "Last updated" and whatever the PR changes). Details live in
 the linked docs; open work lives in GitHub issues.
 
-_Last updated: 2026-11-20 (PR "Add the seed_demo command")_
+_Last updated: 2026-11-20 (PR "Add Palette V2, self-hosted fonts and the base layout")_
 
 ## Live
 
@@ -59,6 +59,10 @@ Brief and milestones: [`PROJECT_BRIEF.md`](PROJECT_BRIEF.md).
   pages, five places (flagged "to be checked", issue #15), three
   placeholder stories, three placeholder events and four placeholder
   projects. **Milestone 2 complete.**
+- **Milestone 3 – tokens, fonts, base layout**: Palette V2 as CSS
+  variables (contrast checked by a test), self-hosted Cormorant Garamond,
+  Manrope, Noto Serif/Sans Armenian, header/footer, skip link, focus rings,
+  44 px touch targets, mobile layout checked at 390 px.
 
 ## Open issues
 
@@ -82,9 +86,8 @@ Overview: `gh issue list`. At the time of writing:
    public first needs the organisation setting "Package creation → Public"
    (org settings → Packages); alternatively the server logs in with a
    read-only token. Only needed for milestone 8.
-2. Milestone 3 (#3): design foundation (Palette V2 tokens in `site.css`,
-   self-hosted fonts incl. Armenian, base layout). The template's
-   `site.css` still has the neutral template colours until then.
+2. Milestone 3 (#3), rest: generated web assets (favicon, Open Graph
+   image) and a Content-Security-Policy (ADR 0013).
 3. Editor: check the seed place coordinates and descriptions (#15) – they
    can be edited in the Wagtail admin under "Map & directory → Places".
 
