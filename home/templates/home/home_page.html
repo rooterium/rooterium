@@ -1,6 +1,11 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block content %}
-  <h1>{{ site_name }}</h1>
-  <p class="lead">{{ site_description }}</p>
+  {# Placeholder until the map home page (milestone 4). #}
+  <div class="prose">
+    <span class="eyebrow">{% translate "Armenian history, traditions, myths, symbols and music" %}</span>
+    <h1>{% translate "Find your way back to your roots." %}</h1>
+    <p class="lead">{{ site_description }}</p>
+  </div>
 {% endblock %}

@@ -3,9 +3,10 @@
 {# Minimal template; designed in milestone 5. #}
 
 {% block content %}
-  <article>
-    <p>{{ page.get_theme_display }} · <time datetime="{{ page.date|date:'Y-m-d' }}">{{ page.date }}</time></p>
+  <article class="prose">
+    <span class="eyebrow">{{ page.get_theme_display }}</span>
     <h1>{{ page.title }}</h1>
+    <p class="meta"><time datetime="{{ page.date|date:'Y-m-d' }}">{{ page.date }}</time></p>
     <p class="lead">{{ page.teaser }}</p>
 
     <figure>

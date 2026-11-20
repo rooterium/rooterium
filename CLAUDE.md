@@ -169,7 +169,10 @@ English everywhere (ADR 0012):
 - Templates extend `base.html`. New sections get a main navigation entry in
   `core/navigation.py`.
 - Styles live in `core/static/core/css/site.css` (plain CSS, no framework),
-  colours as CSS variables on `:root`. Accent colours are for accents only;
+  colours as CSS variables on `:root` (Palette V2; contrast pairs are
+  checked by `core/tests/test_design_tokens.py`). Cormorant Garamond only
+  for headings of 28 px and more; everything else Manrope. Touch targets at
+  least 44 px (`--touch`), visible apricot focus rings. Accent colours are for accents only;
   text must meet contrast requirements (use `--text-muted` for secondary
   text). Errors must not rely on colour alone.
 - Logo and image originals live in `design/` (not served, not in the image);

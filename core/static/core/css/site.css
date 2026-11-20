@@ -1,14 +1,107 @@
-/* Site styles: plain CSS, no framework. Replace the colours with the
-   project's brand colours (from the logo). */
+/* Rooterium site styles: plain CSS, no framework (ADR 0011).
+   Palette V2 and typography from docs/PROJECT_BRIEF.md, section 6.
+   Dark only in version 1. Contrast pairs are checked by
+   core/tests/test_design_tokens.py – keep it in sync with the tokens. */
+
+/* --- Fonts (self-hosted, ADR 0013; licences next to the files) ---------- */
+
+/* Headings: Cormorant Garamond 600, only at 28 px and larger. */
+@font-face {
+  font-family: "Cormorant Garamond";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../fonts/cormorant-garamond-latin-600-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Cormorant Garamond";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../fonts/cormorant-garamond-latin-ext-600-normal.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+    U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* Body and UI: Manrope 400–600 (variable). */
+@font-face {
+  font-family: "Manrope";
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url("../fonts/manrope-latin-wght-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Manrope";
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url("../fonts/manrope-latin-ext-wght-normal.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+    U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* Armenian script: only downloaded when a page contains Armenian letters. */
+@font-face {
+  font-family: "Noto Serif Armenian";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("../fonts/noto-serif-armenian-armenian-wght-normal.woff2") format("woff2");
+  unicode-range: U+0308, U+0530-058F, U+2010, U+2024, U+25CC, U+FB13-FB17;
+}
+
+@font-face {
+  font-family: "Noto Sans Armenian";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("../fonts/noto-sans-armenian-armenian-wght-normal.woff2") format("woff2");
+  unicode-range: U+0308, U+0530-058F, U+2010, U+2024, U+25CC, U+FB13-FB17;
+}
+
+/* --- Tokens ------------------------------------------------------------- */
 
 :root {
-  --text: #1a1a1a;
-  --text-muted: #5c6670;
-  --accent: #0b5cad;
-  --line: #d5d9dd;
-  --background: #ffffff;
-  --max-width: 60rem;
+  color-scheme: dark;
+
+  /* Palette V2 (binding) */
+  --bg: #0b0a09;
+  --surface: #161311;
+  --text: #eee3d1;
+  --text-secondary: #c9bfae;
+  --text-muted: #8e8b85;
+  --muted: #7b7872; /* borders and quiet UI only, never small text */
+  --accent: #a6352c; /* pomegranate: buttons, active states; never as text */
+  --accent-hover: #8e2c24; /* darker pomegranate for button hover */
+  --accent-2: #d98a3f; /* apricot: links, hover, focus */
+  --gold: #c8a15d; /* markers, lines, ornaments */
+  --line: #2b2621; /* decorative dividers only (no contrast requirement) */
+
+  /* Typography */
+  --font-heading: "Cormorant Garamond", "Noto Serif Armenian", Georgia, serif;
+  --font-body: "Manrope", "Noto Sans Armenian", system-ui, -apple-system,
+    "Segoe UI", sans-serif;
+
+  /* Layout */
+  --max-width: 72rem;
+  --prose-width: 42rem;
+  --gutter: 1rem;
+  --radius: 0.75rem;
+  --touch: 44px;
 }
+
+/* --- Base --------------------------------------------------------------- */
 
 *,
 *::before,
@@ -16,35 +109,181 @@
   box-sizing: border-box;
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.65;
   color: var(--text);
-  background: var(--background);
+  background: var(--bg);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
 }
 
 a {
-  color: var(--accent);
+  color: var(--accent-2);
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+}
+
+a:hover {
+  color: var(--text);
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent-2);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--text);
+}
+
+/* Cormorant only from 28 px; smaller headings use Manrope. */
+h1,
+h2 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: 0;
+  margin: 0 0 0.5em;
+}
+
+h1 {
+  font-size: clamp(2.25rem, 1.6rem + 3vw, 3.5rem);
+}
+
+h2 {
+  font-size: clamp(1.75rem, 1.5rem + 1vw, 2.25rem);
+}
+
+h3,
+h4 {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 1.125rem;
+  line-height: 1.35;
+  margin: 1.5em 0 0.5em;
+}
+
+p {
+  margin: 0 0 1em;
+}
+
+.lead {
+  font-size: 1.1875rem;
+  color: var(--text-secondary);
+}
+
+.meta,
+figcaption,
+small {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+/* Small uppercase label above titles, e.g. the theme of a story. */
+.eyebrow {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-2);
 }
 
 .container {
+  width: 100%;
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 1rem;
+  padding-inline: var(--gutter);
 }
+
+@media (min-width: 48rem) {
+  :root {
+    --gutter: 2rem;
+  }
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --- Buttons ------------------------------------------------------------ */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--touch);
+  padding: 0.5rem 1.25rem;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--text);
+  font: inherit;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.button:hover {
+  background: var(--accent-hover);
+  color: var(--text);
+}
+
+.button--secondary {
+  background: transparent;
+  border-color: var(--muted);
+}
+
+.button--secondary:hover {
+  background: var(--surface);
+  border-color: var(--accent-2);
+}
+
+/* --- Skip link ---------------------------------------------------------- */
 
 .skip-link {
   position: absolute;
-  left: -999px;
+  left: var(--gutter);
+  top: -100px;
+  z-index: 100;
+  padding: 0.75rem 1rem;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--accent-2);
+  border-radius: var(--radius);
 }
 
 .skip-link:focus {
-  left: 1rem;
   top: 1rem;
-  background: var(--background);
-  padding: 0.5rem 1rem;
 }
+
+/* --- Header ------------------------------------------------------------- */
 
 .site-header {
   border-bottom: 1px solid var(--line);
@@ -55,44 +294,147 @@ a {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+  gap: 0.5rem 1.5rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
 }
 
 .brand {
-  font-weight: 700;
-  font-size: 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touch);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.75rem; /* 28 px: smallest size for Cormorant */
+  line-height: 1;
   color: var(--text);
   text-decoration: none;
+}
+
+.brand:hover {
+  color: var(--text);
 }
 
 .main-nav ul {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  align-items: center;
+  gap: 0 0.25rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
+.main-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touch);
+  padding: 0 0.75rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--text);
+  text-decoration: none;
+  border-radius: 999px;
+}
+
+.main-nav a:hover {
+  color: var(--accent-2);
+}
+
+/* Current page: underline in gold plus the weight, not colour alone. */
 .main-nav a[aria-current="page"] {
   font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: var(--gold);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.4em;
 }
+
+/* --- Main --------------------------------------------------------------- */
 
 main {
-  padding-top: 2rem;
-  padding-bottom: 3rem;
+  flex: 1;
+  padding-top: 2.5rem;
+  padding-bottom: 4rem;
 }
 
-.lead {
-  font-size: 1.2rem;
-  color: var(--text-muted);
+/* Long-form text (stories, simple pages). */
+.prose {
+  max-width: var(--prose-width);
 }
+
+.prose blockquote {
+  margin: 1.5rem 0;
+  padding-left: 1.25rem;
+  border-left: 2px solid var(--gold);
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+}
+
+.prose figure {
+  margin: 2rem 0;
+}
+
+.prose figcaption {
+  margin-top: 0.5rem;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+
+/* --- Messages ----------------------------------------------------------- */
+
+.messages {
+  margin-bottom: 2rem;
+}
+
+.message {
+  margin: 0 0 0.5rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--muted);
+  border-left: 4px solid var(--accent-2);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+/* Errors never rely on colour alone: the template adds a text label. */
+.message-error {
+  border-left-color: var(--accent);
+}
+
+/* --- Footer ------------------------------------------------------------- */
 
 .site-footer {
   border-top: 1px solid var(--line);
-  padding: 1.5rem 0;
+  padding: 2rem 0;
+  font-size: 0.875rem;
   color: var(--text-muted);
-  font-size: 0.9rem;
+}
+
+.footer-inner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+}
+
+.footer-inner p {
+  margin: 0;
+}
+
+/* --- Motion ------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

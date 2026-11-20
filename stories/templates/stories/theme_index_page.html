@@ -7,10 +7,10 @@
   {% if page.intro %}<p class="lead">{{ page.intro }}</p>{% endif %}
 
   {% for story in stories %}
-    <article>
+    <article class="card">
       <h2><a href="{% pageurl story %}">{{ story.title }}</a></h2>
       <p>{{ story.teaser }}</p>
-      <p><time datetime="{{ story.date|date:'Y-m-d' }}">{{ story.date }}</time></p>
+      <p class="meta"><time datetime="{{ story.date|date:'Y-m-d' }}">{{ story.date }}</time></p>
     </article>
   {% empty %}
     <p>{% translate "No stories yet." %}</p>
