@@ -152,6 +152,24 @@ deleted on every new sign-up and by `manage.py prune_newsletter_signups`
 again with a confirmed address changes nothing and sends no email; the
 visitor sees the same answer either way.
 
+## `pages` – `SimplePage` (Wagtail page) – built
+
+About, Imprint and Privacy (brief, section 2.9), children of the home page,
+no subpages.
+
+| Field | Type | Rules |
+|---|---|---|
+| `purpose` | choice | about, imprint, privacy; unique (each page once) |
+| `intro` | text | optional; lead and meta description fallback |
+| `body` | rich text | h2, h3, bold, italic, link, lists |
+
+Live pages are linked in the footer in the order About, Imprint, Privacy
+(`pages.models.footer_pages`, via the `footer_pages` context variable). The
+newsletter and suggestion forms link to the live Privacy page
+(`privacy_url`). Not created by a migration: the editor creates them in the
+admin with the real texts (issue #14); `seed_demo` creates placeholders
+locally. Editors already have page permissions on the whole tree.
+
 ## Permissions
 
 Wagtail's "Editors" group: add/edit/**publish** on the page tree, all

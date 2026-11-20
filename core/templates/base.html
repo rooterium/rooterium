@@ -56,7 +56,14 @@
   <footer class="site-footer">
     <div class="container footer-inner">
       <p>© {% now "Y" %} {{ site_name }}</p>
-      <p><a href="{% url 'newsletter:signup' %}">{% translate "Newsletter" %}</a></p>
+      <nav aria-label="{% translate 'Footer' %}">
+        <ul class="footer-links">
+          <li><a href="{% url 'newsletter:signup' %}">{% translate "Newsletter" %}</a></li>
+          {% for footer_page in footer_pages %}
+            <li><a href="{{ footer_page.url }}">{{ footer_page.title }}</a></li>
+          {% endfor %}
+        </ul>
+      </nav>
       <p>{% translate "Content in English, more languages to come." %}</p>
     </div>
   </footer>

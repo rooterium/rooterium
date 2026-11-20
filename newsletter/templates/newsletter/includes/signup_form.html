@@ -18,5 +18,5 @@
   </div>
   {% include "includes/spam_fields.html" %}
   <p><button class="button" type="submit">{% translate "Subscribe" %}</button></p>
-  <p class="help">{% translate "You will get an email with a confirmation link. Only after you click it are you subscribed." %}</p>
+  <p class="help">{% translate "You will get an email with a confirmation link. Only after you click it are you subscribed." %}{% if privacy_url %} <a href="{{ privacy_url }}">{% translate "How we handle your data" %}</a>{% endif %}</p>
 </form>

@@ -1196,6 +1196,25 @@ figcaption .credit a {
   margin: 0;
 }
 
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.footer-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touch);
+}
+
+.footer-inner {
+  align-items: center;
+}
+
 /* --- Motion ------------------------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {

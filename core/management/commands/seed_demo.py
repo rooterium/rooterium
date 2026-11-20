@@ -1,7 +1,8 @@
 """Seed data for the local prototype (docs/PROJECT_BRIEF.md, section 5).
 
 Creates the theme pages, five example places, three placeholder stories,
-placeholder events and projects. Safe to run more than once: existing
+placeholder events and projects, and placeholder About, Imprint and Privacy
+pages (the real texts come from the editor, issue #14). Safe to run more than once: existing
 objects are left alone. No invented facts: everything that is not verified
 is in [square brackets] or marked "to be checked".
 """
@@ -20,11 +21,71 @@ from wagtail.images import get_image_model
 from core.themes import Theme
 from events.models import Event
 from home.models import HomePage
+from pages.models import Purpose, SimplePage
 from places.models import Place
 from projects.models import Project, ProjectKind
 from stories.models import StoryPage, ThemeIndexPage
 
 TO_BE_CHECKED = "[To be checked]"
+
+# Placeholders only: the editor writes the real texts (issue #14). The
+# privacy notes list what the code actually does, as a starting point.
+TEXT_PAGES = [
+    {
+        "purpose": Purpose.ABOUT,
+        "title": "About",
+        "slug": "about",
+        "intro": "[One or two sentences: what Rooterium is and who it is for]",
+        "body": (
+            "<p>[Placeholder – the editor writes this text.]</p>"
+            "<h2>[Why Rooterium]</h2><p>[The idea behind the project]</p>"
+            "<h2>[Who is behind it]</h2><p>[The editor, the team]</p>"
+            "<h2>[Contact]</h2><p>[How to get in touch]</p>"
+        ),
+    },
+    {
+        "purpose": Purpose.IMPRINT,
+        "title": "Imprint",
+        "slug": "imprint",
+        "intro": "",
+        "body": (
+            "<p>[Placeholder – the editor provides the legally required "
+            "details (Austrian disclosure rules); to be checked.]</p>"
+            "<h2>[Media owner and publisher]</h2>"
+            "<p>[Name]<br/>[Place of residence or address]</p>"
+            "<h2>[Contact]</h2><p>[Email address]</p>"
+            "<h2>[Purpose of the website]</h2><p>[Basic direction]</p>"
+        ),
+    },
+    {
+        "purpose": Purpose.PRIVACY,
+        "title": "Privacy",
+        "slug": "privacy",
+        "intro": "",
+        "body": (
+            "<p>[Placeholder – the editor provides the privacy policy; to "
+            "be checked. Technical facts as a starting point:]</p>"
+            "<h2>[Controller]</h2><p>[Name, contact]</p>"
+            "<h2>[Visiting the website]</h2><p>[No analytics, no "
+            "advertising, no third-party scripts. Fonts and map tiles are "
+            "served by this website itself. The only cookie is the "
+            "technically necessary security cookie for forms (CSRF). Server "
+            "logs: to be described with the hosting provider.]</p>"
+            "<h2>[YouTube videos]</h2><p>[Loaded from youtube-nocookie.com "
+            "only after a click on the video.]</p>"
+            "<h2>[Newsletter]</h2><p>[Email address, the consent text and "
+            "the time of consent and confirmation are stored (double "
+            "opt-in). Unconfirmed sign-ups are deleted after 7 days; "
+            "unsubscribing deletes the address. Email service: to be "
+            "decided.]</p>"
+            "<h2>[Suggesting an event or a project]</h2><p>[The email "
+            "address is stored with the suggestion, only for questions "
+            "about it, and never shown publicly.]</p>"
+            "<h2>[Your rights]</h2><p>[Access, rectification, erasure, "
+            "complaint to the Austrian data protection authority]</p>"
+        ),
+    },
+]
 
 # Coordinates and descriptions must be verified by the editor before going
 # live (issue #15); every place is flagged `to_be_checked`.
@@ -120,6 +181,8 @@ class Command(BaseCommand):
             self.event(number)
         for name, kind in PROJECTS:
             self.project(name, kind)
+        for data in TEXT_PAGES:
+            self.text_page(data)
         self.stdout.write(
             self.style.SUCCESS(f"Seed data ready ({self.created} objects created).")
         )
@@ -160,6 +223,13 @@ class Command(BaseCommand):
         place.save()
         self.publish(place)
         return place
+
+    def text_page(self, data):
+        if SimplePage.objects.filter(purpose=data["purpose"]).exists():
+            return
+        page = SimplePage(**data)
+        HomePage.objects.get().add_child(instance=page)
+        self.publish(page)
 
     def theme_pages(self):
         home = HomePage.objects.get()

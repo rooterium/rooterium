@@ -4,6 +4,7 @@ from django.core.management import CommandError, call_command
 from django.test import TestCase, override_settings
 
 from events.models import Event
+from pages.models import SimplePage
 from places.models import Place
 from projects.models import Project
 from stories.models import StoryPage, ThemeIndexPage
@@ -17,17 +18,17 @@ class SeedDemoTests(TestCase):
     def counts(self):
         return [
             m.objects.count()
-            for m in (Place, ThemeIndexPage, StoryPage, Event, Project)
+            for m in (Place, ThemeIndexPage, StoryPage, Event, Project, SimplePage)
         ]
 
     def test_creates_the_seed_data_from_the_brief(self):
         self.seed()
-        self.assertEqual(self.counts(), [5, 5, 3, 3, 4])
+        self.assertEqual(self.counts(), [5, 5, 3, 3, 4, 3])
 
     def test_running_twice_creates_no_duplicates(self):
         self.seed()
         self.seed()
-        self.assertEqual(self.counts(), [5, 5, 3, 3, 4])
+        self.assertEqual(self.counts(), [5, 5, 3, 3, 4, 3])
 
     def test_places_are_flagged_to_be_checked(self):
         self.seed()
