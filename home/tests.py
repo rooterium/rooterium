@@ -96,3 +96,16 @@ class HomeMapTests(TestCase):
         self.assertContains(response, "The monastery of the spear")
         self.assertContains(response, "Upcoming events")
         self.assertContains(response, "Projects we love")
+
+
+class HomeLayoutTests(TestCase):
+    """Layout of the variant B mockup (design/mockup-2b-map.png)."""
+
+    def test_heading_newsletter_band_and_suggest_links(self):
+        response = self.client.get("/")
+        self.assertContains(
+            response, '<h1 id="explore-heading">Every root has a place.</h1>', html=True
+        )
+        self.assertContains(response, 'class="signup-form signup-form--inline"')
+        self.assertContains(response, 'href="/suggest/event/"')
+        self.assertContains(response, 'href="/suggest/project/"')

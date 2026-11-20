@@ -4,7 +4,7 @@ Current state of Rooterium and the next steps. **Every PR updates this
 file** (at least "Last updated" and whatever the PR changes). Details live in
 the linked docs; open work lives in GitHub issues.
 
-_Last updated: 2026-11-20 (PR "Match header and footer to the variant B mockup")_
+_Last updated: 2026-11-20 (PR "Lay out the home page like the variant B mockup")_
 
 ## Live
 
@@ -237,10 +237,12 @@ target (PR "Make whole cards the tap target on phones").
 **Design catch-up (in progress):** the variant B mockup did exist on the
 design canvas; it is now in `design/mockup-2b-map.png` (#13 closed). The
 live site is being brought in line with it in small PRs: (1) header and
-footer – done; (2) home page top: two columns, text and place card left,
-map right; (3) map look: warmer relief colours, glowing markers with name
-labels; (4) wider container, story cards, events/projects, newsletter
-band.
+footer – done; (2) home page layout – done: two columns (text, chips and
+place card left, map right), container 1360 px, story cards with "All
+stories" top right, events/projects with suggest links and project
+tiles, one-row newsletter band (shorter consent text), selected chips
+in pomegranate; (3) next: map look – warmer relief colours, glowing
+markers with name labels.
 
 **Open questions for the maintainer/editor:**
 

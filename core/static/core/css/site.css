@@ -94,7 +94,7 @@
     "Segoe UI", sans-serif;
 
   /* Layout */
-  --max-width: 72rem;
+  --max-width: 85rem; /* 1360 px, as in the variant B mockup */
   --prose-width: 42rem;
   --gutter: 1rem;
   --radius: 0.75rem;
@@ -412,32 +412,76 @@ main {
 
 /* --- Home page ---------------------------------------------------------- */
 
-.hero {
-  max-width: 46rem;
-  margin: 1rem auto 3rem;
-  text-align: center;
-}
-
-.hero .lead {
-  margin-inline: auto;
-}
-
+/* Variant B (design/mockup-2b-map.png): on wide screens text, chips and
+   the place card on the left, the map on the right. On phones: text,
+   chips, map, card. */
 .explore {
-  margin-bottom: 4rem;
+  display: grid;
+  grid-template-areas:
+    "intro"
+    "chips"
+    "map"
+    "card"
+    "list";
+  gap: 1.5rem;
+  margin: 1.5rem 0 6rem;
 }
 
-.explore-toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+.explore-intro {
+  grid-area: intro;
+}
+
+.explore-intro h1 {
   margin-bottom: 1rem;
+  font-size: clamp(2.5rem, 6vw, 3.75rem); /* up to 60 px */
+  line-height: 1.04;
+}
+
+.explore-intro .lead {
+  margin: 0;
+  font-size: 1.0625rem;
+}
+
+.explore-chips {
+  grid-area: chips;
+}
+
+.explore-map {
+  grid-area: map;
+  display: grid;
+  align-content: start; /* the toggle keeps its height when the card grows */
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.explore .map-card {
+  grid-area: card;
+}
+
+.explore .place-list {
+  grid-area: list;
+  margin-top: -0.75rem;
+}
+
+@media (min-width: 60rem) {
+  .explore {
+    grid-template-columns: minmax(0, 22rem) minmax(0, 1fr);
+    grid-template-areas:
+      "intro map"
+      "chips map"
+      "card map"
+      ". map"
+      ". list";
+    grid-template-rows: auto auto auto 1fr auto;
+    column-gap: 2rem;
+    margin-top: 0.5rem;
+  }
 }
 
 /* Toggle buttons: state shown by fill and weight, not colour alone. */
 .segmented {
   display: inline-flex;
+  justify-self: start;
   padding: 3px;
   border: 1px solid var(--muted);
   border-radius: 999px;
@@ -481,33 +525,36 @@ main {
   color: var(--accent-2);
 }
 
+/* Selected: pomegranate fill with apricot border (mockup) plus weight. */
 .chip[aria-pressed="true"] {
-  border-color: var(--gold);
-  background: var(--surface);
+  border-color: var(--accent-2);
+  background: var(--accent);
   font-weight: 700;
-  box-shadow: inset 0 0 0 1px var(--gold);
 }
 
-.explore-body {
-  display: grid;
-  gap: 1rem;
+.chip[aria-pressed="true"]:hover {
+  color: var(--text);
 }
 
-@media (min-width: 56rem) {
-  .explore-body {
-    grid-template-columns: minmax(0, 1fr) 20rem;
-  }
+.explore-chips .chip {
+  padding: 0 0.875rem;
+  font-size: 0.875rem;
 }
 
 .map-frame {
   position: relative;
-  min-height: 22rem;
-  height: 60vh;
-  max-height: 40rem;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
+  height: 26rem;
+  border: 1px solid rgb(238 227 209 / 12%);
+  border-radius: 1.25rem;
   overflow: hidden;
   background: var(--bg);
+}
+
+@media (min-width: 60rem) {
+  .map-frame {
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
 }
 
 /* Sized explicitly: MapLibre sets `position: relative` on the container. */
@@ -534,12 +581,35 @@ main {
 
 .map-card {
   align-self: start;
+  border-color: rgb(217 138 63 / 40%);
+}
+
+/* Nothing selected yet: a quiet dashed hint, as in the mockup. */
+.map-card:has([data-card-default]:not([hidden])) {
+  border: 1px dashed rgb(238 227 209 / 25%);
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.map-card [data-card-default] p {
+  margin: 0;
 }
 
 .map-card-title {
+  margin: 0 0 0.5rem;
   font-family: var(--font-heading);
-  font-size: 1.75rem; /* 28 px: Cormorant allowed */
-  margin-top: 0;
+  font-size: 2.25rem; /* 36 px: Cormorant allowed */
+  line-height: 1.1;
+}
+
+.map-card [data-card-feature] > :last-child,
+.map-card [data-card-feature] p:has(+ p > [hidden]) {
+  margin-bottom: 0;
+}
+
+.map-card [data-card-link] {
+  font-weight: 600;
+  text-decoration: none;
 }
 
 /* Markers: gold dot plus name; the button is the whole marker. */
@@ -660,13 +730,36 @@ main {
 }
 
 .home-section {
-  margin-bottom: 4rem;
+  margin-bottom: 6rem;
+}
+
+/* Section title with its "All …" link on the right. */
+.section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0 1rem;
+  margin-bottom: 2rem;
+}
+
+.section-head h2 {
+  margin: 0;
+  font-size: clamp(2.25rem, 5vw, 3rem); /* up to 48 px */
+}
+
+.section-head-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touch);
+  font-weight: 600;
+  text-decoration: none;
 }
 
 .story-grid {
   display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17.5rem), 1fr));
 }
 
 .story-card {
@@ -741,8 +834,55 @@ main {
 
 .home-columns {
   display: grid;
+  gap: 2rem;
+  margin-bottom: 6rem;
+}
+
+.home-columns .card {
+  padding: 1.5rem;
+}
+
+@media (min-width: 48rem) {
+  .home-columns .card {
+    padding: 2rem;
+  }
+}
+
+.home-columns h2 {
+  font-size: 2.5rem; /* 40 px */
+}
+
+.home-columns .section-link {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.5rem;
+}
+
+.home-columns .section-link a,
+.home-columns .item-list a {
+  text-decoration: none;
+}
+
+.home-columns .section-link a {
+  font-weight: 600;
+}
+
+/* Projects as tiles, two per row (variant A mockup). */
+.home-columns .item-list--projects {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
   gap: 1rem;
-  margin-bottom: 4rem;
+}
+
+.home-columns .item-list--projects li {
+  flex-direction: column;
+  padding: 1rem 1.125rem;
+  border: 1px solid rgb(238 227 209 / 12%);
+  border-radius: var(--radius);
+}
+
+.home-columns .item-list--projects a {
+  font-weight: 600;
 }
 
 @media (min-width: 48rem) {
@@ -770,10 +910,29 @@ main {
   font-weight: 600;
 }
 
-.newsletter-teaser {
-  padding: 3rem var(--gutter);
-  border-top: 1px solid var(--line);
+/* Full-width band (variant B mockup). The shadow and clip-path paint the
+   background to the window edges without widening the page. */
+/* The band ends the home page: no gap before the footer. */
+main:has(> .newsletter-band:last-child) {
+  padding-bottom: 0;
+}
+
+.newsletter-band {
+  padding: 4.5rem 0;
+  margin-bottom: -1px;
+  background: var(--surface);
+  box-shadow: 0 0 0 100vmax var(--surface);
+  clip-path: inset(0 -100vmax);
   text-align: center;
+}
+
+.newsletter-band h2 {
+  margin-bottom: 1rem;
+  font-size: clamp(2.25rem, 5vw, 2.75rem); /* up to 44 px */
+}
+
+.newsletter-band > p {
+  color: var(--text-secondary);
 }
 
 /* --- Page header, chips as links, pagination ---------------------------- */
@@ -794,10 +953,13 @@ a.chip {
 }
 
 a.chip[aria-current="page"] {
-  border-color: var(--gold);
-  background: var(--surface);
+  border-color: var(--accent-2);
+  background: var(--accent);
   font-weight: 700;
-  box-shadow: inset 0 0 0 1px var(--gold);
+}
+
+a.chip[aria-current="page"]:hover {
+  color: var(--text);
 }
 
 .pagination {
@@ -1017,8 +1179,43 @@ a.chip[aria-current="page"] {
   max-width: 40rem;
 }
 
-.newsletter-teaser .signup-form {
-  margin: 2rem auto 0;
+.signup-form--inline {
+  max-width: 30rem;
+  margin: 1.5rem auto 0;
+}
+
+.signup-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.signup-row input {
+  flex: 1 1 16rem;
+  min-height: 48px;
+  padding: 0.75rem 1.25rem;
+  border: 1px solid rgb(238 227 209 / 35%);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+}
+
+.signup-row .button {
+  min-height: 48px;
+  padding-inline: 1.625rem;
+  font-size: 1rem;
+}
+
+.signup-form--inline .form-check {
+  margin: 1rem 0 0;
+  text-align: left;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.signup-form--inline .help {
   text-align: left;
 }
 

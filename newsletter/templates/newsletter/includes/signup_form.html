@@ -1,6 +1,6 @@
 {% load i18n %}
-{# Sign-up form; needs `form` (SignupForm) and `started_token`. Used on /newsletter/ and the home page. #}
-<form class="signup-form" method="post" action="{% url 'newsletter:signup' %}" novalidate>
+{# Sign-up form; needs `form` (SignupForm) and `started_token`. Used on /newsletter/ and, with `inline=True` (email and button in one row, as in the mockup), in the home page band. Errors are only shown on /newsletter/: the view renders that page. #}
+<form class="signup-form{% if inline %} signup-form--inline{% endif %}" method="post" action="{% url 'newsletter:signup' %}" novalidate>
   {% csrf_token %}
   {% if form.errors %}
     <div class="form-errors" role="alert">
@@ -8,7 +8,15 @@
       {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
     </div>
   {% endif %}
-  {% include "includes/form_field.html" with field=form.email %}
+  {% if inline %}
+    <div class="signup-row">
+      <label class="visually-hidden" for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+      {{ form.email }}
+      <button class="button" type="submit">{% translate "Subscribe" %}</button>
+    </div>
+  {% else %}
+    {% include "includes/form_field.html" with field=form.email %}
+  {% endif %}
   <div class="form-field form-check{% if form.consent.errors %} has-error{% endif %}">
     {% if form.consent.errors %}
       <p class="field-error" id="{{ form.consent.auto_id }}_error"><strong>{% translate "Error:" %}</strong> {{ form.consent.errors|join:" " }}</p>
@@ -17,6 +25,6 @@
     <label for="{{ form.consent.id_for_label }}">{{ form.consent.label }}</label>
   </div>
   {% include "includes/spam_fields.html" %}
-  <p><button class="button" type="submit">{% translate "Subscribe" %}</button></p>
+  {% if not inline %}<p><button class="button" type="submit">{% translate "Subscribe" %}</button></p>{% endif %}
   <p class="help">{% translate "You will get an email with a confirmation link. Only after you click it are you subscribed." %}{% if privacy_url %} <a href="{{ privacy_url }}">{% translate "How we handle your data" %}</a>{% endif %}</p>
 </form>
