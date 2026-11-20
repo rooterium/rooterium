@@ -114,6 +114,13 @@ English everywhere (ADR 0012):
       `Dockerfile`, `deploy/`, `scripts/`, `.github/workflows/`, new or
       changed variables in `.env.example`, or anything that needs manual
       steps on the server (`.env`, cron, packages).
+  - **Until the site goes productive, Claude merges these PRs too and may
+    change the server without review** (maintainer's decision, 2026-11-20):
+    the test phase on rooterium.pocketapp.ch has no real content or users.
+    Still say in the PR description that it would be an exception, record
+    server changes in `docs/STATUS.md`, and never put secrets in the chat or
+    the repo. Remove this paragraph when the maintainer declares the site
+    productive (final domain, real content).
   - If the PR is already merged, say so and skip the merge command.
 - **Deploying** (after Claude's own merge, if the PR changes the app):
   1. Wait until CI on `main` has pushed the image for the merge commit:
