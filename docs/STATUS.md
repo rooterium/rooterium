@@ -4,7 +4,7 @@ Current state of Rooterium and the next steps. **Every PR updates this
 file** (at least "Last updated" and whatever the PR changes). Details live in
 the linked docs; open work lives in GitHub issues.
 
-_Last updated: 2026-11-20 (PR "Give the seed stories a story-shaped placeholder body")_
+_Last updated: 2026-11-20 (PR "Record the confirmed email delivery")_
 
 ## Live
 
@@ -17,9 +17,8 @@ _Last updated: 2026-11-20 (PR "Give the seed stories a story-shaped placeholder 
   placeholder stories with a story-shaped body, three events, four
   projects, About/Imprint/Privacy placeholders – everything unverified in
   [brackets]. The editor replaces or deletes it in the admin before the
-  site is announced. Also two test records from the email check: the
-  unconfirmed sign-up `rooterium@linard.org` and the draft event
-  "[Test suggestion – please delete]".
+  site is announced. (The two test records from the email check were
+  deleted.)
 - Map tiles: the maintainer's local build (Protomaps 20261118) copied into
   the `media` volume (`/app/media/maps/rooterium.pmtiles`, checksum
   matched).
@@ -166,7 +165,10 @@ Brief and milestones: [`PROJECT_BRIEF.md`](PROJECT_BRIEF.md).
   port 587 with STARTTLS. Checked live: `sendtestemail`, a newsletter
   sign-up and an event suggestion through the public forms (emails sent
   without errors; subscriber unconfirmed, suggestion an unpublished draft
-  with a revision).
+  with a revision). Delivery confirmed by the maintainer after
+  `rooterium@linard.org` was set to forward to their inbox (a change at
+  Hostpoint briefly broke the login, then was reverted). Test records
+  deleted.
 
 ## Open issues
 
