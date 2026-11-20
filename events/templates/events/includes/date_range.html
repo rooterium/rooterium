@@ -1,0 +1,2 @@
+{# Start date, plus the end date for multi-day events. #}
+<time datetime="{{ event.start_date|date:'Y-m-d' }}">{{ event.start_date|date:"j M Y" }}</time>{% if event.end_date and event.end_date != event.start_date %} – <time datetime="{{ event.end_date|date:'Y-m-d' }}">{{ event.end_date|date:"j M Y" }}</time>{% endif %}

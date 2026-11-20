@@ -69,3 +69,43 @@ class EventValidationTests(TestCase):
 
     def test_without_coordinates_is_valid(self):
         self.event().full_clean()
+
+
+@mock.patch("events.models.timezone.localdate", return_value=TODAY)
+class EventListPageTests(TestCase):
+    def test_shows_upcoming_events_only(self, _):
+        make_event(title="[Upcoming]", start_date=TODAY + datetime.timedelta(days=3))
+        make_event(title="[Past]", start_date=TODAY - datetime.timedelta(days=1))
+        make_event(title="[Draft]", live=False)
+        response = self.client.get("/events/")
+        self.assertContains(response, "<title>Events – Rooterium</title>", html=True)
+        self.assertContains(response, '<meta name="description" content="Upcoming')
+        self.assertContains(response, "[Upcoming]")
+        self.assertNotContains(response, "[Past]")
+        self.assertNotContains(response, "[Draft]")
+
+    def test_multi_day_event_shows_its_date_range(self, _):
+        make_event(start_date=TODAY, end_date=datetime.date(2026, 11, 22))
+        response = self.client.get("/events/")
+        self.assertContains(response, "20 Nov 2026")
+        self.assertContains(response, "22 Nov 2026")
+
+    def test_map_link_only_for_events_with_coordinates(self, _):
+        on_map = make_event(latitude=Decimal("40.18"), longitude=Decimal("44.51"))
+        make_event(title="[Without position]")
+        response = self.client.get("/events/")
+        self.assertContains(response, f'href="/?place=event-{on_map.pk}#explore"')
+        self.assertContains(response, "Show on the map", count=1)
+
+    def test_empty_list(self, _):
+        self.assertContains(
+            self.client.get("/events/"), "No upcoming events at the moment."
+        )
+
+    def test_main_navigation_and_home_page_link_to_events(self, _):
+        self.assertContains(
+            self.client.get("/events/"),
+            '<a href="/events/" aria-current="page">Events</a>',
+            html=True,
+        )
+        self.assertContains(self.client.get("/"), 'href="/events/"')

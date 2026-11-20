@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load i18n wagtailimages_tags %}
+
+{% block content %}
+  <header class="page-header">
+    <h1>{% translate "Projects" %}</h1>
+    <p class="lead">{% translate "Shops, start-ups and initiatives that carry Armenian traditions into today." %}</p>
+    <nav class="chips" aria-label="{% translate 'Filter by type' %}">
+      <a class="chip" href="{% url 'projects:list' %}"{% if not current_kind %} aria-current="page"{% endif %}>{% translate "All" %}</a>
+      {% for value, label in kinds %}
+        <a class="chip" href="?type={{ value }}"{% if value == current_kind %} aria-current="page"{% endif %}>{{ label }}</a>
+      {% endfor %}
+    </nav>
+  </header>
+
+  <div class="project-grid">
+    {% for project in projects %}
+      <article class="project-card card">
+        {% if project.logo %}
+          {% image project.logo max-160x160 as logo %}
+          {# Decorative: the name follows right after. #}
+          <img class="project-logo" src="{{ logo.url }}" width="{{ logo.width }}" height="{{ logo.height }}" alt="" loading="lazy">
+        {% endif %}
+        <span class="eyebrow">{{ project.get_kind_display }}</span>
+        <h2 class="project-title"><a href="{{ project.link }}" rel="noopener">{{ project.name }}</a></h2>
+        <p>{{ project.short_description }}</p>
+        <p class="meta">{{ project.city }}, {{ project.country }}</p>
+      </article>
+    {% empty %}
+      <p>{% translate "No projects here yet." %}</p>
+    {% endfor %}
+  </div>
+
+  {% translate "Previous page" as previous_label %}{% translate "Next page" as next_label %}
+  {% include "stories/includes/pagination.html" with previous_label=previous_label next_label=next_label query=pagination_query %}
+{% endblock %}
