@@ -4,7 +4,7 @@ Current state of Rooterium and the next steps. **Every PR updates this
 file** (at least "Last updated" and whatever the PR changes). Details live in
 the linked docs; open work lives in GitHub issues.
 
-_Last updated: 2026-11-20 (PR "Record the server configuration")_
+_Last updated: 2026-11-20 (PR "Complete milestone 8")_
 
 ## Live
 
@@ -31,10 +31,10 @@ _Last updated: 2026-11-20 (PR "Record the server configuration")_
 | Access | `ssh deploy@80.47.231.164` (SSH key only; root and password login off, `00-hardening.conf`); firewall `ufw`: SSH, 80, 443 |
 | App | `/srv/rooterium` (git checkout), `compose.prod.yaml`: `db` (PostgreSQL 18), `web` (GHCR image, Gunicorn), `caddy` (HTTPS) |
 | Secrets | `/srv/rooterium/.env` on the server only |
-| Backups | cron 02:00 `scripts/backup-db.sh` (dump in `/srv/rooterium/backups`, 14 days; first dump checked) + UpCloud backups – **still to be enabled** in the control panel (ADR 0008) |
+| Backups | cron 02:00 `scripts/backup-db.sh` (dump in `/srv/rooterium/backups`, 14 days; first dump checked) + UpCloud backups daily at 02:15 (enabled by the maintainer, ADR 0008) |
 | Cron (`deploy`) | 02:00 database dump, 03:00 `prune_newsletter_signups`; output in `journalctl -t rooterium-cron` |
 | Updates | `unattended-upgrades`; automatic reboot at 04:30 when required (`/etc/apt/apt.conf.d/52rooterium-reboot`) |
-| Mail | _Not decided_ – issue #11 |
+| Mail | _Not decided_ – issue #11; outbound SMTP from the server works on 465 and 587 (25 blocked) |
 | DNS | Hostpoint (`pocketapp.ch`): `A` record `rooterium` → `80.47.231.164`, no `AAAA` (the zone's wildcard no longer applies to it); final domain: #9 |
 
 Runbook: [`deployment.md`](deployment.md). Architecture:
@@ -150,6 +150,9 @@ Brief and milestones: [`PROJECT_BRIEF.md`](PROJECT_BRIEF.md).
   journal; both run once by hand, first dump 249 KB), automatic reboot at
   04:30 when an update needs it. Memory in use: about 350 MB for the
   containers, 1 GB available; disk 6.7 of 20 GB.
+- **Milestone 8 complete** (#8 closed): admin account created and UpCloud
+  backups enabled (02:15) by the maintainer; outbound SMTP checked (465
+  and 587 open). Mail (#11) and the final domain (#9) are separate issues.
 
 ## Open issues
 
@@ -157,10 +160,9 @@ Overview: `gh issue list`. At the time of writing:
 
 | # | Topic | Who |
 |---|---|---|
-| #1–#5 | Milestones 1–5 – **closed** | – |
+| #1–#6, #8 | Milestones 1–6 and 8 – **closed** | – |
 | #6 | M6: events, projects, submission form – **done**, closed by this PR | – |
 | #7 | M7: newsletter, About/Imprint/Privacy – code done; texts (#14) and real emails (#11) open | Editor / maintainer |
-| #8 | M8: deployment to a test server – **running**; open: UpCloud backups, admin account | Maintainer |
 | #9 | Register the final domain (test phase runs on `rooterium.pocketapp.ch`) | Maintainer / editor |
 | #10 | Hosting: UpCloud server running; open: who pays | Maintainer / editor |
 | #11 | Email sending service | Maintainer |
@@ -172,13 +174,15 @@ Overview: `gh issue list`. At the time of writing:
 
 ## Next steps
 
-1. **Maintainer** (the cron jobs and the reboot policy are set up, see
-   Infrastructure):
-   - enable UpCloud backups for the server in the control panel (ADR 0008),
-     scheduled after 02:00;
-   - create the admin account:
-     `ssh -t deploy@80.47.231.164 'cd /srv/rooterium && docker compose -f compose.prod.yaml exec web python manage.py createsuperuser'`,
-     then an editor account (staff, group "Editors", not superuser).
+1. **Maintainer**: the admin account exists (1 superuser) and UpCloud
+   backups run at 02:15. Still open:
+   - an editor account in the admin (Settings → Users; staff, group
+     "Editors", never superuser) – the group has no members yet;
+   - two-factor authentication on the UpCloud account
+     (`docs/NEW_PROJECT.md`, section 4);
+   - a copy of the production `.env` in the password manager (ADR 0007):
+     `ssh deploy@80.47.231.164 'cat /srv/rooterium/.env'` in your own
+     terminal, never in a chat.
 2. **Editor (#14)**: write and publish About, Imprint and Privacy in the
    admin (Pages → home page → Add child page → "Text page (About, Imprint,
    Privacy)"). The site is public now, so the Imprint is needed soon. The
@@ -202,8 +206,8 @@ Overview: `gh issue list`. At the time of writing:
 ## Session handoff (2026-11-20, second session)
 
 Where the last session stopped: milestones 1–7 merged (PRs #24–#43), no
-open PRs, all CI runs green. Update: milestone 8 started the same day –
-the site runs on https://rooterium.pocketapp.ch (see Live and Done). Milestone 6
+open PRs, all CI runs green. Update: milestone 8 was completed the same
+day – the site runs on https://rooterium.pocketapp.ch (see Live and Done). Milestone 6
 (#6) is closed; **#7 is still open** although its code is complete – the
 maintainer decides whether to close it (texts are tracked in #14, sending
 the newsletter is an open question below). Everything left in version 1
@@ -235,7 +239,8 @@ width.
   admin (#14); they are not created by a migration.
 - `EDITOR_NOTIFICATION_EMAIL` and the SMTP settings in the server's
   `.env` (#11).
-- UpCloud backups (next steps, item 1).
+- Editor account, UpCloud two-factor authentication, `.env` in the
+  password manager (next steps, item 1).
 - Seed place coordinates checked (#15); final domain (#9); `ROBOTS_TAG`
   switched to `all`.
 
