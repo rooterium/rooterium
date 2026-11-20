@@ -202,3 +202,60 @@ class AdminSmokeTests(TestCase):
 
     def test_root_page_exists(self):
         self.assertTrue(Page.objects.filter(depth=1).exists())
+
+
+class StoryOverviewTests(TestCase):
+    def setUp(self):
+        home = HomePage.objects.get()
+        self.myths = ThemeIndexPage(title="Myths", theme=Theme.MYTHS)
+        self.music = ThemeIndexPage(title="Music", theme=Theme.MUSIC)
+        home.add_child(instance=self.myths)
+        home.add_child(instance=self.music)
+        self.spear = make_story(self.myths, title="The monastery of the spear")
+        self.duduk = make_story(self.music, title="The duduk")
+
+    def test_lists_all_live_stories_with_title_and_description(self):
+        draft = make_story(self.myths, title="[Draft story]")
+        draft.unpublish()
+        response = self.client.get("/stories/")
+        self.assertContains(response, "<title>Stories – Rooterium</title>", html=True)
+        self.assertContains(response, "The monastery of the spear")
+        self.assertContains(response, "The duduk")
+        self.assertNotContains(response, "[Draft story]")
+
+    def test_theme_links_go_to_the_theme_pages(self):
+        response = self.client.get("/stories/")
+        self.assertContains(response, f'href="{self.myths.url}"')
+        self.assertContains(response, f'href="{self.music.url}"')
+        self.assertContains(
+            response,
+            '<a class="chip" href="/stories/" aria-current="page">All</a>',
+            html=True,
+        )
+
+    def test_paginates_after_twelve(self):
+        for number in range(12):
+            make_story(self.music, title=f"[Story {number}]")
+        response = self.client.get("/stories/")
+        self.assertContains(response, "Page 1 of 2")
+        self.assertContains(response, 'rel="next"')
+        self.assertEqual(self.client.get("/stories/?page=2").status_code, 200)
+
+    def test_main_navigation_links_to_stories(self):
+        response = self.client.get("/stories/")
+        self.assertContains(
+            response, '<a href="/stories/" aria-current="page">Stories</a>', html=True
+        )
+        self.assertContains(
+            self.client.get("/"), '<a href="/stories/">Stories</a>', html=True
+        )
+
+    def test_theme_page_shows_its_stories_and_theme_links(self):
+        response = self.client.get(self.myths.url)
+        self.assertContains(response, "The monastery of the spear")
+        self.assertNotContains(response, "The duduk")
+        self.assertContains(
+            response,
+            f'<a class="chip" href="{self.myths.url}" aria-current="page">Myths</a>',
+            html=True,
+        )

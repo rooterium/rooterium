@@ -1,0 +1,8 @@
+{% load i18n wagtailcore_tags %}
+{# Links to the story overview and the theme pages; `current` is the current theme page (or nothing). #}
+<nav class="chips" aria-label="{% translate 'Themes' %}">
+  <a class="chip" href="{% url 'stories:list' %}"{% if not current %} aria-current="page"{% endif %}>{% translate "All" %}</a>
+  {% for theme_page in theme_pages %}
+    <a class="chip" href="{% pageurl theme_page %}"{% if current.pk == theme_page.pk %} aria-current="page"{% endif %}>{{ theme_page.title }}</a>
+  {% endfor %}
+</nav>

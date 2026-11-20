@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+  <header class="page-header">
+    <h1>{% translate "Stories" %}</h1>
+    <p class="lead">{% translate "Armenian history, traditions, myths, symbols and music – one new story about every ten days." %}</p>
+    {% include "stories/includes/theme_chips.html" %}
+  </header>
+
+  <div class="story-grid">
+    {% for story in stories %}
+      {% include "stories/includes/story_card.html" %}
+    {% empty %}
+      <p>{% translate "No stories yet." %}</p>
+    {% endfor %}
+  </div>
+
+  {% include "stories/includes/pagination.html" %}
+{% endblock %}
