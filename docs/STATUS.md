@@ -4,7 +4,7 @@ Current state of Rooterium and the next steps. **Every PR updates this
 file** (at least "Last updated" and whatever the PR changes). Details live in
 the linked docs; open work lives in GitHub issues.
 
-_Last updated: 2026-11-20 (PR "Tune the map style against the real tiles")_
+_Last updated: 2026-11-20 (PR "Design the story page")_
 
 ## Live
 
@@ -77,6 +77,12 @@ Brief and milestones: [`PROJECT_BRIEF.md`](PROJECT_BRIEF.md).
   style tuned against them (earth tones per land cover, pale glaciers, gold
   shorelines, rivers). Each environment runs `scripts/build-map-tiles.sh`
   once. **Milestone 4 complete.**
+- **Milestone 5 – story page**: header with theme link, date, reading
+  time; hero image with credit; styled quote, book excerpt, images with
+  credit; two-click YouTube embed (youtube-nocookie.com, referrer policy
+  set so embeds work); sources; related places with "Show on the map"
+  (deep link selects the marker); "More on <theme>"; hero image as Open
+  Graph image.
 
 ## Open issues
 

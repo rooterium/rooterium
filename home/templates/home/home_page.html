@@ -88,16 +88,7 @@
     <h2 id="stories-heading">{% translate "Latest stories" %}</h2>
     <div class="story-grid">
       {% for story in latest_stories %}
-        <article class="story-card card">
-          {% image story.hero_image fill-640x400 as thumb %}
-          <img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.height }}" alt="{{ story.hero_image.default_alt_text }}" loading="lazy">
-          <div class="story-card-body">
-            <span class="eyebrow">{{ story.get_theme_display }}</span>
-            <h3><a href="{% pageurl story %}">{{ story.title }}</a></h3>
-            <p>{{ story.teaser }}</p>
-            <p class="meta"><time datetime="{{ story.date|date:'Y-m-d' }}">{{ story.date }}</time></p>
-          </div>
-        </article>
+        {% include "stories/includes/story_card.html" %}
       {% empty %}
         <p>{% translate "No stories yet." %}</p>
       {% endfor %}

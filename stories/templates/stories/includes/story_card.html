@@ -1,0 +1,12 @@
+{% load i18n wagtailcore_tags wagtailimages_tags %}
+{# A story as a card: home page, theme pages, story overview, "more stories". #}
+<article class="story-card card">
+  {% image story.hero_image fill-640x400 as thumb %}
+  <img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.height }}" alt="{{ story.hero_image.default_alt_text }}" loading="lazy">
+  <div class="story-card-body">
+    {% if not hide_theme %}<span class="eyebrow">{{ story.get_theme_display }}</span>{% endif %}
+    <h3><a href="{% pageurl story %}">{{ story.title }}</a></h3>
+    <p>{{ story.teaser }}</p>
+    <p class="meta"><time datetime="{{ story.date|date:'Y-m-d' }}">{{ story.date|date:"j F Y" }}</time></p>
+  </div>
+</article>

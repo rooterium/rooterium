@@ -64,9 +64,13 @@ newest first.
 | `related_places` | many-to-many `Place` | optional |
 
 Parent: `ThemeIndexPage` only; no children. Theme = parent's theme
-(`story.theme`). Meta description falls back to the teaser. Templates are
-minimal until milestone 5; the YouTube block renders only a link (no
-embed yet).
+(`story.theme`). Meta description falls back to the teaser, the Open Graph
+image is the hero image (1200 × 630). Computed: `reading_time` (220 words
+per minute), `more_stories()` (other live stories of the theme). The page
+lists its live related places with a link to the home map
+(`/?place=place-<id>#explore` selects the marker). The YouTube block is a
+two-click embed (`core/static/core/js/video.js`): nothing loads from
+YouTube until the visitor clicks.
 
 ### `StorySource` (orderable, inline on `StoryPage`)
 
