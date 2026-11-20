@@ -21,8 +21,10 @@ urlpatterns = [
     path("django-admin/", admin.site.urls),
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
-    # Feature apps go here, e.g. path("events/", include("events.urls")).
+    # Feature apps go here.
     path("stories/", include("stories.urls")),
+    path("events/", include("events.urls")),
+    path("projects/", include("projects.urls")),
     path("", include("core.urls")),
     # Wagtail pages last: it catches every remaining path.
     path("", include(wagtail_urls)),

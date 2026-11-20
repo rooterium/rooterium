@@ -93,17 +93,20 @@
         <p>{% translate "No stories yet." %}</p>
       {% endfor %}
     </div>
+    <p class="section-link"><a href="{% url 'stories:list' %}">{% translate "All stories" %} →</a></p>
   </section>
 
   <div class="home-columns">
     <section class="card" aria-labelledby="events-heading">
       <h2 id="events-heading">{% translate "Upcoming events" %}</h2>
       {% include "home/includes/event_list.html" %}
+      <p class="section-link"><a href="{% url 'events:list' %}">{% translate "All events" %} →</a></p>
     </section>
     <section class="card" aria-labelledby="projects-heading">
       <h2 id="projects-heading">{% translate "Projects we love" %}</h2>
       <p class="meta">{% translate "Shops, start-ups and initiatives that carry Armenian traditions into today." %}</p>
       {% include "home/includes/project_list.html" %}
+      <p class="section-link"><a href="{% url 'projects:list' %}">{% translate "All projects" %} →</a></p>
     </section>
   </div>
 

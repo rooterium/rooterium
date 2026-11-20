@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+  <header class="page-header">
+    <h1>{% translate "Events" %}</h1>
+    <p class="lead">{% translate "Concerts, festivals, exhibitions and gatherings – wherever Armenians meet. Past events disappear automatically." %}</p>
+  </header>
+
+  <ul class="event-list">
+    {% for event in events %}
+      <li class="event-item card">
+        <p class="event-date">{% include "events/includes/date_range.html" %}</p>
+        <div class="event-body">
+          <h2 class="event-title"><a href="{{ event.link }}" rel="noopener">{{ event.title }}</a></h2>
+          <p class="meta">{{ event.city }}, {{ event.country }}</p>
+          {% if event.latitude is not None %}
+            <p class="event-map-link"><a href="/?place=event-{{ event.pk }}#explore">{% translate "Show on the map" %} →</a></p>
+          {% endif %}
+        </div>
+      </li>
+    {% empty %}
+      <li>{% translate "No upcoming events at the moment." %}</li>
+    {% endfor %}
+  </ul>
+
+  {% translate "Earlier events" as previous_label %}{% translate "Later events" as next_label %}
+  {% include "stories/includes/pagination.html" with previous_label=previous_label next_label=next_label %}
+{% endblock %}

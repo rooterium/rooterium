@@ -4,7 +4,7 @@ Current state of Rooterium and the next steps. **Every PR updates this
 file** (at least "Last updated" and whatever the PR changes). Details live in
 the linked docs; open work lives in GitHub issues.
 
-_Last updated: 2026-11-20 (PR "Document the session handoff")_
+_Last updated: 2026-11-20 (PR "Add the events and projects pages")_
 
 ## Live
 
@@ -87,6 +87,12 @@ Brief and milestones: [`PROJECT_BRIEF.md`](PROJECT_BRIEF.md).
   stories, 12 per page) as the first main navigation entry; theme pages
   with intro and story cards; theme chips link to the theme pages (one URL
   per theme). **Milestone 5 complete.**
+- **Milestone 6a – events and projects pages**: `/events/` (upcoming
+  only, date ranges for multi-day events, "Show on the map" for events with
+  coordinates) and `/projects/` (cards with optional logo, filter chips by
+  type via `?type=`, filter kept when paginating); both in the main
+  navigation after "Stories"; home page sections link to all stories,
+  events and projects. Checked at 390 px and 1280 px, no CSP violations.
 
 ## Open issues
 
@@ -95,7 +101,7 @@ Overview: `gh issue list`. At the time of writing:
 | # | Topic | Who |
 |---|---|---|
 | #1–#5 | Milestones 1–5 – **closed** | – |
-| #6 | M6: events, projects, submission form | Claude (next) |
+| #6 | M6: events, projects, submission form – 6a done, 6b next | Claude (next) |
 | #7 | M7: newsletter, About/Imprint/Privacy | Claude (needs #11, #14) |
 | #8 | M8: deployment to a test server | Maintainer + Claude (needs #9, #10) |
 | #9 | Register the domain | Maintainer / editor |
@@ -109,10 +115,7 @@ Overview: `gh issue list`. At the time of writing:
 
 ## Next steps
 
-1. **Milestone 6 (#6)** – proposed steps, one PR each:
-   - 6a: events page (`/events/`, upcoming only, past events disappear) and
-     projects page (`/projects/`, filter by type), both in the main
-     navigation; home page sections link to them.
+1. **Milestone 6 (#6)** – remaining step:
    - 6b: submission form "Suggest an event / a project": creates drafts
      (`live=False`, `submitted_by_email`), email to the editor
      (`EDITOR_NOTIFICATION_EMAIL`, new env variable → `.env.example`),
@@ -128,7 +131,8 @@ Overview: `gh issue list`. At the time of writing:
 ## Session handoff (2026-11-20)
 
 Where the last session stopped: milestones 1–5 merged (PRs #24–#38), no
-open PRs, nothing deployed (no server). Next is milestone 6.
+open PRs, nothing deployed (no server). Next is milestone 6 (6a done since,
+see above; 6b next).
 
 **Open questions for the maintainer/editor** (not blocking M6):
 

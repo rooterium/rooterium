@@ -11,4 +11,6 @@ from django.utils.translation import gettext_lazy as _
 
 MAIN_NAVIGATION: list[tuple[str, str]] = [
     (_("Stories"), "stories:list"),
+    (_("Events"), "events:list"),
+    (_("Projects"), "projects:list"),
 ]
