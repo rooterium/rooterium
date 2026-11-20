@@ -196,6 +196,7 @@ class AdminSmokeTests(TestCase):
             "/admin/newsletter-subscribers/",
             f"/admin/pages/add/stories/themeindexpage/{home.pk}/",
             f"/admin/pages/add/stories/storypage/{theme.pk}/",
+            f"/admin/pages/add/pages/simplepage/{home.pk}/",
         ]:
             with self.subTest(url=url):
                 self.assertEqual(self.client.get(url).status_code, 200)

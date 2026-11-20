@@ -4,7 +4,7 @@ Current state of Rooterium and the next steps. **Every PR updates this
 file** (at least "Last updated" and whatever the PR changes). Details live in
 the linked docs; open work lives in GitHub issues.
 
-_Last updated: 2026-11-20 (PR "Add the newsletter sign-up with double opt-in")_
+_Last updated: 2026-11-20 (PR "Add the About, Imprint and Privacy pages")_
 
 ## Live
 
@@ -115,6 +115,15 @@ Brief and milestones: [`PROJECT_BRIEF.md`](PROJECT_BRIEF.md).
   subscriber list is now `/admin/newsletter-subscribers/` (the public
   `newsletter` URL namespace needed the name). **Sending** newsletters is
   not built (see open questions).
+- **Milestone 7b – About, Imprint, Privacy** (`pages/`): Wagtail page
+  type `SimplePage` (purpose unique, intro, rich text) under the home page;
+  live ones are linked in the footer; the newsletter and suggestion forms
+  link to the Privacy page once it is live. `seed_demo` creates
+  placeholder pages locally (the privacy placeholder lists the technical
+  facts of the code as a starting point). **Not created in production by a
+  migration**: the editor creates and publishes them with the real texts
+  (#14) – required before the site goes public. Milestone 7 is complete
+  in code; the texts are open.
 
 ## Open issues
 
@@ -124,7 +133,7 @@ Overview: `gh issue list`. At the time of writing:
 |---|---|---|
 | #1–#5 | Milestones 1–5 – **closed** | – |
 | #6 | M6: events, projects, submission form – **done**, closed by this PR | – |
-| #7 | M7: newsletter, About/Imprint/Privacy – sign-up done; pages need #14, real emails need #11 | Claude (needs #11, #14) |
+| #7 | M7: newsletter, About/Imprint/Privacy – code done; texts (#14) and real emails (#11) open | Editor / maintainer |
 | #8 | M8: deployment to a test server | Maintainer + Claude (needs #9, #10) |
 | #9 | Register the domain | Maintainer / editor |
 | #10 | Hosting account and who pays | Maintainer / editor |
@@ -137,26 +146,29 @@ Overview: `gh issue list`. At the time of writing:
 
 ## Next steps
 
-1. **Milestone 7 (#7)** – remaining: About, Imprint and Privacy pages
-   (texts from the editor, #14). Possible now: the page structure (Wagtail
-   page type, footer links) with placeholder text. The Privacy page must
-   cover the newsletter (consent text, 7-day deletion, unsubscribe = delete)
-   and the submitter email of the suggestion forms; the newsletter consent
-   text should then link to it. Real emails need the email service (#11).
-2. When an email service exists (#11): set `EDITOR_NOTIFICATION_EMAIL`
+1. **Editor (#14)**: write About, Imprint and Privacy. In the Wagtail
+   admin: Pages → home page → Add child page → "Text page (About, Imprint,
+   Privacy)", one per purpose. The Privacy text must cover the newsletter
+   (consent text, 7-day deletion, unsubscribe = delete), the submitter
+   email of the suggestion forms, YouTube after a click, the email service
+   (#11) and the hosting provider's server logs (#10). The local
+   placeholder lists these facts. Required before the site goes public.
+2. **Milestone 8 (#8)** once domain (#9) and hosting (#10) are decided.
+3. When an email service exists (#11): set `EDITOR_NOTIFICATION_EMAIL`
    in the server's `.env` so suggestions reach the editor.
-3. GHCR package `ghcr.io/rooterium/rooterium`: still private. Making it
+4. GHCR package `ghcr.io/rooterium/rooterium`: still private. Making it
    public first needs the organisation setting "Package creation → Public"
    (org settings → Packages); alternatively the server logs in with a
    read-only token. Only needed for milestone 8.
-4. Editor: check the seed place coordinates and descriptions (#15) – they
+5. Editor: check the seed place coordinates and descriptions (#15) – they
    can be edited in the Wagtail admin under "Map & directory → Places".
 
 ## Session handoff (2026-11-20)
 
 Where the last session stopped: milestones 1–5 merged (PRs #24–#38), no
 open PRs, nothing deployed (no server). Next is milestone 6 (6a done since,
-see above; milestone 6 is now complete, next is milestone 7).
+see above; milestones 6 and 7 are now complete in code; texts and infrastructure
+are open).
 
 **Open questions for the maintainer/editor** (not blocking M6):
 

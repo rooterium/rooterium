@@ -27,4 +27,20 @@ def site(request):
             static("core/img/og-default.jpg")
         ),
         "nav_items": nav_items,
+        # Callables: only queried when a template uses them.
+        "footer_pages": _footer_pages,
+        "privacy_url": lambda: _privacy_url(request),
     }
+
+
+def _footer_pages():
+    from pages.models import footer_pages
+
+    return footer_pages()
+
+
+def _privacy_url(request) -> str:
+    from pages.models import privacy_page
+
+    page = privacy_page()
+    return page.get_url(request) if page else ""

@@ -28,7 +28,7 @@ class HomePage(SeoPageMixin, Page):
 
     max_count = 1
     parent_page_types = ["wagtailcore.Page"]
-    subpage_types = ["stories.ThemeIndexPage"]
+    subpage_types = ["stories.ThemeIndexPage", "pages.SimplePage"]
 
     class Meta:
         verbose_name = _("home page")

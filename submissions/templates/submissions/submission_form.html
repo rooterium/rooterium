@@ -21,7 +21,7 @@
     {% endfor %}
     {% include "includes/spam_fields.html" %}
 
-    <p class="help">{% translate "Your suggestion is saved as a draft. It only appears on the site after the editor has checked and published it." %}</p>
+    <p class="help">{% translate "Your suggestion is saved as a draft. It only appears on the site after the editor has checked and published it." %}{% if privacy_url %} <a href="{{ privacy_url }}">{% translate "How we handle your data" %}</a>{% endif %}</p>
     <p><button class="button" type="submit">{% translate "Send suggestion" %}</button></p>
   </form>
 

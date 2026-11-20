@@ -14,6 +14,7 @@ Overview of how the project is built and run. Decisions and their rationale:
 | `stories/` | `ThemeIndexPage`, `StoryPage` (StreamField blocks in `blocks.py`), sources; `/stories/` overview (Django view, paginated) |
 | `places/`, `events/`, `projects/` | Snippets with draft/publish; admin viewsets in `viewsets.py`; `/events/` (upcoming only, paginated) and `/projects/` (filter `?type=`, paginated) as Django views |
 | `submissions/` | "Suggest an event / a project" forms (`/suggest/…`): drafts, editor notification; no models |
+| `pages/` | `SimplePage` for About, Imprint, Privacy (footer links) |
 | `newsletter/` | `NewsletterSubscriber`; double opt-in sign-up at `/newsletter/` (confirm, unsubscribe, `prune_newsletter_signups`) |
 | `tools/` | Development helpers, not in the image (`browser_check.py`) |
 
