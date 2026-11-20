@@ -4,7 +4,7 @@ Current state of Rooterium and the next steps. **Every PR updates this
 file** (at least "Last updated" and whatever the PR changes). Details live in
 the linked docs; open work lives in GitHub issues.
 
-_Last updated: 2026-11-20 (PR "Record the first server and the test-phase domain")_
+_Last updated: 2026-11-20 (PR "Record the server configuration")_
 
 ## Live
 
@@ -31,7 +31,9 @@ _Last updated: 2026-11-20 (PR "Record the first server and the test-phase domain
 | Access | `ssh deploy@80.47.231.164` (SSH key only; root and password login off, `00-hardening.conf`); firewall `ufw`: SSH, 80, 443 |
 | App | `/srv/rooterium` (git checkout), `compose.prod.yaml`: `db` (PostgreSQL 18), `web` (GHCR image, Gunicorn), `caddy` (HTTPS) |
 | Secrets | `/srv/rooterium/.env` on the server only |
-| Backups | **not set up yet**: cron 02:00 `scripts/backup-db.sh` (maintainer, see next steps) + UpCloud backups (to be enabled in the control panel, ADR 0008) |
+| Backups | cron 02:00 `scripts/backup-db.sh` (dump in `/srv/rooterium/backups`, 14 days; first dump checked) + UpCloud backups – **still to be enabled** in the control panel (ADR 0008) |
+| Cron (`deploy`) | 02:00 database dump, 03:00 `prune_newsletter_signups`; output in `journalctl -t rooterium-cron` |
+| Updates | `unattended-upgrades`; automatic reboot at 04:30 when required (`/etc/apt/apt.conf.d/52rooterium-reboot`) |
 | Mail | _Not decided_ – issue #11 |
 | DNS | Hostpoint (`pocketapp.ch`): `A` record `rooterium` → `80.47.231.164`, no `AAAA` (the zone's wildcard no longer applies to it); final domain: #9 |
 
@@ -143,6 +145,11 @@ Brief and milestones: [`PROJECT_BRIEF.md`](PROJECT_BRIEF.md).
   only takes the password at creation) and the site redeployed. No data or
   accounts existed. Lesson: verify `grep -c change-me .env` is 0 before a
   first deploy (now in the runbook).
+- **Server configuration** (on the server, 2026-11-20): crontab for
+  `deploy` (database dump 02:00, newsletter cleanup 03:00, output to the
+  journal; both run once by hand, first dump 249 KB), automatic reboot at
+  04:30 when an update needs it. Memory in use: about 350 MB for the
+  containers, 1 GB available; disk 6.7 of 20 GB.
 
 ## Open issues
 
@@ -153,7 +160,7 @@ Overview: `gh issue list`. At the time of writing:
 | #1–#5 | Milestones 1–5 – **closed** | – |
 | #6 | M6: events, projects, submission form – **done**, closed by this PR | – |
 | #7 | M7: newsletter, About/Imprint/Privacy – code done; texts (#14) and real emails (#11) open | Editor / maintainer |
-| #8 | M8: deployment to a test server – **running**; open: cron jobs, UpCloud backups, admin account | Maintainer |
+| #8 | M8: deployment to a test server – **running**; open: UpCloud backups, admin account | Maintainer |
 | #9 | Register the final domain (test phase runs on `rooterium.pocketapp.ch`) | Maintainer / editor |
 | #10 | Hosting: UpCloud server running; open: who pays | Maintainer / editor |
 | #11 | Email sending service | Maintainer |
@@ -165,12 +172,10 @@ Overview: `gh issue list`. At the time of writing:
 
 ## Next steps
 
-1. **Maintainer, on the server** (Claude's attempt to install the crontab
-   was blocked by the session's permission rules):
-   - cron jobs from `deployment.md` section 5 (`crontab -e` as `deploy`):
-     database dump 02:00, `prune_newsletter_signups` 03:00; run
-     `scripts/backup-db.sh` once by hand to check it;
-   - enable UpCloud backups for the server (ADR 0008), after 02:00;
+1. **Maintainer** (the cron jobs and the reboot policy are set up, see
+   Infrastructure):
+   - enable UpCloud backups for the server in the control panel (ADR 0008),
+     scheduled after 02:00;
    - create the admin account:
      `ssh -t deploy@80.47.231.164 'cd /srv/rooterium && docker compose -f compose.prod.yaml exec web python manage.py createsuperuser'`,
      then an editor account (staff, group "Editors", not superuser).
@@ -230,7 +235,7 @@ width.
   admin (#14); they are not created by a migration.
 - `EDITOR_NOTIFICATION_EMAIL` and the SMTP settings in the server's
   `.env` (#11).
-- Cron jobs and UpCloud backups (next steps, item 1).
+- UpCloud backups (next steps, item 1).
 - Seed place coordinates checked (#15); final domain (#9); `ROBOTS_TAG`
   switched to `all`.
 
@@ -267,7 +272,9 @@ width.
 - Every change via branch + PR. Claude merges its own PRs with
   `gh pr merge <N> --squash --auto` once the checks are green, verifies with
   `gh pr view` and deploys. PRs with database migrations or server/deployment
-  changes are merged by the maintainer (the pre-server exception ended with
-  milestone 8). Never pipe `gh` output.
+  changes are merged by the maintainer – **except until the site goes
+  productive: Claude merges those too and may change the server without
+  review** (maintainer's decision 2026-11-20, see CLAUDE.md). Never pipe
+  `gh` output.
 - Content on the live site lives only in the production database, not in
   git; local data is a playground.
