@@ -1,0 +1,6 @@
+{% load i18n %}
+{# Placeholder only: no request to YouTube. The click-to-load embed via youtube-nocookie.com follows in milestone 5 (ADR 0013). #}
+<figure class="video">
+  <p><a href="https://www.youtube.com/watch?v={{ value.video_id }}" rel="noopener">{{ value.title }}</a></p>
+  <figcaption>{% translate "Video on YouTube" %}</figcaption>
+</figure>

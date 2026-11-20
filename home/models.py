@@ -9,8 +9,7 @@ class HomePage(SeoPageMixin, Page):
 
     max_count = 1
     parent_page_types = ["wagtailcore.Page"]
-    # Theme index pages are added in the content model step.
-    subpage_types: list[str] = []
+    subpage_types = ["stories.ThemeIndexPage"]
 
     class Meta:
         verbose_name = _("home page")

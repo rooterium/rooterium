@@ -11,7 +11,9 @@ Overview of how the project is built and run. Decisions and their rationale:
 | `core/` | Base layout, SEO (`core/seo.py`), navigation, `/version`, error pages |
 | `home/` | Wagtail `HomePage` (site root) |
 | `images/` | Wagtail image model with required alt text, credit and licence |
-| `<app>/` | One small Django app per topic (stories, places, events, …) |
+| `stories/` | `ThemeIndexPage`, `StoryPage` (StreamField blocks in `blocks.py`), sources |
+| `places/`, `events/`, `projects/` | Snippets with draft/publish; admin viewsets in `viewsets.py` |
+| `newsletter/` | `NewsletterSubscriber` (sign-up flow in milestone 7) |
 
 - Wagtail (ADR 0009, 0014): the editor's admin is at `/admin/`, the Django
   admin at `/django-admin/` (technical tasks). Wagtail serves all remaining

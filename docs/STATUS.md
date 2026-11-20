@@ -4,7 +4,7 @@ Current state of Rooterium and the next steps. **Every PR updates this
 file** (at least "Last updated" and whatever the PR changes). Details live in
 the linked docs; open work lives in GitHub issues.
 
-_Last updated: 2026-11-20 (PR "Let Claude merge migration PRs until a server exists")_
+_Last updated: 2026-11-20 (PR "Add the content models")_
 
 ## Live
 
@@ -48,6 +48,10 @@ Brief and milestones: [`PROJECT_BRIEF.md`](PROJECT_BRIEF.md).
 - **Milestone 2 – Wagtail 7.4 LTS added**: Wagtail admin at `/admin/`,
   Django admin at `/django-admin/`, custom image model with required alt
   text, credit and licence, `HomePage` as site root (data migration).
+- **Milestone 2 – content models**: theme pages, stories (StreamField,
+  sources, related places), places, events (upcoming filter), projects,
+  newsletter subscribers; admin menu "Map & directory" and "Newsletter";
+  minimal page templates (designed in milestone 5).
 
 ## Open issues
 
@@ -72,7 +76,7 @@ Overview: `gh issue list`. At the time of writing:
    (org settings → Packages); alternatively the server logs in with a
    read-only token. Only needed for milestone 8.
 2. Milestone 2 (#2), in steps: ADR 0014 (done) → Wagtail, image model,
-   `HomePage` (done) → content models → editor group permissions →
+   `HomePage` (done) → content models (done) → editor group permissions →
    `seed_demo` command.
 3. Milestone 3 (#3): design foundation (Palette V2 tokens in `site.css`,
    self-hosted fonts incl. Armenian, base layout). The template's
