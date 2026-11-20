@@ -4,7 +4,7 @@ Current state of Rooterium and the next steps. **Every PR updates this
 file** (at least "Last updated" and whatever the PR changes). Details live in
 the linked docs; open work lives in GitHub issues.
 
-_Last updated: 2026-11-20 (PR "Add the About, Imprint and Privacy pages")_
+_Last updated: 2026-11-20 (PR "Update the session handoff after milestones 6 and 7")_
 
 ## Live
 
@@ -163,21 +163,25 @@ Overview: `gh issue list`. At the time of writing:
 5. Editor: check the seed place coordinates and descriptions (#15) – they
    can be edited in the Wagtail admin under "Map & directory → Places".
 
-## Session handoff (2026-11-20)
+## Session handoff (2026-11-20, second session)
 
-Where the last session stopped: milestones 1–5 merged (PRs #24–#38), no
-open PRs, nothing deployed (no server). Next is milestone 6 (6a done since,
-see above; milestones 6 and 7 are now complete in code; texts and infrastructure
-are open).
+Where the last session stopped: milestones 1–7 merged (PRs #24–#43), no
+open PRs, all CI runs green, nothing deployed (no server). Milestone 6
+(#6) is closed; **#7 is still open** although its code is complete – the
+maintainer decides whether to close it (texts are tracked in #14, sending
+the newsletter is an open question below). Everything left in version 1
+now waits on the maintainer or the editor: domain (#9), hosting (#10),
+email service (#11), page texts (#14), then deployment (#8). Without
+those, possible Claude work: a review pass over the whole site at phone
+width.
 
-**Open questions for the maintainer/editor** (not blocking M6):
+**Open questions for the maintainer/editor:**
 
 - How will the editor **send** the newsletter? Not part of the brief.
   Options: export the confirmed addresses to the email service chosen in
   #11 (if it has newsletter features), or a simple send function in the
   admin (needs an unsubscribe link per recipient and a List-Unsubscribe
   header). Decide together with #11.
-
 - Armenian word next to the logo (the variant A mockup shows one): add it
   only once the editor confirms the exact wording (brief: Armenian script
   only from verified sources).
@@ -188,12 +192,22 @@ are open).
 - Real logo: the favicon is an interim "R" mark
   (`design/build_web_assets.py`).
 
+**Before the site goes public** (collected from the milestones):
+
+- About, Imprint and Privacy created and published by the editor in the
+  admin (#14); they are not created by a migration.
+- `EDITOR_NOTIFICATION_EMAIL` and the SMTP settings in the server's
+  `.env` (#11).
+- Cron for `prune_newsletter_signups` (`docs/deployment.md`, section 5).
+- Seed place coordinates checked (#15); `ROBOTS_TAG` switched to `all`.
+
 **Local development state** (maintainer's machine, not in git):
 
 - `.env` created from `.env.example` with a random `SECRET_KEY`.
 - Map tiles built: `media/maps/rooterium.pmtiles` (Protomaps build
   20261118, 40 MB). Without them the map shows only markers.
-- Database seeded with `seed_demo`; the demo story "The monastery of the
+- Database seeded with `seed_demo` (rerun after milestone 7: it now also
+  creates placeholder About, Imprint and Privacy pages); the demo story "The monastery of the
   spear" was additionally filled with every block type (placeholders) to
   check the layout.
 
@@ -207,8 +221,11 @@ are open).
   force pushes: add follow-up commits instead of amending pushed ones.
 - After editing Python files, the dev server's auto-reloader can hang on a
   transient syntax error ("page isn't working"): `docker compose restart web`.
-- Local branches of merged PRs still exist (remote ones are deleted);
-  `git fetch --prune` and delete them when convenient.
+- Local branches of merged PRs still exist (remote ones are deleted).
+  Squash merges mean `git branch -d` refuses them; delete with
+  `git branch -D <name>` after checking `gh pr list --state merged`.
+- Spam checks for public forms are shared: `core/spam.py`,
+  `core.forms.SpamCheckForm`, `templates/includes/spam_fields.html`.
 
 ## Working agreements (summary)
 
