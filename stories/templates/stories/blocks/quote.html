@@ -1,0 +1,4 @@
+<figure class="quote">
+  <blockquote>{{ value.text|linebreaks }}</blockquote>
+  <figcaption>{% if value.source_url %}<a href="{{ value.source_url }}" rel="noopener">{{ value.source }}</a>{% else %}{{ value.source }}{% endif %}</figcaption>
+</figure>

@@ -54,6 +54,11 @@ INSTALLED_APPS = [
     # Project apps
     "images",
     "home",
+    "stories",
+    "places",
+    "events",
+    "projects",
+    "newsletter",
 ]
 
 MIDDLEWARE = [
@@ -202,6 +207,11 @@ LOGGING = {
     "loggers": {
         # 404/403 are expected noise; access logs come from Caddy.
         "django.request": {"level": "ERROR"},
+        # Wagtail runs its background tasks in the request and logs every
+        # task and page action at INFO; Wagtail's own audit log (in the
+        # database) already records the page actions.
+        "django_tasks": {"level": "WARNING"},
+        "wagtail": {"level": "WARNING"},
     },
 }
 

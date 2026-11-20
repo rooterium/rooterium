@@ -4,16 +4,20 @@ One section per app with its models, fields and rules (visibility, ordering,
 retention). Keep this file in sync with every model change. Decisions behind
 it: [ADR 0014](decisions/0014-content-model.md).
 
-> Status (milestone 2, issue #2): **built**: `images`, `home`. **Planned**:
-> everything else. Sections move from planned to built as the PRs land.
+> Status (milestone 2, issue #2): all models below are **built**. Still to
+> come: editor group permissions (data migration) and seed data.
 
 Conventions: all labels and help texts in English and translatable; every
 image is a `CustomImage`; "live" means published in Wagtail (`live=True`).
 
 ## `core` – shared
 
-- `Theme` (`TextChoices`): `history`, `traditions`, `myths`, `symbols`,
-  `music`.
+- `core.themes.Theme` (`TextChoices`): `history`, `traditions`, `myths`,
+  `symbols`, `music`.
+- `core.geo.latitude_field()` / `longitude_field()`: `Decimal(9,6)` with
+  range validators.
+- Admin menu: "Map & directory" groups places, events and projects
+  (`core/wagtail_hooks.py`); "Newsletter" is its own menu item.
 
 ## `images` – `CustomImage` (Wagtail image model) – built
 
@@ -55,10 +59,13 @@ newest first.
 | `date` | date | required, default today; shown and used for ordering |
 | `teaser` | text, ≤ 300 | required; cards and meta description fallback |
 | `hero_image` | `CustomImage` | required, `PROTECT` |
-| `body` | StreamField | blocks: paragraph, heading, quote, image, youtube, book_excerpt |
+| `body` | StreamField | blocks (`stories/blocks.py`): paragraph (bold, italic, link, lists), heading (h2/h3), quote (text, source, link), image (image, caption), youtube (URL validated to a video ID, title), book_excerpt (text, book title, author, page, link) |
 | `related_places` | many-to-many `Place` | optional |
 
-Parent: `ThemeIndexPage` only; no children. Theme = parent's theme.
+Parent: `ThemeIndexPage` only; no children. Theme = parent's theme
+(`story.theme`). Meta description falls back to the teaser. Templates are
+minimal until milestone 5; the YouTube block renders only a link (no
+embed yet).
 
 ### `StorySource` (orderable, inline on `StoryPage`)
 
@@ -77,7 +84,7 @@ Parent: `ThemeIndexPage` only; no children. Theme = parent's theme.
 | `latitude` | decimal(9,6) | required, −90…90 |
 | `longitude` | decimal(9,6) | required, −180…180 |
 | `short_description` | text, ≤ 300 | required, 1–2 sentences |
-| `to_be_checked` | bool | default true for seed data; admin filter |
+| `to_be_checked` | bool | default false; seed data sets it; admin filter |
 
 Related stories: reverse of `StoryPage.related_places`. Public: live only.
 
@@ -120,8 +127,9 @@ Public: live only, ordered by name.
 | `confirmed_at` | datetime | null until double opt-in confirmed |
 | `token` | text | random, unique; for the confirm and unsubscribe links |
 
-Read-only in the Wagtail admin. Unconfirmed sign-ups older than a set
-period are deleted (milestone 7).
+Listed in the Wagtail admin under "Newsletter" (editors: view only, set in
+the permissions step). Unconfirmed sign-ups older than a set period are
+deleted (milestone 7).
 
 ## Permissions
 
