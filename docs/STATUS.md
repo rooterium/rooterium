@@ -4,7 +4,7 @@ Current state of Rooterium and the next steps. **Every PR updates this
 file** (at least "Last updated" and whatever the PR changes). Details live in
 the linked docs; open work lives in GitHub issues.
 
-_Last updated: 2026-11-20 (PR "Add Wagtail with custom image model and home page")_
+_Last updated: 2026-11-20 (PR "Let Claude merge migration PRs until a server exists")_
 
 ## Live
 
@@ -22,7 +22,7 @@ _Last updated: 2026-11-20 (PR "Add Wagtail with custom image model and home page
 | GitHub settings | Squash merge only (PR title/body), auto-merge allowed, head branches deleted after merge; ruleset "protect main" (id 27710130): PR required (0 approvals), squash only, no force push/deletion, checks "Lint and test" and "Build image (linux/amd64)" required |
 | Labels | `ops`, `content`, `bug`, `enhancement`, `later`, `milestone` |
 | CI | GitHub Actions: lint + tests, `linux/amd64` image to `ghcr.io/rooterium/rooterium` (`latest`, `sha-<commit>`) on `main`; runs on `main` are queued, never cancelled |
-| GHCR package | Created by the first CI run on `main`; **then set to public** (or the server uses a read-only token) – not done yet |
+| GHCR package | `ghcr.io/rooterium/rooterium`, private for now; public needs the org setting "Package creation → Public" first, or the server uses a read-only token |
 | Server | _Not decided_ (template default: UpCloud, Ubuntu 26.04, time zone Europe/Vienna) – issue #10 |
 | Access | `ssh {{SSH_TARGET}}` – once a server exists |
 | App | `/srv/rooterium` (git checkout), `compose.prod.yaml`: `db` (PostgreSQL 18), `web` (GHCR image, Gunicorn), `caddy` (HTTPS) |
@@ -67,11 +67,13 @@ Overview: `gh issue list`. At the time of writing:
 
 ## Next steps
 
-1. Set the GHCR package `ghcr.io/rooterium/rooterium` to public (maintainer,
-   package settings on GitHub).
+1. GHCR package `ghcr.io/rooterium/rooterium`: still private. Making it
+   public first needs the organisation setting "Package creation → Public"
+   (org settings → Packages); alternatively the server logs in with a
+   read-only token. Only needed for milestone 8.
 2. Milestone 2 (#2), in steps: ADR 0014 (done) → Wagtail, image model,
-   `HomePage` (this PR, has migrations: maintainer merges) → content models →
-   editor group permissions → `seed_demo` command.
+   `HomePage` (done) → content models → editor group permissions →
+   `seed_demo` command.
 3. Milestone 3 (#3): design foundation (Palette V2 tokens in `site.css`,
    self-hosted fonts incl. Armenian, base layout). The template's
    `site.css` still has the neutral template colours until then.
@@ -83,6 +85,8 @@ Overview: `gh issue list`. At the time of writing:
 - Every change via branch + PR. Claude merges its own PRs with
   `gh pr merge <N> --squash --auto` once the checks are green, verifies with
   `gh pr view` and deploys. PRs with database migrations or server/deployment
-  changes are merged by the maintainer. Never pipe `gh` output.
+  changes are merged by the maintainer – **except until a server runs the
+  app: then Claude merges those too** (maintainer's decision 2026-11-20,
+  ends with milestone 8). Never pipe `gh` output.
 - Content on the live site lives only in the production database, not in
   git; local data is a playground.
