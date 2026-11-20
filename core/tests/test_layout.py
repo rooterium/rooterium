@@ -74,3 +74,42 @@ class ErrorPageTests(TestCase):
             f"<title>Page not found – {settings.SITE_SHORT_NAME}</title>",
             status_code=404,
         )
+
+
+class WebAssetTests(TestCase):
+    def test_default_open_graph_image_is_absolute(self):
+        response = self.client.get("/")
+        self.assertContains(
+            response,
+            '<meta property="og:image" '
+            'content="http://testserver/static/core/img/og-default.jpg">',
+            html=True,
+        )
+
+    def test_icons_are_linked(self):
+        response = self.client.get("/")
+        self.assertContains(response, "core/img/favicon-32.png")
+        self.assertContains(response, "core/img/apple-touch-icon.png")
+
+    def test_favicon_ico_redirects_to_static_file(self):
+        response = self.client.get("/favicon.ico")
+        self.assertRedirects(
+            response,
+            "/static/core/img/favicon.ico",
+            status_code=301,
+            fetch_redirect_response=False,
+        )
+
+    def test_generated_files_exist(self):
+        from pathlib import Path
+
+        img = Path(settings.BASE_DIR) / "core/static/core/img"
+        for name in (
+            "favicon.ico",
+            "favicon-32.png",
+            "apple-touch-icon.png",
+            "icon-512.png",
+            "og-default.jpg",
+        ):
+            with self.subTest(name=name):
+                self.assertTrue((img / name).is_file())
