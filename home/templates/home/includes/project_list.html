@@ -1,0 +1,11 @@
+{% load i18n %}
+<ul class="item-list">
+  {% for project in projects %}
+    <li>
+      <a href="{{ project.link }}" rel="noopener">{{ project.name }}</a>
+      <span class="meta">{{ project.get_kind_display }} · {{ project.city }}</span>
+    </li>
+  {% empty %}
+    <li>{% translate "No projects yet." %}</li>
+  {% endfor %}
+</ul>

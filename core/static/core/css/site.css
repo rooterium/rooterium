@@ -109,6 +109,11 @@
   box-sizing: border-box;
 }
 
+/* `hidden` wins over component display rules (e.g. flex markers). */
+[hidden] {
+  display: none !important;
+}
+
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
@@ -384,6 +389,333 @@ main {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 1.5rem;
+}
+
+/* --- Home page ---------------------------------------------------------- */
+
+.hero {
+  max-width: 46rem;
+  margin: 1rem auto 3rem;
+  text-align: center;
+}
+
+.hero .lead {
+  margin-inline: auto;
+}
+
+.explore {
+  margin-bottom: 4rem;
+}
+
+.explore-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Toggle buttons: state shown by fill and weight, not colour alone. */
+.segmented {
+  display: inline-flex;
+  padding: 3px;
+  border: 1px solid var(--muted);
+  border-radius: 999px;
+}
+
+.segmented-option,
+.chip {
+  min-height: var(--touch);
+  padding: 0 1rem;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  color: var(--text);
+}
+
+.segmented-option {
+  border: 0;
+  background: transparent;
+}
+
+.segmented-option[aria-pressed="true"] {
+  background: var(--accent);
+  font-weight: 600;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chip {
+  border: 1px solid var(--muted);
+  background: transparent;
+}
+
+.chip:hover,
+.segmented-option:hover {
+  border-color: var(--accent-2);
+  color: var(--accent-2);
+}
+
+.chip[aria-pressed="true"] {
+  border-color: var(--gold);
+  background: var(--surface);
+  font-weight: 700;
+  box-shadow: inset 0 0 0 1px var(--gold);
+}
+
+.explore-body {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 56rem) {
+  .explore-body {
+    grid-template-columns: minmax(0, 1fr) 20rem;
+  }
+}
+
+.map-frame {
+  position: relative;
+  min-height: 22rem;
+  height: 60vh;
+  max-height: 40rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--bg);
+}
+
+/* Sized explicitly: MapLibre sets `position: relative` on the container. */
+.map {
+  width: 100%;
+  height: 100%;
+}
+
+.map-diaspora {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  place-content: center;
+  padding: 2rem;
+  text-align: center;
+  background: rgb(11 10 9 / 92%);
+}
+
+.is-diaspora .map-card,
+.is-diaspora .chips {
+  display: none;
+}
+
+.map-card {
+  align-self: start;
+}
+
+.map-card-title {
+  font-family: var(--font-heading);
+  font-size: 1.75rem; /* 28 px: Cormorant allowed */
+  margin-top: 0;
+}
+
+/* Markers: gold dot plus name; the button is the whole marker. */
+.map-marker {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: var(--touch);
+  padding: 0 0.5rem 0 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.map-marker::before {
+  content: "";
+  flex: none;
+  width: 14px;
+  height: 14px;
+  margin-left: 15px; /* centres the dot in a 44 px hit area */
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 0 4px rgb(200 161 93 / 25%), 0 0 12px rgb(200 161 93 / 60%);
+}
+
+.map-marker--event::before {
+  border-radius: 2px;
+  transform: rotate(45deg);
+}
+
+.map-marker-label {
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  background: rgb(11 10 9 / 80%);
+  white-space: nowrap;
+}
+
+.map:not(.show-labels) .map-marker-label {
+  display: none;
+}
+
+.map .map-marker:hover .map-marker-label,
+.map .map-marker:focus-visible .map-marker-label,
+.map .map-marker[aria-pressed="true"] .map-marker-label {
+  display: inline;
+  outline: 1px solid var(--gold);
+}
+
+.map-marker:hover,
+.map-marker:focus-visible,
+.map-marker[aria-pressed="true"] {
+  z-index: 2;
+}
+
+.map-marker[aria-pressed="true"]::before {
+  background: var(--text);
+}
+
+/* MapLibre controls in the dark palette. */
+.maplibregl-ctrl-group {
+  background: var(--surface) !important;
+  border: 1px solid var(--muted);
+}
+
+.maplibregl-ctrl-group button {
+  width: var(--touch) !important;
+  height: var(--touch) !important;
+}
+
+.maplibregl-ctrl-group button + button {
+  border-top-color: var(--line) !important;
+}
+
+.maplibregl-ctrl-icon {
+  filter: invert(0.9);
+}
+
+.maplibregl-ctrl-attrib {
+  background: rgb(11 10 9 / 80%) !important;
+  color: var(--text-muted);
+}
+
+.maplibregl-ctrl-attrib a {
+  color: var(--text-secondary) !important;
+}
+
+.maplibregl-cooperative-gesture-screen {
+  background: rgb(11 10 9 / 70%) !important;
+  color: var(--text) !important;
+}
+
+.place-list {
+  margin-top: 1rem;
+}
+
+.place-list summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touch);
+  cursor: pointer;
+  color: var(--accent-2);
+}
+
+.place-list ul,
+.item-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.place-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.home-section {
+  margin-bottom: 4rem;
+}
+
+.story-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+}
+
+.story-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.story-card img {
+  display: block;
+  width: 100%;
+}
+
+.story-card-body {
+  padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.story-card h3 {
+  margin-top: 0;
+  font-family: var(--font-heading);
+  font-size: 1.75rem; /* 28 px: Cormorant allowed */
+  line-height: 1.15;
+}
+
+.story-card h3 a {
+  color: var(--text);
+  text-decoration: none;
+}
+
+.story-card h3 a:hover {
+  color: var(--accent-2);
+  text-decoration: underline;
+}
+
+.home-columns {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 4rem;
+}
+
+@media (min-width: 48rem) {
+  .home-columns {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.item-list li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--line);
+}
+
+.item-list a {
+  color: var(--text);
+}
+
+.item-date {
+  min-width: 6.5rem;
+  color: var(--accent-2);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.newsletter-teaser {
+  padding: 3rem var(--gutter);
+  border-top: 1px solid var(--line);
+  text-align: center;
 }
 
 /* --- Messages ----------------------------------------------------------- */

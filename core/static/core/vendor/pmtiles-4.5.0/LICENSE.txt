@@ -1,0 +1,4 @@
+pmtiles 4.5.0 (npm package "pmtiles", file dist/pmtiles.js)
+Author: Brandon Liu (Protomaps)
+Licence: BSD-3-Clause, as declared in the package's package.json.
+Full text: https://github.com/protomaps/PMTiles/blob/main/LICENSE

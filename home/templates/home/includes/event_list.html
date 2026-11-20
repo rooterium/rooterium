@@ -1,0 +1,12 @@
+{% load i18n %}
+<ul class="item-list">
+  {% for event in upcoming_events %}
+    <li>
+      <span class="item-date"><time datetime="{{ event.start_date|date:'Y-m-d' }}">{{ event.start_date|date:"j M Y" }}</time></span>
+      <a href="{{ event.link }}" rel="noopener">{{ event.title }}</a>
+      <span class="meta">{{ event.city }}, {{ event.country }}</span>
+    </li>
+  {% empty %}
+    <li>{% translate "No upcoming events." %}</li>
+  {% endfor %}
+</ul>
