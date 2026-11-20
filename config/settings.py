@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     "events",
     "projects",
     "newsletter",
+    "submissions",
 ]
 
 MIDDLEWARE = [
@@ -196,6 +197,9 @@ EMAIL_USE_SSL = env.bool("EMAIL_USE_SSL", default=True)
 EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=False)
 DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="webmaster@localhost")
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
+# Receives the "Suggest an event / a project" notifications. Empty: no
+# email (the drafts still show up in the admin).
+EDITOR_NOTIFICATION_EMAIL = env("EDITOR_NOTIFICATION_EMAIL", default="")
 
 # --- Logging --------------------------------------------------------------
 

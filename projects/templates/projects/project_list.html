@@ -5,6 +5,7 @@
   <header class="page-header">
     <h1>{% translate "Projects" %}</h1>
     <p class="lead">{% translate "Shops, start-ups and initiatives that carry Armenian traditions into today." %}</p>
+    <p><a class="button button--secondary" href="{% url 'submissions:project' %}">{% translate "Suggest a project" %}</a></p>
     <nav class="chips" aria-label="{% translate 'Filter by type' %}">
       <a class="chip" href="{% url 'projects:list' %}"{% if not current_kind %} aria-current="page"{% endif %}>{% translate "All" %}</a>
       {% for value, label in kinds %}

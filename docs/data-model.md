@@ -122,6 +122,12 @@ ordered by `start_date`.
 
 Public: live only, ordered by name.
 
+Events and projects can also come from the public "Suggest an event / a
+project" forms (`submissions/`): saved with `live=False`, a first
+revision (so the editor can publish from the admin) and
+`submitted_by_email`. No public uploads: the editor adds coordinates and
+logos.
+
 ## `newsletter` – `NewsletterSubscriber` (Django model)
 
 | Field | Type | Rules |

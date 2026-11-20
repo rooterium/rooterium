@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+  <header class="page-header">
+    <h1>{% translate "Thank you!" %}</h1>
+    <p class="lead">{% translate "Your suggestion has been sent to the editor. It appears on the site once the editor has checked and published it." %}</p>
+  </header>
+  <p class="chips">
+    <a class="button button--secondary" href="{% url 'events:list' %}">{% translate "Events" %}</a>
+    <a class="button button--secondary" href="{% url 'projects:list' %}">{% translate "Projects" %}</a>
+  </p>
+{% endblock %}
