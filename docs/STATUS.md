@@ -4,7 +4,7 @@ Current state of Rooterium and the next steps. **Every PR updates this
 file** (at least "Last updated" and whatever the PR changes). Details live in
 the linked docs; open work lives in GitHub issues.
 
-_Last updated: 2026-11-20 (PR "Add the content models")_
+_Last updated: 2026-11-20 (PR "Give the editor group its permissions")_
 
 ## Live
 
@@ -52,6 +52,9 @@ Brief and milestones: [`PROJECT_BRIEF.md`](PROJECT_BRIEF.md).
   sources, related places), places, events (upcoming filter), projects,
   newsletter subscribers; admin menu "Map & directory" and "Newsletter";
   minimal page templates (designed in milestone 5).
+- **Milestone 2 – editor permissions**: Wagtail's "Editors" group can
+  publish pages, manage places/events/projects and view newsletter
+  subscribers (data migrations).
 
 ## Open issues
 
@@ -76,8 +79,8 @@ Overview: `gh issue list`. At the time of writing:
    (org settings → Packages); alternatively the server logs in with a
    read-only token. Only needed for milestone 8.
 2. Milestone 2 (#2), in steps: ADR 0014 (done) → Wagtail, image model,
-   `HomePage` (done) → content models (done) → editor group permissions →
-   `seed_demo` command.
+   `HomePage` (done) → content models (done) → editor group permissions
+   (done) → `seed_demo` command.
 3. Milestone 3 (#3): design foundation (Palette V2 tokens in `site.css`,
    self-hosted fonts incl. Armenian, base layout). The template's
    `site.css` still has the neutral template colours until then.
