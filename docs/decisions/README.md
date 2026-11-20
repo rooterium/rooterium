@@ -19,8 +19,9 @@ deviations and additions.
 | 0007 | [Secrets only in .env](0007-secrets-in-env.md)                         | accepted |
 | 0008 | [Backups with UpCloud's backup service](0008-backups-with-upcloud.md) | accepted |
 | 0009 | [Wagtail as CMS](0009-wagtail-as-cms.md)                               | accepted |
-| 0010 | [Interactive map with MapLibre GL JS](0010-map-with-maplibre.md)       | accepted (tile source: milestone 4) |
+| 0010 | [Interactive map with MapLibre GL JS](0010-map-with-maplibre.md)       | accepted (tile source: 0015) |
 | 0011 | [Interactivity with plain JavaScript modules and htmx](0011-interactivity-without-spa.md) | accepted |
 | 0012 | [English first, translatable from day one](0012-english-and-i18n.md)   | accepted |
 | 0013 | [Privacy by default](0013-privacy-by-default.md)                       | accepted |
 | 0014 | [Content model](0014-content-model.md)                                 | accepted |
+| 0015 | [Map tiles and map style](0015-map-tiles-and-style.md)               | accepted |
