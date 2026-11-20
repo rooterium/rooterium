@@ -1,0 +1,48 @@
+# Caddy configuration for production (ADR 0005). Values come from .env via
+# compose.prod.yaml. Caddy obtains and renews the TLS certificate itself and
+# redirects HTTP to HTTPS. No ACME account email: Let's Encrypt no longer
+# sends expiry notices, and Caddy renews automatically.
+
+{$SITE_ADDRESS} {
+	# Server-specific snippets, e.g. Basic Auth during a test phase
+	# (see deploy/caddy.d/README.md). No matching file is fine.
+	import /etc/caddy/caddy.d/*.caddy
+
+	encode zstd gzip
+
+	header {
+		# "noindex, nofollow" by default (test phase); set ROBOTS_TAG=all in
+		# .env when the site goes live.
+		X-Robots-Tag "{$ROBOTS_TAG}"
+		# Browsers use HTTPS only for the next year (not for subdomains,
+		# so mail and other services on subdomains are unaffected).
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options nosniff
+		Referrer-Policy same-origin
+		-Server
+	}
+
+	# Uploaded images and documents (Django's MEDIA_ROOT volume).
+	handle_path /media/* {
+		root * /srv/media
+		header Cache-Control "public, max-age=86400"
+		file_server
+	}
+
+	# Everything else, including /static/ (served by WhiteNoise).
+	handle {
+		reverse_proxy web:8000
+	}
+
+	log {
+		output stdout
+		format console
+	}
+}
+
+# Other host names (e.g. www.example.ch) redirect permanently to the main
+# address, keeping the path. Caddy gets certificates for them too.
+# Without REDIRECT_ADDRESSES, compose.prod.yaml sets a harmless placeholder.
+{$REDIRECT_ADDRESSES} {
+	redir https://{$SITE_ADDRESS}{uri} permanent
+}

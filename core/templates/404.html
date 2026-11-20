@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block title %}Seite nicht gefunden – {{ site_short_name }}{% endblock %}
+
+{% block content %}
+  <h1>Seite nicht gefunden</h1>
+  <p>Die gesuchte Seite gibt es nicht oder nicht mehr.</p>
+  <p><a href="{% url 'core:home' %}">Zur Startseite</a></p>
+{% endblock %}

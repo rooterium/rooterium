@@ -1,0 +1,64 @@
+# Production setup (UpCloud server, ADR 0005). Usage on the server:
+#   docker compose -f compose.prod.yaml up -d
+# Deployments: scripts/deploy.sh. Setup and operations: docs/deployment.md.
+
+services:
+  db:
+    image: postgres:18
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  web:
+    # Built for linux/amd64 by GitHub Actions (ADR 0006). IMAGE_TAG pins a
+    # specific build (sha-<commit>) e.g. for a rollback.
+    # {{GITHUB_REPO}} is owner/name in lower case (GHCR requires it).
+    image: ghcr.io/{{GITHUB_REPO}}:${IMAGE_TAG:-latest}
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - media:/app/media
+    depends_on:
+      db:
+        condition: service_healthy
+    # Not published: only reachable through Caddy.
+    expose:
+      - "8000"
+
+  caddy:
+    image: caddy:2.10
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      SITE_ADDRESS: ${SITE_ADDRESS}
+      # Default: a harmless placeholder, so Caddy starts without redirects.
+      REDIRECT_ADDRESSES: ${REDIRECT_ADDRESSES:-http://localhost}
+      ROBOTS_TAG: ${ROBOTS_TAG:-noindex, nofollow}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      # Optional server-specific snippets (e.g. Basic Auth), not in git.
+      - ./deploy/caddy.d:/etc/caddy/caddy.d:ro
+      # Uploaded files are served by Caddy directly.
+      - media:/srv/media:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - web
+
+volumes:
+  postgres_data:
+  media:
+  caddy_data:
+  caddy_config:
