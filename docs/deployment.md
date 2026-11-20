@@ -144,7 +144,20 @@ scripts/deploy.sh
 docker compose -f compose.prod.yaml exec web python manage.py createsuperuser
 ```
 
-Check `https://<domain>/`, log in to `/admin/`. Test email sending:
+Check `https://<domain>/`, log in to `/admin/`.
+
+Email (current setup: Hostpoint, `asmtp.mail.hostpoint.ch`, port 587 with
+STARTTLS – Hostpoint does not allow 465 for this; PLAIN login; user name =
+full mailbox address; sender = the same address). Two helpers live in
+`deploy`'s home directory on the server, not in the repo:
+
+- `ssh -t deploy@80.47.231.164 ~/test-smtp-login.sh` – one SMTP login with a
+  hidden password, sends nothing, prints "accepted" or "refused";
+- `ssh -t deploy@80.47.231.164 ~/set-mail-password.sh` – writes a new
+  `EMAIL_HOST_PASSWORD` into `.env` without showing it; then recreate `web`.
+
+Do not repeat failed logins many times: providers block accounts or IPs.
+Test email sending:
 
 ```bash
 docker compose -f compose.prod.yaml exec -T web python manage.py sendtestemail <address>

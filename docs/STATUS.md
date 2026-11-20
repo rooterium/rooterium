@@ -4,7 +4,7 @@ Current state of Rooterium and the next steps. **Every PR updates this
 file** (at least "Last updated" and whatever the PR changes). Details live in
 the linked docs; open work lives in GitHub issues.
 
-_Last updated: 2026-11-20 (PR "Complete milestone 8")_
+_Last updated: 2026-11-20 (PR "Record the email setup")_
 
 ## Live
 
@@ -34,7 +34,7 @@ _Last updated: 2026-11-20 (PR "Complete milestone 8")_
 | Backups | cron 02:00 `scripts/backup-db.sh` (dump in `/srv/rooterium/backups`, 14 days; first dump checked) + UpCloud backups daily at 02:15 (enabled by the maintainer, ADR 0008) |
 | Cron (`deploy`) | 02:00 database dump, 03:00 `prune_newsletter_signups`; output in `journalctl -t rooterium-cron` |
 | Updates | `unattended-upgrades`; automatic reboot at 04:30 when required (`/etc/apt/apt.conf.d/52rooterium-reboot`) |
-| Mail | _Not decided_ – issue #11; outbound SMTP from the server works on 465 and 587 (25 blocked) |
+| Mail | Hostpoint mailbox `rooterium@linard.org` (maintainer's domain; SPF covers Hostpoint, no DMARC policy yet): `asmtp.mail.hostpoint.ch:587`, STARTTLS, PLAIN; sender and editor notifications = this address for now. Helpers on the server: `~/test-smtp-login.sh`, `~/set-mail-password.sh` |
 | DNS | Hostpoint (`pocketapp.ch`): `A` record `rooterium` → `80.47.231.164`, no `AAAA` (the zone's wildcard no longer applies to it); final domain: #9 |
 
 Runbook: [`deployment.md`](deployment.md). Architecture:
@@ -153,6 +153,14 @@ Brief and milestones: [`PROJECT_BRIEF.md`](PROJECT_BRIEF.md).
 - **Milestone 8 complete** (#8 closed): admin account created and UpCloud
   backups enabled (02:15) by the maintainer; outbound SMTP checked (465
   and 587 open). Mail (#11) and the final domain (#9) are separate issues.
+- **Email** (#11, on the server, 2026-11-20): SMTP via Hostpoint. The
+  first account (`rooterium@pocketapp.ch`) was refused by Hostpoint with
+  `535 Incorrect authentication data` (on 465 and 587, IMAP too); the
+  maintainer's mailbox `rooterium@linard.org` works. Hostpoint requires
+  port 587 with STARTTLS. Checked live: `sendtestemail`, a newsletter
+  sign-up and an event suggestion through the public forms (emails sent
+  without errors; subscriber unconfirmed, suggestion an unpublished draft
+  with a revision).
 
 ## Open issues
 
@@ -165,7 +173,6 @@ Overview: `gh issue list`. At the time of writing:
 | #7 | M7: newsletter, About/Imprint/Privacy – code done; texts (#14) and real emails (#11) open | Editor / maintainer |
 | #9 | Register the final domain (test phase runs on `rooterium.pocketapp.ch`) | Maintainer / editor |
 | #10 | Hosting: UpCloud server running; open: who pays | Maintainer / editor |
-| #11 | Email sending service | Maintainer |
 | #12 | Second GitHub owner, shared password manager | Maintainer / editor |
 | #13 | Mockups of design variant B ("Landkarte") – none available; M4 was built from the brief | Maintainer |
 | #14 | Texts for About, Imprint, Privacy – needed for M7 | Editor |
@@ -192,10 +199,13 @@ Overview: `gh issue list`. At the time of writing:
    (Caddy access logs on stdout, Docker log limit 10 MB × 5). The local
    placeholder lists these facts. The editor also creates the five theme
    pages before the first story.
-3. When an email service exists (#11): SMTP settings and
-   `EDITOR_NOTIFICATION_EMAIL` in the server's `.env`, then
-   `--force-recreate web` and `sendtestemail`. Until then emails only go
-   to the log (`docker compose -f compose.prod.yaml logs web`).
+3. Email works (#11 closed). Maintainer: change the password of
+   `rooterium@linard.org` at Hostpoint (it was sent through the chat) and
+   enter the new one with `~/set-mail-password.sh`; the unused
+   `rooterium@pocketapp.ch` password was in the chat too. Optional for
+   deliverability: DKIM and a DMARC record (`v=DMARC1; p=none`) for the
+   sender domain. Set `EDITOR_NOTIFICATION_EMAIL` to the editor's address
+   when the editor wants the suggestion emails.
 4. Final domain (#9): `A` record, then `SITE_ADDRESS` / `ALLOWED_HOSTS` /
    `CSRF_TRUSTED_ORIGINS` in `.env`, the test subdomain in
    `REDIRECT_ADDRESSES` (permanent redirect), recreate `web` and `caddy`,
@@ -237,8 +247,8 @@ width.
 
 - About, Imprint and Privacy created and published by the editor in the
   admin (#14); they are not created by a migration.
-- `EDITOR_NOTIFICATION_EMAIL` and the SMTP settings in the server's
-  `.env` (#11).
+- Mail password changed (it was in the chat); editor's address in
+  `EDITOR_NOTIFICATION_EMAIL`; DKIM/DMARC for the sender domain.
 - Editor account, UpCloud two-factor authentication, `.env` in the
   password manager (next steps, item 1).
 - Seed place coordinates checked (#15); final domain (#9); `ROBOTS_TAG`
