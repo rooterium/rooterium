@@ -1,6 +1,12 @@
 {% load i18n %}
-{# Placeholder only: no request to YouTube. The click-to-load embed via youtube-nocookie.com follows in milestone 5 (ADR 0013). #}
-<figure class="video">
-  <p><a href="https://www.youtube.com/watch?v={{ value.video_id }}" rel="noopener">{{ value.title }}</a></p>
+{# Two-click embed (ADR 0013): nothing is loaded from YouTube until the visitor clicks. Without JavaScript the link opens YouTube. #}
+<figure class="video" data-video data-video-id="{{ value.video_id }}" data-video-title="{{ value.title }}">
+  <div class="video-frame">
+    <a class="video-consent" href="https://www.youtube.com/watch?v={{ value.video_id }}" rel="noopener" data-video-play>
+      <span class="video-play" aria-hidden="true"></span>
+      <span class="video-title">{{ value.title }}</span>
+      <span class="video-note">{% translate "Play video – this loads it from YouTube (youtube-nocookie.com), which receives your IP address." %}</span>
+    </a>
+  </div>
   <figcaption>{% translate "Video on YouTube" %}</figcaption>
 </figure>

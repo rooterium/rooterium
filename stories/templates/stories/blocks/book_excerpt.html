@@ -1,4 +1,6 @@
+{% load i18n %}
 <figure class="book-excerpt">
+  <p class="eyebrow">{% translate "From the book" %}</p>
   <blockquote>{{ value.text|linebreaks }}</blockquote>
-  <figcaption>{{ value.author }}, {% if value.link %}<a href="{{ value.link }}" rel="noopener"><cite>{{ value.book_title }}</cite></a>{% else %}<cite>{{ value.book_title }}</cite>{% endif %}{% if value.page %}, {{ value.page }}{% endif %}</figcaption>
+  <figcaption>{{ value.author }}, {% if value.link %}<a href="{{ value.link }}" rel="noopener"><cite>{{ value.book_title }}</cite></a>{% else %}<cite>{{ value.book_title }}</cite>{% endif %}{% if value.page %}, {% translate "p." %} {{ value.page }}{% endif %}</figcaption>
 </figure>

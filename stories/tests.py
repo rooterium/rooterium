@@ -90,7 +90,7 @@ class StoryPageTests(TestCase):
         self.assertContains(response, "<title>The eternity sign – Rooterium</title>")
         self.assertContains(response, '<meta name="description" content="[Teaser]">')
         self.assertContains(response, "[Book title]")
-        self.assertContains(response, "Photo: [Name] (CC BY-SA 4.0)")
+        self.assertContains(response, "Photo: [Name] · CC BY-SA 4.0")
         self.assertContains(response, 'alt="A test image"')
 
     def test_all_body_blocks_render_without_external_requests(self):
@@ -114,6 +114,69 @@ class StoryPageTests(TestCase):
         self.assertIn("<h2>Origins</h2>", html)
         self.assertIn("<cite>b</cite>", html)
         self.assertNotIn("<iframe", html)
+
+
+class StoryPageDesignTests(TestCase):
+    def setUp(self):
+        self.home = HomePage.objects.get()
+        self.myths = ThemeIndexPage(title="Myths", theme=Theme.MYTHS)
+        self.home.add_child(instance=self.myths)
+
+    def test_reading_time_is_at_least_one_minute(self):
+        story = make_story(self.myths)
+        self.assertEqual(story.reading_time, 1)
+        long = make_story(
+            self.myths,
+            title="Long",
+            body=[("paragraph", "<p>" + "word " * 1000 + "</p>")],
+        )
+        self.assertEqual(long.reading_time, 5)
+
+    def test_related_place_links_to_the_map(self):
+        story = make_story(self.myths)
+        place = make_place()
+        story.related_places.add(place)
+        story.save_revision().publish()
+        response = self.client.get(story.url)
+        self.assertContains(response, "Places in this story")
+        self.assertContains(response, f'href="/?place=place-{place.pk}#explore"')
+
+    def test_draft_places_are_not_listed(self):
+        story = make_story(self.myths)
+        story.related_places.add(make_place(name="[Draft]", live=False))
+        story.save_revision().publish()
+        self.assertNotContains(self.client.get(story.url), "Places in this story")
+
+    def test_more_stories_of_the_same_theme(self):
+        story = make_story(self.myths, title="One")
+        other = make_story(self.myths, title="Two")
+        symbols = ThemeIndexPage(title="Symbols", theme=Theme.SYMBOLS)
+        self.home.add_child(instance=symbols)
+        make_story(symbols, title="Elsewhere")
+        self.assertEqual(list(story.more_stories()), [other.page_ptr.specific])
+        response = self.client.get(story.url)
+        self.assertContains(response, "More on Myths")
+
+    def test_story_uses_its_hero_image_for_open_graph(self):
+        story = make_story(self.myths)
+        response = self.client.get(story.url)
+        self.assertContains(response, ".fill-1200x630.")
+
+    def test_youtube_is_not_loaded_before_a_click(self):
+        story = make_story(
+            self.myths,
+            body=[
+                (
+                    "youtube",
+                    {"url": "https://youtu.be/dQw4w9WgXcQ", "title": "[Video]"},
+                )
+            ],
+        )
+        response = self.client.get(story.url)
+        self.assertContains(response, 'data-video-id="dQw4w9WgXcQ"')
+        self.assertContains(response, "youtube-nocookie.com), which receives")
+        self.assertNotContains(response, "<iframe")
+        self.assertContains(response, "core/js/video.js")
 
 
 class AdminSmokeTests(TestCase):

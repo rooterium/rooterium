@@ -1,6 +1,6 @@
 {% load wagtailimages_tags %}
-<figure>
+<figure class="story-image">
   {% image value.image width-1200 as img %}
   <img src="{{ img.url }}" width="{{ img.width }}" height="{{ img.height }}" alt="{{ value.image.default_alt_text }}" loading="lazy">
-  <figcaption>{% if value.caption %}{{ value.caption }} – {% endif %}{{ value.image.credit }} ({{ value.image.licence }})</figcaption>
+  {% include "stories/includes/credit.html" with image=value.image caption=value.caption %}
 </figure>

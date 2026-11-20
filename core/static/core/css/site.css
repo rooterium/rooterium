@@ -718,6 +718,189 @@ main {
   text-align: center;
 }
 
+/* --- Story page --------------------------------------------------------- */
+
+.story-header {
+  max-width: var(--prose-width);
+  margin: 0 auto 2rem;
+}
+
+.story-header .eyebrow {
+  text-decoration: none;
+}
+
+.story-hero {
+  margin: 0 0 3rem;
+}
+
+.story-hero img {
+  display: block;
+  width: 100%;
+  max-height: 70vh;
+  object-fit: cover;
+  border-radius: var(--radius);
+}
+
+.story-body,
+.story-sources,
+.story-places {
+  margin-inline: auto;
+}
+
+.story-places {
+  max-width: var(--prose-width);
+  margin-top: 3rem;
+}
+
+figcaption .caption {
+  display: block;
+  color: var(--text-secondary);
+}
+
+figcaption .credit a {
+  color: inherit;
+}
+
+.prose h2 {
+  margin-top: 2.5rem;
+}
+
+.prose .quote,
+.prose .book-excerpt {
+  margin: 2.5rem 0;
+}
+
+.prose .quote blockquote {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 1.75rem; /* 28 px: Cormorant allowed */
+  line-height: 1.3;
+  color: var(--text);
+}
+
+.prose .quote blockquote p:last-child,
+.prose .book-excerpt blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+.prose .quote figcaption,
+.prose .book-excerpt figcaption {
+  margin-top: 0.75rem;
+  padding-left: 1.25rem;
+}
+
+.prose .book-excerpt {
+  padding: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.prose .book-excerpt blockquote {
+  margin: 0;
+}
+
+.story-image img {
+  border-radius: var(--radius);
+}
+
+.story-sources {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+}
+
+.story-sources ol {
+  padding-left: 1.25rem;
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+}
+
+.story-sources li + li {
+  margin-top: 0.5rem;
+}
+
+.place-cards {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.place-cards h3 {
+  margin-top: 0;
+}
+
+/* YouTube placeholder (two-click embed). */
+.video {
+  margin: 2.5rem 0;
+}
+
+.video-frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+.video-frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.video-consent {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  text-align: center;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.video-play {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  background: var(--accent);
+  position: relative;
+}
+
+.video-play::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 54%;
+  transform: translate(-50%, -50%);
+  border-style: solid;
+  border-width: 0.7rem 0 0.7rem 1.1rem;
+  border-color: transparent transparent transparent var(--text);
+}
+
+.video-consent:hover .video-play {
+  background: var(--accent-hover);
+}
+
+.video-title {
+  font-weight: 600;
+}
+
+.video-note {
+  max-width: 28rem;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
 /* --- Messages ----------------------------------------------------------- */
 
 .messages {

@@ -298,6 +298,14 @@ async function init() {
   map.on("zoom", updateLabels);
   updateLabels();
 
+  // Deep link from a story: /?place=place-3#explore selects that marker.
+  const wanted = new URLSearchParams(window.location.search).get("place");
+  const entry = markers.find((m) => m.feature.id === wanted);
+  if (entry) {
+    map.jumpTo({ center: [entry.feature.lng, entry.feature.lat], zoom: 8 });
+    select(entry);
+  }
+
   section.classList.add("has-map");
 }
 

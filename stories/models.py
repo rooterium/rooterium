@@ -1,7 +1,10 @@
+import math
+
 from django import forms
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
+from django.utils.html import strip_tags
 from django.utils.translation import gettext_lazy as _
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from wagtail.admin.panels import FieldPanel, InlinePanel
@@ -95,6 +98,37 @@ class StoryPage(SeoPageMixin, Page):
 
     def get_theme_display(self) -> str:
         return Theme(self.theme).label if self.theme else ""
+
+    @property
+    def theme_page(self):
+        parent = self.get_parent()
+        return parent.specific if parent else None
+
+    @property
+    def reading_time(self) -> int:
+        """Estimated reading time in minutes (220 words per minute)."""
+        words = len(strip_tags(str(self.body.render_as_block())).split())
+        words += len(self.teaser.split())
+        return max(1, math.ceil(words / 220))
+
+    def more_stories(self, limit=2):
+        """Other live stories of the same theme, newest first."""
+        return (
+            StoryPage.objects.live()
+            .sibling_of(self, inclusive=False)
+            .select_related("hero_image")
+            .order_by("-date", "-pk")[:limit]
+        )
+
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+        context["related_places"] = self.related_places.filter(live=True)
+        context["more_stories"] = self.more_stories()
+        if self.hero_image_id:
+            context["og_image"] = request.build_absolute_uri(
+                self.hero_image.get_rendition("fill-1200x630").url
+            )
+        return context
 
 
 class StorySource(Orderable):

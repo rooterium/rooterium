@@ -1,0 +1,5 @@
+{# Credit under every image (brief, section 6). Expects `image`, optional `caption`. #}
+<figcaption>
+  {% if caption %}<span class="caption">{{ caption }}</span>{% endif %}
+  <span class="credit">{% if image.source_url %}<a href="{{ image.source_url }}" rel="noopener">{{ image.credit }}</a>{% else %}{{ image.credit }}{% endif %} · {{ image.licence }}</span>
+</figcaption>

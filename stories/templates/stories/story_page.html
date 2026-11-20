@@ -1,35 +1,74 @@
 {% extends "base.html" %}
-{% load i18n wagtailcore_tags wagtailimages_tags %}
-{# Minimal template; designed in milestone 5. #}
+{% load i18n static wagtailcore_tags wagtailimages_tags %}
+
+{% block extra_head %}
+  <script type="module" src="{% static 'core/js/video.js' %}"></script>
+{% endblock %}
 
 {% block content %}
-  <article class="prose">
-    <span class="eyebrow">{{ page.get_theme_display }}</span>
-    <h1>{{ page.title }}</h1>
-    <p class="meta"><time datetime="{{ page.date|date:'Y-m-d' }}">{{ page.date }}</time></p>
-    <p class="lead">{{ page.teaser }}</p>
+  <article class="story">
+    <header class="story-header">
+      {% with theme_page=page.theme_page %}
+        <a class="eyebrow" href="{% pageurl theme_page %}">{{ page.get_theme_display }}</a>
+      {% endwith %}
+      <h1>{{ page.title }}</h1>
+      <p class="lead">{{ page.teaser }}</p>
+      <p class="meta">
+        <time datetime="{{ page.date|date:'Y-m-d' }}">{{ page.date|date:"j F Y" }}</time>
+        · {% blocktranslate count minutes=page.reading_time %}{{ minutes }} min read{% plural %}{{ minutes }} min read{% endblocktranslate %}
+      </p>
+    </header>
 
-    <figure>
-      {% image page.hero_image width-1200 as hero %}
+    <figure class="story-hero">
+      {% image page.hero_image width-1600 as hero %}
       <img src="{{ hero.url }}" width="{{ hero.width }}" height="{{ hero.height }}" alt="{{ page.hero_image.default_alt_text }}">
-      <figcaption>{{ page.hero_image.credit }} ({{ page.hero_image.licence }})</figcaption>
+      {% include "stories/includes/credit.html" with image=page.hero_image %}
     </figure>
 
-    {% include_block page.body %}
+    <div class="story-body prose">
+      {% include_block page.body %}
+    </div>
 
     {% with sources=page.sources.all %}
       {% if sources %}
-        <section>
-          <h2>{% translate "Sources" %}</h2>
+        <section class="story-sources prose" aria-labelledby="sources-heading">
+          <h2 id="sources-heading">{% translate "Sources" %}</h2>
           <ol>
             {% for source in sources %}
               <li>
-                {% if source.url %}<a href="{{ source.url }}" rel="noopener">{{ source.title }}</a>{% else %}{{ source.title }}{% endif %}{% if source.note %}, {{ source.note }}{% endif %}
+                {% if source.url %}<a href="{{ source.url }}" rel="noopener">{{ source.title }}</a>{% else %}<cite>{{ source.title }}</cite>{% endif %}{% if source.note %}, {{ source.note }}{% endif %}
               </li>
             {% endfor %}
           </ol>
         </section>
       {% endif %}
     {% endwith %}
+
+    {% if related_places %}
+      <section class="story-places" aria-labelledby="places-heading">
+        <h2 id="places-heading">{% translate "Places in this story" %}</h2>
+        <ul class="place-cards">
+          {% for place in related_places %}
+            <li class="card">
+              <span class="eyebrow">{{ place.get_theme_display }}</span>
+              <h3>{{ place.name }}</h3>
+              <p>{{ place.short_description }}</p>
+              <p><a href="/?place=place-{{ place.pk }}#explore">{% translate "Show on the map" %} →</a></p>
+            </li>
+          {% endfor %}
+        </ul>
+      </section>
+    {% endif %}
   </article>
+
+  {% if more_stories %}
+    <section class="home-section" aria-labelledby="more-heading">
+      <h2 id="more-heading">{% blocktranslate with theme=page.get_theme_display %}More on {{ theme }}{% endblocktranslate %}</h2>
+      <div class="story-grid">
+        {% for story in more_stories %}
+          {% include "stories/includes/story_card.html" with hide_theme=True %}
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
 {% endblock %}
