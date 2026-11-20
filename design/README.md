@@ -20,6 +20,7 @@ It writes to `core/static/core/img/` (commit the result):
 | `rooterium_v2_fantasy_map.png` | Fantasy map with theme islands | AI-generated mood image | Atmosphere only |
 | `rooterium_v2_moodboard.png` | Moodboard (khachkar, pomegranate, carpet, duduk, …) | AI-generated mood image | Reference for colour and mood only |
 | `mockup-2a-theme-islands.png` | Home page mockup, design variant A ("Themen-Inseln") | Screenshot of the Claude design canvas "Rooterium – Startseiten-Entwürfe" | Reference only; variant A is out of scope for version 1 (issue #23) |
+| `mockup-2b-map.png` | Home page mockup, design variant B ("Landkarte"), 1440 px | Screenshot of the same canvas, board "B · Landkarte" | **The agreed design for version 1**: header, home page layout, map look, cards, newsletter band, footer |
 
 ## Fonts
 
@@ -47,5 +48,7 @@ From `docs/PROJECT_BRIEF.md`, section 6:
   sources.
 - Real photos need a source, author and clarified usage rights, recorded in
   this table; the credit is shown under each image on the site.
-- Still missing: the mockups of design variant B ("Landkarte"), which the
-  home page follows (issue #13).
+- The design canvas "Rooterium – Startseiten-Entwürfe" (the maintainer's
+  claude.ai account) holds the boards A, B and the style board; variant B
+  is the reference for version 1. Export a board as PNG into this folder
+  when it changes.

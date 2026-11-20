@@ -113,3 +113,41 @@ class WebAssetTests(TestCase):
         ):
             with self.subTest(name=name):
                 self.assertTrue((img / name).is_file())
+
+
+class HeaderFooterTests(TestCase):
+    """Header and footer follow the variant B mockup (design/)."""
+
+    def test_header_has_map_link_and_subscribe_button(self):
+        response = self.client.get("/stories/")
+        self.assertContains(response, '<a href="/#explore">Map</a>', html=True)
+        self.assertContains(
+            response,
+            '<a class="button nav-subscribe" href="/newsletter/">Subscribe</a>',
+            html=True,
+        )
+
+    def test_about_link_only_when_the_page_is_live(self):
+        from home.models import HomePage
+        from pages.models import Purpose, SimplePage
+
+        self.assertNotContains(self.client.get("/stories/"), ">About</a>")
+        about = SimplePage(title="About", purpose=Purpose.ABOUT, body="<p>x</p>")
+        HomePage.objects.get().add_child(instance=about)
+        self.assertContains(
+            self.client.get("/stories/"), f'<a href="{about.url}">About</a>', html=True
+        )
+
+    def test_footer_names_the_project_owner(self):
+        response = self.client.get("/stories/")
+        self.assertContains(
+            response, f"Rooterium is a personal project by {settings.SITE_OWNER}."
+        )
+
+    def test_armenian_name_only_when_set(self):
+        self.assertNotContains(self.client.get("/stories/"), "brand-native")
+        with override_settings(SITE_NATIVE_NAME="[hy]"):
+            self.assertContains(
+                self.client.get("/stories/"),
+                '<span class="brand-native" lang="hy">[hy]</span>',
+            )

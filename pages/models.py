@@ -62,5 +62,9 @@ def footer_pages() -> list[SimplePage]:
     return sorted(SimplePage.objects.live(), key=lambda p: order[p.purpose])
 
 
+def about_page() -> SimplePage | None:
+    return SimplePage.objects.live().filter(purpose=Purpose.ABOUT).first()
+
+
 def privacy_page() -> SimplePage | None:
     return SimplePage.objects.live().filter(purpose=Purpose.PRIVACY).first()
