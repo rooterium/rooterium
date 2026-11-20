@@ -4,7 +4,7 @@ Current state of Rooterium and the next steps. **Every PR updates this
 file** (at least "Last updated" and whatever the PR changes). Details live in
 the linked docs; open work lives in GitHub issues.
 
-_Last updated: 2026-11-20 (PR "Lay out the home page like the variant B mockup")_
+_Last updated: 2026-11-20 (PR "Give the map a relief like the variant B mockup")_
 
 ## Live
 
@@ -22,6 +22,9 @@ _Last updated: 2026-11-20 (PR "Lay out the home page like the variant B mockup")
 - Map tiles: the maintainer's local build (Protomaps 20261118) copied into
   the `media` volume (`/app/media/maps/rooterium.pmtiles`, checksum
   matched).
+- Relief (ADR 0016): Mapterhorn terrain extract (max zoom 8, 22.6 MB)
+  copied into the `media` volume (`/app/media/maps/terrain.pmtiles`,
+  checksum matched, served by Caddy with range requests), 2026-11-20.
 
 ## Infrastructure
 
@@ -241,8 +244,10 @@ footer – done; (2) home page layout – done: two columns (text, chips and
 place card left, map right), container 1360 px, story cards with "All
 stories" top right, events/projects with suggest links and project
 tiles, one-row newsletter band (shorter consent text), selected chips
-in pomegranate; (3) next: map look – warmer relief colours, glowing
-markers with name labels.
+in pomegranate; (3) map look – done: relief from elevation data (ADR
+0016), glowing markers with name labels. Remaining differences to the
+mockup are content (real photos, story texts) and the Armenian name
+(`SITE_NATIVE_NAME`, needs the editor).
 
 **Open questions for the maintainer/editor:**
 

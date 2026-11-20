@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
-# Build the map tiles for the home page (ADR 0015): a PMTiles extract of
-# historic Armenia and the South Caucasus from the Protomaps daily build.
+# Build the map tiles for the home page: PMTiles extracts of historic
+# Armenia and the South Caucasus –
+#   - vector tiles from the Protomaps daily build (ADR 0015) -> OUTPUT,
+#   - terrain (elevation) from Mapterhorn for the relief (ADR 0016) ->
+#     terrain.pmtiles next to OUTPUT.
 #
 # Usage: scripts/build-map-tiles.sh [OUTPUT] [BUILD]
 #   OUTPUT  default: media/maps/rooterium.pmtiles (local development)
@@ -13,6 +16,9 @@ set -euo pipefail
 VERSION=1.31.2
 BBOX=36.5,36.0,50.5,43.6
 MAXZOOM=10
+# Relief: zoom 8 is enough for the shading (MapLibre over-zooms), ~25 MB.
+TERRAIN_SOURCE=https://download.mapterhorn.com/planet.pmtiles
+TERRAIN_MAXZOOM=8
 OUTPUT=${1:-media/maps/rooterium.pmtiles}
 BUILD=${2:-}
 
@@ -51,4 +57,10 @@ echo "Extracting build ${BUILD}: bbox ${BBOX}, max zoom ${MAXZOOM} -> ${OUTPUT}"
 "$WORK/pmtiles" extract "https://build.protomaps.com/${BUILD}.pmtiles" "$OUTPUT.tmp" \
   --bbox="$BBOX" --maxzoom="$MAXZOOM"
 mv "$OUTPUT.tmp" "$OUTPUT"
-ls -lh "$OUTPUT"
+
+TERRAIN="$(dirname "$OUTPUT")/terrain.pmtiles"
+echo "Extracting terrain: bbox ${BBOX}, max zoom ${TERRAIN_MAXZOOM} -> ${TERRAIN}"
+"$WORK/pmtiles" extract "$TERRAIN_SOURCE" "$TERRAIN.tmp" \
+  --bbox="$BBOX" --maxzoom="$TERRAIN_MAXZOOM"
+mv "$TERRAIN.tmp" "$TERRAIN"
+ls -lh "$OUTPUT" "$TERRAIN"

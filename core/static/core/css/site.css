@@ -557,6 +557,17 @@ main {
   }
 }
 
+/* Dark edges, like the framed relief in the mockup; lets clicks through. */
+.map-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: inherit;
+  box-shadow: inset 0 0 80px 10px rgb(11 10 9 / 75%);
+}
+
 /* Sized explicitly: MapLibre sets `position: relative` on the container. */
 .map {
   width: 100%;
@@ -628,15 +639,17 @@ main {
   cursor: pointer;
 }
 
+/* Glowing dot, as in the variant B mockup. */
 .map-marker::before {
   content: "";
   flex: none;
+  box-sizing: border-box;
   width: 14px;
   height: 14px;
   margin-left: 15px; /* centres the dot in a 44 px hit area */
   border-radius: 50%;
-  background: var(--gold);
-  box-shadow: 0 0 0 4px rgb(200 161 93 / 25%), 0 0 12px rgb(200 161 93 / 60%);
+  background: #e3c48a;
+  box-shadow: 0 0 16px 5px rgb(200 161 93 / 85%);
 }
 
 .map-marker--event::before {
@@ -645,13 +658,14 @@ main {
 }
 
 .map-marker-label {
-  padding: 0.1rem 0.45rem;
+  padding: 0.25rem 0.625rem;
   border-radius: 999px;
-  background: rgb(11 10 9 / 80%);
+  background: rgb(16 13 12 / 82%);
   white-space: nowrap;
 }
 
-.map:not(.show-labels) .map-marker-label {
+.map:not(.show-labels) .map-marker-label,
+.map .label-collides .map-marker-label {
   display: none;
 }
 
@@ -659,7 +673,7 @@ main {
 .map .map-marker:focus-visible .map-marker-label,
 .map .map-marker[aria-pressed="true"] .map-marker-label {
   display: inline;
-  outline: 1px solid var(--gold);
+  outline: 1px solid var(--accent-2);
 }
 
 .map-marker:hover,
@@ -668,8 +682,12 @@ main {
   z-index: 2;
 }
 
+/* Selected: larger dot with a pomegranate ring (shape, not colour alone). */
 .map-marker[aria-pressed="true"]::before {
-  background: var(--text);
+  width: 18px;
+  height: 18px;
+  margin-left: 13px;
+  border: 3px solid var(--accent);
 }
 
 /* MapLibre controls in the dark palette. */
@@ -692,8 +710,14 @@ main {
 }
 
 .maplibregl-ctrl-attrib {
-  background: rgb(11 10 9 / 80%) !important;
-  color: var(--text-muted);
+  max-width: calc(100% - 20px);
+  background: rgb(11 10 9 / 88%) !important;
+  font-size: 0.6875rem;
+}
+
+.maplibregl-ctrl-attrib,
+.maplibregl-ctrl-attrib-inner {
+  color: var(--text-secondary) !important;
 }
 
 .maplibregl-ctrl-attrib a {

@@ -12,6 +12,7 @@
   <section id="explore" class="explore" aria-labelledby="explore-heading"
            data-map
            data-tiles="{{ map_tiles_url|default:'' }}"
+           data-terrain="{{ map_terrain_url|default:'' }}"
            data-worker="{% static 'core/vendor/maplibre-gl-6.16.0/maplibre-gl-worker.mjs' %}"
            data-maplibre="{% static 'core/vendor/maplibre-gl-6.16.0/maplibre-gl.mjs' %}">
     <div class="explore-intro">
