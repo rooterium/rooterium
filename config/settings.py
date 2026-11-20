@@ -6,6 +6,7 @@ production differ only in their environment.
 """
 
 import sys
+import tempfile
 from pathlib import Path
 
 import environ
@@ -149,6 +150,8 @@ if "test" in sys.argv[1:2]:
     STORAGES["staticfiles"]["BACKEND"] = (
         "django.contrib.staticfiles.storage.StaticFilesStorage"
     )
+    # Uploaded test images go to a throwaway folder, not the real media.
+    MEDIA_ROOT = Path(tempfile.mkdtemp(prefix="rooterium-test-media-"))
 
 # --- Site -----------------------------------------------------------------
 

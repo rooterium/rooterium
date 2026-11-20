@@ -4,21 +4,27 @@ Current state of Rooterium and the next steps. **Every PR updates this
 file** (at least "Last updated" and whatever the PR changes). Details live in
 the linked docs; open work lives in GitHub issues.
 
-_Last updated: 2026-11-20 (PR "Give the map a relief like the variant B mockup")_
+_Last updated: 2026-11-20 (PR "Add example content with real photos")_
 
 ## Live
 
 - **Test phase on https://rooterium.pocketapp.ch** (a subdomain of the
   maintainer's domain until the final domain is decided, #9). Public, no
   password; `ROBOTS_TAG=noindex, nofollow`.
-- The live database holds the **placeholder content** of `seed_demo`
-  (`--allow-production`, maintainer's request 2026-11-20, so the site shows
-  its look and feel): five theme pages, five places "to be checked", three
-  placeholder stories with a story-shaped body, three events, four
-  projects, About/Imprint/Privacy placeholders – everything unverified in
-  [brackets]. The editor replaces or deletes it in the admin before the
-  site is announced. (The two test records from the email check were
-  deleted.)
+- The live database holds **example content** (maintainer's request
+  2026-11-20: "as accurate and real as possible", to see the real look):
+  `seed_demo` placeholders, then `load_example_content --allow-production`
+  (`core/example_content.py`). Six stories (Geghard, duduk, eternity sign,
+  Garni, khachkars, Ararat) with facts only from the Wikipedia/UNESCO
+  pages listed as their sources, 11 photos from Wikimedia Commons (CC BY /
+  CC BY-SA, author, licence and source shown under each), eight places
+  (coordinates from Wikipedia, still flagged "to be checked"), four real
+  recurring events (Armenian Christmas, Trndez, Genocide Remembrance Day,
+  Vardavar 2027) and four real organisations as projects (TUMO, Armenia
+  Tree Project, Picsart, Komitas Museum-Institute), theme intros and an
+  About text. Imprint and Privacy stay placeholders (legal texts). **The
+  editor reviews all of it** before the site is announced: texts, the
+  choice of projects and events, and whether to keep the photos.
 - Map tiles: the maintainer's local build (Protomaps 20261118) copied into
   the `media` volume (`/app/media/maps/rooterium.pmtiles`, checksum
   matched).
