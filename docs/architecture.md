@@ -33,8 +33,8 @@ Overview of how the project is built and run. Decisions and their rationale:
   styles, fonts and images only from our own origin, and frame only
   `youtube-nocookie.com`. `/admin/` and `/django-admin/` are excluded
   (Wagtail's admin needs inline code and frames the page preview), as are
-  500 responses (standalone page with inline styles). The map (milestone 4)
-  will likely need `worker-src blob:` for MapLibre.
+  500 responses (standalone page with inline styles). The map needs no
+  exception: MapLibre's worker is a same-origin module (ADR 0015).
 - **Home page map** (ADR 0010, 0015): `home.HomePage.get_context()` embeds
   the markers (live places, upcoming events with coordinates) as JSON;
   `core/static/core/js/map.js` (ES module) loads the vendored MapLibre

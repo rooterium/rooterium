@@ -37,8 +37,9 @@ image is a `CustomImage`; "live" means published in Wagtail (`live=True`).
 
 Site root, at most one; created by data migration `home.0002` (replaces
 Wagtail's welcome page, default `Site` → `localhost`, default site so every
-host name matches). Will be the parent of the theme index pages. Map and
-teasers come in milestone 4.
+host name matches). Parent of the theme pages and the text pages (About,
+Imprint, Privacy). Shows the map, latest stories, upcoming events, projects
+and the newsletter sign-up (`HomePage.get_context()`).
 
 ## `stories`
 
