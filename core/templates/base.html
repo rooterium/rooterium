@@ -29,16 +29,18 @@
 
   <header class="site-header">
     <div class="container header-inner">
-      <a class="brand" href="/"{% if request.path == "/" %} aria-current="page"{% endif %}>{{ site_short_name }}</a>
-      {% if nav_items %}
-        <nav class="main-nav" aria-label="{% translate 'Main navigation' %}">
-          <ul>
-            {% for item in nav_items %}
-              <li><a href="{{ item.url }}"{% if item.active %} aria-current="page"{% endif %}>{{ item.label }}</a></li>
-            {% endfor %}
-          </ul>
-        </nav>
-      {% endif %}
+      <a class="brand" href="/"{% if request.path == "/" %} aria-current="page"{% endif %}>{{ site_short_name }}{% if site_native_name %} <span class="brand-native" lang="hy">{{ site_native_name }}</span>{% endif %}</a>
+      <nav class="main-nav" aria-label="{% translate 'Main navigation' %}">
+        <ul>
+          {% for item in nav_items %}
+            <li><a href="{{ item.url }}"{% if item.active %} aria-current="page"{% endif %}>{{ item.label }}</a></li>
+          {% endfor %}
+          {% with about=about_page %}{% if about %}
+            <li><a href="{{ about.url }}"{% if request.path == about.url %} aria-current="page"{% endif %}>{% translate "About" %}</a></li>
+          {% endif %}{% endwith %}
+          <li><a class="button nav-subscribe" href="{% url 'newsletter:signup' %}">{% translate "Subscribe" %}</a></li>
+        </ul>
+      </nav>
     </div>
   </header>
 
@@ -55,16 +57,15 @@
 
   <footer class="site-footer">
     <div class="container footer-inner">
-      <p>© {% now "Y" %} {{ site_name }}</p>
+      <p>{% blocktranslate with name=site_name owner=site_owner %}{{ name }} is a personal project by {{ owner }}. Content in English, more languages to come.{% endblocktranslate %}</p>
       <nav aria-label="{% translate 'Footer' %}">
         <ul class="footer-links">
-          <li><a href="{% url 'newsletter:signup' %}">{% translate "Newsletter" %}</a></li>
           {% for footer_page in footer_pages %}
             <li><a href="{{ footer_page.url }}">{{ footer_page.title }}</a></li>
           {% endfor %}
+          <li><a href="{% url 'newsletter:signup' %}">{% translate "Newsletter" %}</a></li>
         </ul>
       </nav>
-      <p>{% translate "Content in English, more languages to come." %}</p>
     </div>
   </footer>
 </body>

@@ -4,7 +4,7 @@ Current state of Rooterium and the next steps. **Every PR updates this
 file** (at least "Last updated" and whatever the PR changes). Details live in
 the linked docs; open work lives in GitHub issues.
 
-_Last updated: 2026-11-20 (PR "Make whole cards the tap target on phones")_
+_Last updated: 2026-11-20 (PR "Match header and footer to the variant B mockup")_
 
 ## Live
 
@@ -182,7 +182,6 @@ Overview: `gh issue list`. At the time of writing:
 | #9 | Register the final domain (test phase runs on `rooterium.pocketapp.ch`) | Maintainer / editor |
 | #10 | Hosting: UpCloud server running; open: who pays | Maintainer / editor |
 | #12 | Second GitHub owner, shared password manager | Maintainer / editor |
-| #13 | Mockups of design variant B ("Landkarte") – none available; M4 was built from the brief | Maintainer |
 | #14 | Texts for About, Imprint, Privacy – needed for M7 | Editor |
 | #15 | Verify seed place coordinates and descriptions | Editor (after M2) |
 | #16–#23 | Outside version 1 (label `later`) | – |
@@ -235,6 +234,14 @@ pages) is done: no horizontal scrolling, no console or CSP errors; card
 and list links were below 44 px and now the whole card or row is the tap
 target (PR "Make whole cards the tap target on phones").
 
+**Design catch-up (in progress):** the variant B mockup did exist on the
+design canvas; it is now in `design/mockup-2b-map.png` (#13 closed). The
+live site is being brought in line with it in small PRs: (1) header and
+footer – done; (2) home page top: two columns, text and place card left,
+map right; (3) map look: warmer relief colours, glowing markers with name
+labels; (4) wider container, story cards, events/projects, newsletter
+band.
+
 **Open questions for the maintainer/editor:**
 
 - How will the editor **send** the newsletter? Not part of the brief.
@@ -242,13 +249,14 @@ target (PR "Make whole cards the tap target on phones").
   #11 (if it has newsletter features), or a simple send function in the
   admin (needs an unsubscribe link per recipient and a List-Unsubscribe
   header). Decide together with #11.
-- Armenian word next to the logo (the variant A mockup shows one): add it
-  only once the editor confirms the exact wording (brief: Armenian script
-  only from verified sources).
+- Armenian word next to the logo (both mockups show "Արմատներ"): set
+  `SITE_NATIVE_NAME` in `config/settings.py` once the editor confirms the
+  exact wording (brief: Armenian script only from verified sources).
+- Footer "a personal project by [Name]": set `SITE_OWNER` in
+  `config/settings.py` once the editor agrees to be named. The mockup's
+  "Contact" link has no page yet (not in the brief).
 - Map: modern political borders are deliberately not shown (ADR 0015);
   the editor decides later whether to show modern or historic borders.
-- Variant B mockups (#13): none exist; the home page was built from the
-  brief. Colours and layout can be adjusted once mockups exist.
 - Real logo: the favicon is an interim "R" mark
   (`design/build_web_assets.py`).
 

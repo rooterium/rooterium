@@ -157,6 +157,13 @@ SITE_NAME = "Rooterium"
 SITE_SHORT_NAME = "Rooterium"
 # Document title of the home page; other pages use "<page> – <short name>".
 SITE_TITLE = f"{SITE_NAME} – Find your way back to your roots"
+# Armenian name next to the logo (variant B mockup). Empty until the editor
+# confirms the exact wording: Armenian script only from verified sources
+# (brief, section 6).
+SITE_NATIVE_NAME = ""
+# Shown in the footer ("a personal project by …"). Replace the placeholder
+# with the editor's name once they agree to be named.
+SITE_OWNER = "[Name]"
 # Default meta description for pages that do not set their own.
 SITE_DESCRIPTION = (
     "Armenian history, traditions, myths, symbols and music, collected and "

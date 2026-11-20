@@ -304,20 +304,29 @@ small {
   padding-bottom: 0.75rem;
 }
 
+/* Block with a 44 px line box: name and Armenian word share a baseline. */
 .brand {
-  display: inline-flex;
-  align-items: center;
-  min-height: var(--touch);
+  display: inline-block;
+  line-height: var(--touch);
   font-family: var(--font-heading);
   font-weight: 600;
   font-size: 1.75rem; /* 28 px: smallest size for Cormorant */
-  line-height: 1;
   color: var(--text);
+  white-space: nowrap;
   text-decoration: none;
 }
 
 .brand:hover {
   color: var(--text);
+}
+
+/* Armenian name next to the logo (variant B mockup): small and quiet. */
+.brand-native {
+  margin-left: 0.75rem;
+  font-family: "Noto Serif Armenian", Georgia, serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-muted);
 }
 
 .main-nav ul {
@@ -344,6 +353,16 @@ small {
 
 .main-nav a:hover {
   color: var(--accent-2);
+}
+
+.main-nav .nav-subscribe {
+  margin-left: 0.5rem;
+  padding: 0 1.25rem;
+  font-weight: 600;
+}
+
+.main-nav .nav-subscribe:hover {
+  color: var(--text);
 }
 
 /* Current page: underline in gold plus the weight, not colour alone. */
@@ -1252,6 +1271,11 @@ figcaption .credit a {
   display: inline-flex;
   align-items: center;
   min-height: var(--touch);
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
 }
 
 .footer-inner {
