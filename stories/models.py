@@ -17,6 +17,12 @@ from core.themes import Theme
 from .blocks import StoryBodyBlock
 
 
+def theme_pages():
+    """Live theme pages in the order of the theme list."""
+    order = {value: index for index, value in enumerate(Theme.values)}
+    return sorted(ThemeIndexPage.objects.live(), key=lambda p: order[p.theme])
+
+
 class ThemeIndexPage(SeoPageMixin, Page):
     """One page per theme; lists its stories (ADR 0014)."""
 
@@ -43,6 +49,7 @@ class ThemeIndexPage(SeoPageMixin, Page):
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
         context["stories"] = self.stories()
+        context["theme_pages"] = theme_pages()
         return context
 
 

@@ -22,6 +22,7 @@ urlpatterns = [
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     # Feature apps go here, e.g. path("events/", include("events.urls")).
+    path("stories/", include("stories.urls")),
     path("", include("core.urls")),
     # Wagtail pages last: it catches every remaining path.
     path("", include(wagtail_urls)),

@@ -7,4 +7,8 @@ time. The home page has no entry: the site name in the
 header links to it.
 """
 
-MAIN_NAVIGATION: list[tuple[str, str]] = []
+from django.utils.translation import gettext_lazy as _
+
+MAIN_NAVIGATION: list[tuple[str, str]] = [
+    (_("Stories"), "stories:list"),
+]

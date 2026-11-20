@@ -4,7 +4,7 @@ Current state of Rooterium and the next steps. **Every PR updates this
 file** (at least "Last updated" and whatever the PR changes). Details live in
 the linked docs; open work lives in GitHub issues.
 
-_Last updated: 2026-11-20 (PR "Design the story page")_
+_Last updated: 2026-11-20 (PR "Add the story overview and design the theme pages")_
 
 ## Live
 
@@ -83,6 +83,10 @@ Brief and milestones: [`PROJECT_BRIEF.md`](PROJECT_BRIEF.md).
   set so embeds work); sources; related places with "Show on the map"
   (deep link selects the marker); "More on <theme>"; hero image as Open
   Graph image.
+- **Milestone 5 – story overview and theme pages**: `/stories/` (all
+  stories, 12 per page) as the first main navigation entry; theme pages
+  with intro and story cards; theme chips link to the theme pages (one URL
+  per theme). **Milestone 5 complete.**
 
 ## Open issues
 
@@ -106,8 +110,8 @@ Overview: `gh issue list`. At the time of writing:
    public first needs the organisation setting "Package creation → Public"
    (org settings → Packages); alternatively the server logs in with a
    read-only token. Only needed for milestone 8.
-2. Milestone 5 (#5): story pages, theme pages, places linked to stories,
-   YouTube click-to-load.
+2. Milestone 6 (#6): events and projects pages, submission form with
+   moderation and email notification.
 3. Editor: check the seed place coordinates and descriptions (#15) – they
    can be edited in the Wagtail admin under "Map & directory → Places".
 

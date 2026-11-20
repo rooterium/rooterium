@@ -11,7 +11,7 @@ Overview of how the project is built and run. Decisions and their rationale:
 | `core/` | Base layout, SEO (`core/seo.py`), navigation, `/version`, error pages |
 | `home/` | Wagtail `HomePage` (site root) |
 | `images/` | Wagtail image model with required alt text, credit and licence |
-| `stories/` | `ThemeIndexPage`, `StoryPage` (StreamField blocks in `blocks.py`), sources |
+| `stories/` | `ThemeIndexPage`, `StoryPage` (StreamField blocks in `blocks.py`), sources; `/stories/` overview (Django view, paginated) |
 | `places/`, `events/`, `projects/` | Snippets with draft/publish; admin viewsets in `viewsets.py` |
 | `newsletter/` | `NewsletterSubscriber` (sign-up flow in milestone 7) |
 
