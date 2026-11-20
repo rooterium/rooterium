@@ -203,6 +203,9 @@ uv run ruff check . --fix
 uv run ruff format .
 ```
 
+- Visual check of a page (phone widths, console and CSP messages, clicks):
+  `uv run --no-project --with websockets python tools/browser_check.py URL OUT.png --width 390`.
+- Map tiles for local development (once): `scripts/build-map-tiles.sh`.
 - Inside the container use `python manage.py`, not `uv run` (the venv is
   at `/opt/venv` and on `PATH`; `uv run` would try to sync dev dependencies).
 - `compose.yaml` is the development setup; `compose.prod.yaml` is production

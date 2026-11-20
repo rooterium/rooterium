@@ -4,7 +4,7 @@ Current state of Rooterium and the next steps. **Every PR updates this
 file** (at least "Last updated" and whatever the PR changes). Details live in
 the linked docs; open work lives in GitHub issues.
 
-_Last updated: 2026-11-20 (PR "Add the story overview and design the theme pages")_
+_Last updated: 2026-11-20 (PR "Document the session handoff")_
 
 ## Live
 
@@ -94,7 +94,10 @@ Overview: `gh issue list`. At the time of writing:
 
 | # | Topic | Who |
 |---|---|---|
-| #2–#8 | Milestones 2–8 (label `milestone`) | Claude / maintainer |
+| #1–#5 | Milestones 1–5 – **closed** | – |
+| #6 | M6: events, projects, submission form | Claude (next) |
+| #7 | M7: newsletter, About/Imprint/Privacy | Claude (needs #11, #14) |
+| #8 | M8: deployment to a test server | Maintainer + Claude (needs #9, #10) |
 | #9 | Register the domain | Maintainer / editor |
 | #10 | Hosting account and who pays | Maintainer / editor |
 | #11 | Email sending service | Maintainer |
@@ -106,14 +109,60 @@ Overview: `gh issue list`. At the time of writing:
 
 ## Next steps
 
-1. GHCR package `ghcr.io/rooterium/rooterium`: still private. Making it
+1. **Milestone 6 (#6)** – proposed steps, one PR each:
+   - 6a: events page (`/events/`, upcoming only, past events disappear) and
+     projects page (`/projects/`, filter by type), both in the main
+     navigation; home page sections link to them.
+   - 6b: submission form "Suggest an event / a project": creates drafts
+     (`live=False`, `submitted_by_email`), email to the editor
+     (`EDITOR_NOTIFICATION_EMAIL`, new env variable → `.env.example`),
+     spam protection without third parties (honeypot field + minimum fill
+     time + rate limit), success page; tests for spam rules and drafts.
+2. GHCR package `ghcr.io/rooterium/rooterium`: still private. Making it
    public first needs the organisation setting "Package creation → Public"
    (org settings → Packages); alternatively the server logs in with a
    read-only token. Only needed for milestone 8.
-2. Milestone 6 (#6): events and projects pages, submission form with
-   moderation and email notification.
 3. Editor: check the seed place coordinates and descriptions (#15) – they
    can be edited in the Wagtail admin under "Map & directory → Places".
+
+## Session handoff (2026-11-20)
+
+Where the last session stopped: milestones 1–5 merged (PRs #24–#38), no
+open PRs, nothing deployed (no server). Next is milestone 6.
+
+**Open questions for the maintainer/editor** (not blocking M6):
+
+- Armenian word next to the logo (the variant A mockup shows one): add it
+  only once the editor confirms the exact wording (brief: Armenian script
+  only from verified sources).
+- Map: modern political borders are deliberately not shown (ADR 0015);
+  the editor decides later whether to show modern or historic borders.
+- Variant B mockups (#13): none exist; the home page was built from the
+  brief. Colours and layout can be adjusted once mockups exist.
+- Real logo: the favicon is an interim "R" mark
+  (`design/build_web_assets.py`).
+
+**Local development state** (maintainer's machine, not in git):
+
+- `.env` created from `.env.example` with a random `SECRET_KEY`.
+- Map tiles built: `media/maps/rooterium.pmtiles` (Protomaps build
+  20261118, 40 MB). Without them the map shows only markers.
+- Database seeded with `seed_demo`; the demo story "The monastery of the
+  spear" was additionally filled with every block type (placeholders) to
+  check the layout.
+
+**Tooling notes for Claude Code sessions:**
+
+- Visual checks: `tools/browser_check.py` (headless Chrome with device
+  emulation, console/CSP messages, scripted clicks, YouTube blocked); see
+  its docstring. Plain `--headless --window-size` cannot go below 500 px.
+- The session's permission rules blocked running downloaded binaries
+  (`scripts/build-map-tiles.sh` was run by the maintainer with `!`) and
+  force pushes: add follow-up commits instead of amending pushed ones.
+- After editing Python files, the dev server's auto-reloader can hang on a
+  transient syntax error ("page isn't working"): `docker compose restart web`.
+- Local branches of merged PRs still exist (remote ones are deleted);
+  `git fetch --prune` and delete them when convenient.
 
 ## Working agreements (summary)
 
