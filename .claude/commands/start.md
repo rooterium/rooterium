@@ -19,14 +19,13 @@ except for switching to `main` and pulling.
 4. `gh pr list --state open`
 5. `gh issue list --state open`
 6. `gh run list --limit 10`
-7. Live site (skip this step and say so while `{{LIVE_URL}}` below is still
-   a placeholder – no domain or server yet):
-   - `curl -s {{LIVE_URL}}/version`
+7. Live site:
+   - `curl -s https://rooterium.pocketapp.ch/version`
    - `git rev-parse origin/main`
    - Compare: is the deployed commit the head of `main`? If not, list the
      commits not yet deployed (`git log --oneline <deployed>..origin/main`)
      and check that CI pushed an image for `origin/main` (step 6).
-   - `curl -s -o /dev/null -w "%{http_code}\n" {{LIVE_URL}}/`
+   - `curl -s -o /dev/null -w "%{http_code}\n" https://rooterium.pocketapp.ch/`
 
 Then summarise in English, short:
 - what is live (commit, date) and whether it matches `main`,

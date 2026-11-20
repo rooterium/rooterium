@@ -1,6 +1,7 @@
 # Deployment and operations
 
-How the production server runs {{LIVE_URL}}. Architecture and rationale:
+How the production server runs https://rooterium.pocketapp.ch (test
+phase; server `deploy@80.47.231.164`). Architecture and rationale:
 [`architecture.md`](architecture.md), ADRs 0005–0008. Placeholders in
 examples: `<server-ip>`, `<domain>`.
 
@@ -133,9 +134,12 @@ The GHCR image must be pullable: make the package public (GitHub → package
 settings → visibility) or `docker login ghcr.io` on the server with a
 read-only token.
 
-Then:
+Then check that no placeholder secret is left (must print `0`), and
+only then deploy – PostgreSQL takes its password only when the database
+volume is first created:
 
 ```bash
+grep -c change-me .env
 scripts/deploy.sh
 docker compose -f compose.prod.yaml exec web python manage.py createsuperuser
 ```
@@ -164,8 +168,8 @@ Wait until the CI run for the merge commit has pushed it
 previous build. Then:
 
 ```bash
-ssh {{SSH_TARGET}} 'cd /srv/rooterium && scripts/deploy.sh'
-curl -s {{LIVE_URL}}/version   # {"commit": "<sha>", "short": "<sha7>"}
+ssh deploy@80.47.231.164 'cd /srv/rooterium && scripts/deploy.sh'
+curl -s https://rooterium.pocketapp.ch/version   # {"commit": "<sha>", "short": "<sha7>"}
 ```
 
 The script pulls the repo and images, runs migrations, restarts the
