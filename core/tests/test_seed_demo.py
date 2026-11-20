@@ -48,6 +48,31 @@ class SeedDemoTests(TestCase):
         )
         self.assertEqual(self.client.get(story.url).status_code, 200)
 
+    def test_stories_get_a_story_shaped_placeholder_body(self):
+        self.seed()
+        story = StoryPage.objects.get(title="The eternity sign")
+        types = [block.block_type for block in story.body]
+        for block_type in ("paragraph", "heading", "quote", "image", "book_excerpt"):
+            self.assertIn(block_type, types)
+        response = self.client.get(story.url)
+        self.assertContains(response, "[First section heading]")
+        self.assertContains(response, "[Book title]")
+
+    def test_old_one_line_bodies_are_upgraded_but_edited_ones_kept(self):
+        self.seed()
+        old = StoryPage.objects.get(title="The eternity sign")
+        old.body = [("paragraph", "<p>[Placeholder text]</p>")]
+        old.save_revision().publish()
+        edited = StoryPage.objects.get(title="The duduk, voice of apricot wood")
+        edited.body = [("paragraph", "<p>Real text by the editor.</p>")]
+        edited.save_revision().publish()
+        self.seed()
+        old.refresh_from_db()
+        edited.refresh_from_db()
+        self.assertGreater(len(old.body), 5)
+        self.assertEqual(len(edited.body), 1)
+        self.assertIn("Real text by the editor.", str(edited.body))
+
     @override_settings(DEBUG=False)
     def test_refuses_to_run_with_debug_off(self):
         with self.assertRaises(CommandError):

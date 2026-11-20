@@ -4,16 +4,22 @@ Current state of Rooterium and the next steps. **Every PR updates this
 file** (at least "Last updated" and whatever the PR changes). Details live in
 the linked docs; open work lives in GitHub issues.
 
-_Last updated: 2026-11-20 (PR "Record the email setup")_
+_Last updated: 2026-11-20 (PR "Give the seed stories a story-shaped placeholder body")_
 
 ## Live
 
 - **Test phase on https://rooterium.pocketapp.ch** (a subdomain of the
   maintainer's domain until the final domain is decided, #9). Public, no
   password; `ROBOTS_TAG=noindex, nofollow`.
-- Deployed commit: `7b78f31` (2026-11-20). The live database is empty on
-  purpose (no seed data): the editor creates the theme pages, text pages
-  and content in the admin.
+- The live database holds the **placeholder content** of `seed_demo`
+  (`--allow-production`, maintainer's request 2026-11-20, so the site shows
+  its look and feel): five theme pages, five places "to be checked", three
+  placeholder stories with a story-shaped body, three events, four
+  projects, About/Imprint/Privacy placeholders – everything unverified in
+  [brackets]. The editor replaces or deletes it in the admin before the
+  site is announced. Also two test records from the email check: the
+  unconfirmed sign-up `rooterium@linard.org` and the draft event
+  "[Test suggestion – please delete]".
 - Map tiles: the maintainer's local build (Protomaps 20261118) copied into
   the `media` volume (`/app/media/maps/rooterium.pmtiles`, checksum
   matched).
@@ -245,8 +251,9 @@ width.
 
 **Before the site is announced** (it is reachable but `noindex`):
 
-- About, Imprint and Privacy created and published by the editor in the
-  admin (#14); they are not created by a migration.
+- About, Imprint and Privacy written by the editor (#14) – the live
+  pages are placeholders from `seed_demo`; all other placeholder content
+  replaced or deleted (stories, events, projects, places).
 - Mail password changed (it was in the chat); editor's address in
   `EDITOR_NOTIFICATION_EMAIL`; DKIM/DMARC for the sender domain.
 - Editor account, UpCloud two-factor authentication, `.env` in the

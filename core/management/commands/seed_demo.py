@@ -154,6 +154,87 @@ PROJECTS = [
 
 PLACEHOLDER_IMAGE_TITLE = "[Placeholder image]"
 
+# The one-line body of earlier seed runs; such stories get the full
+# placeholder body below. Stories with any other body are left alone.
+OLD_PLACEHOLDER_BODY = "<p>[Placeholder text]</p>"
+
+
+def placeholder_body(image):
+    """A story-shaped placeholder: every text block type, realistic lengths,
+    no invented facts (everything in [brackets])."""
+    para = (
+        "<p>[Placeholder paragraph – {what}. Three to five sentences of "
+        "plain, warm language for readers who grew up far from Armenia. "
+        "Names, dates and places only from the sources listed below.]</p>"
+    )
+    return [
+        (
+            "paragraph",
+            para.format(
+                what="the opening: a place, a moment or a "
+                "question that draws the reader in"
+            ),
+        ),
+        (
+            "paragraph",
+            para.format(
+                what="why this matters to Armenians "
+                "today, in Armenia and in the diaspora"
+            ),
+        ),
+        ("heading", {"text": "[First section heading]", "level": "h2"}),
+        (
+            "paragraph",
+            para.format(
+                what="the history: what is known, and where the sources disagree"
+            ),
+        ),
+        (
+            "quote",
+            {
+                "text": "[A short quote from a source – a line from a song, a "
+                "saying or a historical text.]",
+                "source": "[Who said or wrote it]",
+                "source_url": "",
+            },
+        ),
+        ("paragraph", para.format(what="the story or legend as it is told")),
+        (
+            "image",
+            {
+                "image": image,
+                "caption": "[Caption: what the photo shows, where and when]",
+            },
+        ),
+        ("heading", {"text": "[Second section heading]", "level": "h2"}),
+        (
+            "paragraph",
+            para.format(
+                what="how the tradition lives on: "
+                "customs, music, crafts, family memories"
+            ),
+        ),
+        (
+            "book_excerpt",
+            {
+                "text": "[A short excerpt from a book – two or three sentences, "
+                "never whole pages.]",
+                "book_title": "[Book title]",
+                "author": "[Author]",
+                "page": "[Page]",
+                "link": "",
+            },
+        ),
+        ("heading", {"text": "[Subheading]", "level": "h3"}),
+        (
+            "paragraph",
+            para.format(
+                what="the closing: an invitation to "
+                "visit the place, listen or ask the family"
+            ),
+        ),
+    ]
+
 
 class Command(BaseCommand):
     help = "Create placeholder content for the local prototype."
@@ -246,13 +327,20 @@ class Command(BaseCommand):
         return pages
 
     def story(self, data, parent, image, places):
-        if StoryPage.objects.child_of(parent).filter(title=data["title"]).exists():
+        existing = StoryPage.objects.child_of(parent).filter(title=data["title"])
+        if existing.exists():
+            story = existing.get().specific
+            if story.body.raw_data and [
+                (b["type"], b["value"]) for b in story.body.raw_data
+            ] == [("paragraph", OLD_PLACEHOLDER_BODY)]:
+                story.body = placeholder_body(image)
+                self.publish(story)
             return
         story = StoryPage(
             title=data["title"],
             teaser="[Teaser: two lines on what the article is about.]",
             hero_image=image,
-            body=[("paragraph", "<p>[Placeholder text]</p>")],
+            body=placeholder_body(image),
         )
         parent.add_child(instance=story)
         story.related_places.set([places[name] for name in data["places"]])
