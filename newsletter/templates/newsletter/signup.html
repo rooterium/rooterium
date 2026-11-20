@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+  <header class="page-header">
+    <h1>{% translate "Newsletter" %}</h1>
+    <p class="lead">{% translate "A new story about Armenian history, traditions, myths, symbols and music about every ten days – straight to your inbox." %}</p>
+  </header>
+  <div class="card form-card">
+    {% include "newsletter/includes/signup_form.html" %}
+  </div>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+  <header class="page-header">
+    <h1>{% translate "You are subscribed" %}</h1>
+    <p class="lead">{% translate "Thank you! The next story will come to your inbox. You can unsubscribe at any time with the link in every email." %}</p>
+  </header>
+  <p class="page-footer-link"><a href="{% url 'stories:list' %}">{% translate "Read the stories" %} →</a></p>
+{% endblock %}

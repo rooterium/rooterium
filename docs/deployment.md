@@ -24,7 +24,7 @@ apt update && apt upgrade -y
 apt install -y ufw unattended-upgrades git ca-certificates curl
 # reboot if /var/run/reboot-required exists
 
-# Time zone (cron times below are Swiss time)
+# Time zone (cron times below are Vienna time)
 timedatectl set-timezone Europe/Vienna
 
 # Swap as a safety net (small servers have ~2 GB RAM)
@@ -183,6 +183,8 @@ are not rolled back automatically.
 ```cron
 # Database dump before the UpCloud backup, nightly 02:00
 0 2 * * * cd /srv/rooterium && scripts/backup-db.sh
+# Delete newsletter sign-ups not confirmed within 7 days, nightly 03:00
+0 3 * * * cd /srv/rooterium && docker compose -f compose.prod.yaml exec -T web python manage.py prune_newsletter_signups
 ```
 
 Add project-specific jobs (e.g. deleting old form submissions) here and in

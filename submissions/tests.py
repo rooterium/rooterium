@@ -3,11 +3,11 @@ from unittest import mock
 
 from django.core import mail, signing
 from django.core.cache import cache
-from django.test import RequestFactory, TestCase, override_settings
+from django.test import TestCase, override_settings
 
+from core import spam
 from events.models import Event
 from projects.models import Project, ProjectKind
-from submissions import spam
 
 EDITOR = "editor@example.org"
 
@@ -193,25 +193,3 @@ class ThanksPageTests(TestCase):
     def test_thanks_page(self):
         response = self.client.get("/suggest/thanks/")
         self.assertContains(response, "<title>Thank you – Rooterium</title>", html=True)
-
-
-class ClientIpTests(TestCase):
-    def test_uses_the_last_forwarded_address(self):
-        request = RequestFactory().get(
-            "/", HTTP_X_FORWARDED_FOR="10.0.0.1, 198.51.100.7"
-        )
-        self.assertEqual(spam.client_ip(request), "198.51.100.7")
-
-    def test_falls_back_to_remote_addr(self):
-        request = RequestFactory().get("/", REMOTE_ADDR="192.0.2.1")
-        self.assertEqual(spam.client_ip(request), "192.0.2.1")
-
-
-class StartedTokenTests(TestCase):
-    def test_fresh_token_is_too_fast(self):
-        self.assertTrue(spam.filled_in_too_fast(spam.make_started_token()))
-
-    def test_token_after_some_seconds_is_fine(self):
-        token = spam.make_started_token()
-        with mock.patch("submissions.spam.time.time", return_value=time.time() + 5):
-            self.assertFalse(spam.filled_in_too_fast(token))

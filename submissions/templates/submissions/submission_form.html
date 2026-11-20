@@ -16,18 +16,10 @@
       </div>
     {% endif %}
 
-    {% for field in form.visible_fields %}
-      {% if field.name == "website" %}
-        {# Honeypot: hidden from people and screen readers; bots fill it in. #}
-        <div class="form-trap" aria-hidden="true">
-          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-          {{ field }}
-        </div>
-      {% else %}
-        {% include "submissions/includes/field.html" %}
-      {% endif %}
+    {% for field in form.user_fields %}
+      {% include "includes/form_field.html" %}
     {% endfor %}
-    <input type="hidden" name="started" value="{{ started_token }}">
+    {% include "includes/spam_fields.html" %}
 
     <p class="help">{% translate "Your suggestion is saved as a draft. It only appears on the site after the editor has checked and published it." %}</p>
     <p><button class="button" type="submit">{% translate "Send suggestion" %}</button></p>

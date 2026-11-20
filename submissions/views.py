@@ -3,9 +3,9 @@ from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView, TemplateView
 
+from core import spam
 from core.seo import SeoMixin
 
-from . import spam
 from .forms import EventSubmissionForm, ProjectSubmissionForm
 from .notify import notify_editor
 
@@ -29,7 +29,7 @@ class SubmissionView(SeoMixin, FormView):
         return context
 
     def post(self, request, *args, **kwargs):
-        if spam.rate_limited(request):
+        if spam.rate_limited(request, scope="submissions"):
             form = self.get_form()
             form.add_error(
                 None,
@@ -42,7 +42,7 @@ class SubmissionView(SeoMixin, FormView):
         return super().post(request, *args, **kwargs)
 
     def form_valid(self, form):
-        spam.count_submission(self.request)
+        spam.count_submission(self.request, scope="submissions")
         if not form.is_spam():
             obj = form.save()
             notify_editor(self.request, obj, form.Meta.fields)

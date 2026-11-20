@@ -8,13 +8,13 @@ Overview of how the project is built and run. Decisions and their rationale:
 | Path | Purpose |
 |---|---|
 | `config/` | Settings (one module, configured via environment), URLs, WSGI |
-| `core/` | Base layout, SEO (`core/seo.py`), navigation, `/version`, error pages |
+| `core/` | Base layout, SEO (`core/seo.py`), navigation, `/version`, error pages; spam checks for public forms (`spam.py`, `forms.SpamCheckForm`, `templates/includes/`) |
 | `home/` | Wagtail `HomePage` (site root) |
 | `images/` | Wagtail image model with required alt text, credit and licence |
 | `stories/` | `ThemeIndexPage`, `StoryPage` (StreamField blocks in `blocks.py`), sources; `/stories/` overview (Django view, paginated) |
 | `places/`, `events/`, `projects/` | Snippets with draft/publish; admin viewsets in `viewsets.py`; `/events/` (upcoming only, paginated) and `/projects/` (filter `?type=`, paginated) as Django views |
-| `submissions/` | "Suggest an event / a project" forms (`/suggest/…`): drafts, editor notification, spam checks in `spam.py`; no models |
-| `newsletter/` | `NewsletterSubscriber` (sign-up flow in milestone 7) |
+| `submissions/` | "Suggest an event / a project" forms (`/suggest/…`): drafts, editor notification; no models |
+| `newsletter/` | `NewsletterSubscriber`; double opt-in sign-up at `/newsletter/` (confirm, unsubscribe, `prune_newsletter_signups`) |
 | `tools/` | Development helpers, not in the image (`browser_check.py`) |
 
 - Wagtail (ADR 0009, 0014): the editor's admin is at `/admin/`, the Django

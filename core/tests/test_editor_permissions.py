@@ -30,7 +30,9 @@ class EditorPermissionTests(TestCase):
     def test_newsletter_is_view_only(self):
         self.assertTrue(self.editor.has_perm("newsletter.view_newslettersubscriber"))
         self.assertFalse(self.editor.has_perm("newsletter.change_newslettersubscriber"))
-        self.assertEqual(self.client.get("/admin/newsletter/").status_code, 200)
+        self.assertEqual(
+            self.client.get("/admin/newsletter-subscribers/").status_code, 200
+        )
 
     def test_editor_can_publish_pages(self):
         home = HomePage.objects.get()

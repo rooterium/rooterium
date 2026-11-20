@@ -139,8 +139,18 @@ logos.
 | `token` | text | random, unique; for the confirm and unsubscribe links |
 
 Listed in the Wagtail admin under "Newsletter" (editors: view only, set in
-the permissions step). Unconfirmed sign-ups older than a set period are
-deleted (milestone 7).
+the permissions step; admin URL `/admin/newsletter-subscribers/`).
+
+Double opt-in (`newsletter/signup.py`, `newsletter/views.py`): the sign-up
+form (`/newsletter/`, also on the home page) stores the email in lower case,
+the consent text as shown and `consented_at`, and emails a confirmation
+link. Confirming and unsubscribing happen only on POST (a button on the
+linked page), because mail programs open links by themselves. Unsubscribing
+deletes the row. Unconfirmed sign-ups older than `UNCONFIRMED_DAYS` (7) are
+deleted on every new sign-up and by `manage.py prune_newsletter_signups`
+(cron); their confirmation link stops working at the same time. Signing up
+again with a confirmed address changes nothing and sends no email; the
+visitor sees the same answer either way.
 
 ## Permissions
 

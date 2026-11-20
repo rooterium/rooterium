@@ -4,9 +4,11 @@ from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from wagtail.models import Page
 
+from core import spam
 from core.seo import SeoPageMixin
 from core.themes import Theme
 from events.models import Event
+from newsletter.forms import SignupForm
 from places.models import Place
 from projects.models import Project
 
@@ -92,4 +94,6 @@ class HomePage(SeoPageMixin, Page):
         )
         context["upcoming_events"] = Event.objects.upcoming()[:3]
         context["projects"] = Project.objects.public()[:4]
+        context["newsletter_form"] = SignupForm()
+        context["started_token"] = spam.make_started_token()
         return context

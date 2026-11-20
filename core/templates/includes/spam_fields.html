@@ -1,0 +1,6 @@
+{# Honeypot (hidden from people and screen readers; bots fill it in) and the form timestamp. See core/forms.py. #}
+<div class="form-trap" aria-hidden="true">
+  <label for="{{ form.website.id_for_label }}">{{ form.website.label }}</label>
+  {{ form.website }}
+</div>
+<input type="hidden" name="started" value="{{ started_token }}">

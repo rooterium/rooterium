@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+  <header class="page-header">
+    <h1>{% translate "Please check your inbox" %}</h1>
+    <p class="lead">{% translate "We have sent you an email with a confirmation link. Click it to complete your sign-up." %}</p>
+    <p>{% translate "Nothing there? Check your spam folder, or sign up again in a few minutes. If you are already subscribed, you will not get another email." %}</p>
+  </header>
+  <p class="page-footer-link"><a href="{% url 'stories:list' %}">{% translate "Read the stories" %} →</a></p>
+{% endblock %}

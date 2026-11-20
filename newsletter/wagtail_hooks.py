@@ -7,7 +7,7 @@ from .models import NewsletterSubscriber
 
 class NewsletterSubscriberViewSet(ModelViewSet):
     """Subscribers are listed for the editor; they are created by the
-    sign-up flow (milestone 7), not by hand."""
+    sign-up flow (`newsletter/views.py`), not by hand."""
 
     model = NewsletterSubscriber
     icon = "mail"
@@ -23,4 +23,4 @@ class NewsletterSubscriberViewSet(ModelViewSet):
 
 @hooks.register("register_admin_viewset")
 def register_newsletter_viewset():
-    return NewsletterSubscriberViewSet("newsletter")
+    return NewsletterSubscriberViewSet("newsletter-subscribers")
