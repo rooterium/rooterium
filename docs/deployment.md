@@ -7,10 +7,10 @@ examples: `<server-ip>`, `<domain>`.
 ## Overview
 
 - UpCloud server, Ubuntu 26.04 LTS, Docker Engine with the Compose plugin.
-- Repo checkout in `/srv/{{PROJECT_SLUG}}` (public repo, no credentials
+- Repo checkout in `/srv/rooterium` (public repo, no credentials
   needed). It provides `compose.prod.yaml`, `deploy/Caddyfile` and the
   scripts; the app itself comes as an image from GHCR.
-- `.env` in `/srv/{{PROJECT_SLUG}}` holds all secrets (mode `600`, never
+- `.env` in `/srv/rooterium` holds all secrets (mode `600`, never
   committed).
 - Containers: `db` (PostgreSQL 18), `web` (Gunicorn), `caddy` (HTTPS).
 
@@ -25,7 +25,7 @@ apt install -y ufw unattended-upgrades git ca-certificates curl
 # reboot if /var/run/reboot-required exists
 
 # Time zone (cron times below are Swiss time)
-timedatectl set-timezone Europe/Zurich
+timedatectl set-timezone Europe/Vienna
 
 # Swap as a safety net (small servers have ~2 GB RAM)
 fallocate -l 2G /swapfile && chmod 600 /swapfile && mkswap /swapfile && swapon /swapfile
@@ -93,9 +93,9 @@ dig +short <domain> AAAA @<authoritative-name-server>
 As `deploy`:
 
 ```bash
-sudo mkdir -p /srv/{{PROJECT_SLUG}} && sudo chown deploy:deploy /srv/{{PROJECT_SLUG}}
-git clone https://github.com/{{GITHUB_REPO}}.git /srv/{{PROJECT_SLUG}}
-cd /srv/{{PROJECT_SLUG}}
+sudo mkdir -p /srv/rooterium && sudo chown deploy:deploy /srv/rooterium
+git clone https://github.com/rooterium/rooterium.git /srv/rooterium
+cd /srv/rooterium
 cp .env.example .env && chmod 600 .env
 ```
 
@@ -163,7 +163,7 @@ Wait until the CI run for the merge commit has pushed it
 previous build. Then:
 
 ```bash
-ssh {{SSH_TARGET}} 'cd /srv/{{PROJECT_SLUG}} && scripts/deploy.sh'
+ssh {{SSH_TARGET}} 'cd /srv/rooterium && scripts/deploy.sh'
 curl -s {{LIVE_URL}}/version   # {"commit": "<sha>", "short": "<sha7>"}
 ```
 
@@ -181,7 +181,7 @@ are not rolled back automatically.
 
 ```cron
 # Database dump before the UpCloud backup, nightly 02:00
-0 2 * * * cd /srv/{{PROJECT_SLUG}} && scripts/backup-db.sh
+0 2 * * * cd /srv/rooterium && scripts/backup-db.sh
 ```
 
 Add project-specific jobs (e.g. deleting old form submissions) here and in

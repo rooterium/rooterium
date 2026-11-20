@@ -1,7 +1,7 @@
 # 0001: Use ADRs
 
 - Status: accepted
-- Date: YYYY-MM-DD
+- Date: 2026-11-20
 
 ## Context
 

@@ -1,9 +1,8 @@
 # CLAUDE.md
 
-Guidelines for working on this repository ({{PROJECT_NAME}}, {{LIVE_URL}}).
+Guidelines for working on this repository (Rooterium; not live yet – no
+domain or server, see `docs/STATUS.md`).
 Applies to Claude Code and human contributors.
-
-<!-- Template: replace all placeholders ({{…}}), see docs/NEW_PROJECT.md. -->
 
 ## Session start
 
@@ -20,25 +19,36 @@ conversation history of earlier sessions is not available. Run `/start`
 5. `gh issue list --state open`
 6. `gh run list --limit 10` (failed or cancelled runs on `main`?)
 7. Live version: `curl -s {{LIVE_URL}}/version` and compare with
-   `git rev-parse origin/main`.
+   `git rev-parse origin/main`. Skip this step while `{{LIVE_URL}}` is still a
+   placeholder (no domain or server yet, issue #8).
 
-Report the result to the maintainer in German before starting new work.
+Report the result to the maintainer in English before starting new work.
 
 ## Project context
 
-- {{PROJECT_NAME}}: _one or two sentences on what the site is for and who
-  maintains the content._
-- Live on {{LIVE_URL}} (server details in `docs/STATUS.md`). DNS changes are
-  done by the maintainer.
-- Content is maintained through the Django admin – the admin must be
-  understandable for non-technical users (German `verbose_name`s, help texts,
-  sensible list views and filters).
-- Scope of version 1: see README.md. No features beyond that without asking.
+- Rooterium collects and connects Armenian history, traditions, myths,
+  symbols and music, so that Armenians all over the world – above all in the
+  diaspora – and anyone curious can learn about their roots. The founder
+  ("the editor") owns the idea and writes the content; the technical
+  maintainer runs the platform. Full brief: `docs/PROJECT_BRIEF.md`.
+- Live on {{LIVE_URL}} once a domain and server exist (`{{LIVE_URL}}` and
+  `{{SSH_TARGET}}` are deliberately still placeholders, issues #8–#10).
+  DNS changes are done by the maintainer.
+- Content is maintained through the Wagtail admin (ADR 0009) – it must be
+  understandable for non-technical users (clear English `verbose_name`s,
+  help texts, sensible list views and filters).
+- Scope of version 1: `docs/PROJECT_BRIEF.md`, section 2. No features beyond
+  that without asking; ideas for later go into issues labelled `later`.
 
 ## Stack (binding)
 
-- Django 5.2 LTS with Django templates. No React/SPA, no frontend build step
-  unless it becomes necessary.
+- Django 5.2 LTS with Django templates, **Wagtail** as CMS (ADR 0009).
+- Interactivity with plain JavaScript modules or htmx (ADR 0011). No
+  React/SPA, no frontend build step unless an ADR justifies it.
+- Map: **MapLibre GL JS**, self-hosted (ADR 0010).
+- Privacy by default (ADR 0013): no third-party requests from the browser
+  (fonts self-hosted, YouTube only via youtube-nocookie.com after a click, no
+  analytics); a new third-party script needs an ADR.
 - Python dependencies only via **uv** (`pyproject.toml`, `uv.lock`).
   No `pip install`, no `requirements.txt`.
 - **Ruff** for linting and formatting.
@@ -54,12 +64,21 @@ Rationale lives in `docs/decisions/`. To deviate, write a new ADR first.
 
 | What                                                        | Language |
 |-------------------------------------------------------------|----------|
-| Conversation with the maintainer                            | German   |
-| Website content, templates (user-facing text), admin labels, form and error messages | German (Swiss spelling: «ss», never «ß») |
+English everywhere (ADR 0012):
+
+| What                                                        | Language |
+|-------------------------------------------------------------|----------|
+| Conversation with the maintainer, status reports, `/start`  | English  |
+| Website content, templates (user-facing text), admin labels, form and error messages | English (translatable) |
 | Documentation (README, CLAUDE.md, docs/, ADRs)              | English  |
 | Code: identifiers, comments, docstrings, commit messages    | English  |
 
-- `LANGUAGE_CODE = "de-ch"`, `TIME_ZONE = "Europe/Zurich"`, `USE_TZ = True`.
+- `LANGUAGE_CODE = "en"`, `TIME_ZONE = "Europe/Vienna"`, `USE_TZ = True`.
+- Every user-facing string is translatable from day one: `{% translate %}` /
+  `{% blocktranslate %}` in templates, `gettext_lazy` in Python. Armenian and
+  Russian come later (issue #21); Wagtail localisation is prepared, not
+  enabled.
+- Fonts and layouts must handle Armenian script.
 
 ## Workflow
 
@@ -100,7 +119,7 @@ Rationale lives in `docs/decisions/`. To deviate, write a new ADR first.
 - **Deploying** (after Claude's own merge, if the PR changes the app):
   1. Wait until CI on `main` has pushed the image for the merge commit:
      `gh run list --branch main --limit 1`, then `gh run watch <run-id>`.
-  2. `ssh {{SSH_TARGET}} 'cd /srv/{{PROJECT_SLUG}} && scripts/deploy.sh'`
+  2. `ssh {{SSH_TARGET}} 'cd /srv/rooterium && scripts/deploy.sh'`
   3. `curl -s {{LIVE_URL}}/version` must show the merge commit;
      `curl -s -o /dev/null -w "%{http_code}\n" {{LIVE_URL}}/` must be `200`.
   - Docs- or CI-only changes need no deploy (the live commit then lags behind

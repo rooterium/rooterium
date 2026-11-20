@@ -95,9 +95,12 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # --- Internationalisation -------------------------------------------------
 
-# Website language: German (Swiss spelling). Adjust per project.
-LANGUAGE_CODE = "de-ch"
-TIME_ZONE = "Europe/Zurich"
+# Website language: English first; Armenian and Russian later (ADR 0012).
+# All user-facing strings are translatable from day one.
+LANGUAGE_CODE = "en"
+LANGUAGES = [("en", "English")]
+LOCALE_PATHS = [BASE_DIR / "locale"]
+TIME_ZONE = "Europe/Vienna"
 USE_I18N = True
 USE_TZ = True
 
@@ -126,12 +129,16 @@ if "test" in sys.argv[1:2]:
 # --- Site -----------------------------------------------------------------
 
 # Replace the placeholders when creating a project (docs/NEW_PROJECT.md).
-SITE_NAME = "{{PROJECT_NAME}}"
-SITE_SHORT_NAME = "{{PROJECT_SHORT_NAME}}"
+SITE_NAME = "Rooterium"
+SITE_SHORT_NAME = "Rooterium"
 # Document title of the home page; other pages use "<page> – <short name>".
-SITE_TITLE = f"{SITE_SHORT_NAME} – {SITE_NAME}"
+SITE_TITLE = f"{SITE_NAME} – Find your way back to your roots"
 # Default meta description for pages that do not set their own.
-SITE_DESCRIPTION = "{{SITE_DESCRIPTION}}"
+SITE_DESCRIPTION = (
+    "Armenian history, traditions, myths, symbols and music, collected and "
+    "connected – for Armenians all over the world and everyone curious about "
+    "their roots."
+)
 # Git commit of the running image (Dockerfile build arg GIT_COMMIT, set by CI),
 # shown at /version. "dev" for local builds.
 APP_COMMIT = env("APP_COMMIT", default="dev")

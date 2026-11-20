@@ -1,7 +1,7 @@
 # 0008: Backups with UpCloud's backup service
 
 - Status: accepted
-- Date: YYYY-MM-DD
+- Date: 2026-11-20
 
 ## Context
 

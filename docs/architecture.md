@@ -34,7 +34,7 @@ Browser ──HTTPS──▶ caddy ──▶ web (Gunicorn + Django, WhiteNoise 
 
 1. Pull request → CI: Ruff, `manage.py check`, missing-migration check,
    tests, image build (no push).
-2. Merge to `main` → CI pushes `ghcr.io/{{GITHUB_REPO}}:latest` and
+2. Merge to `main` → CI pushes `ghcr.io/rooterium/rooterium:latest` and
    `:sha-<commit>`.
 3. `scripts/deploy.sh` on the server pulls the image, runs migrations and
    restarts the containers.

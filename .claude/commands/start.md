@@ -3,7 +3,7 @@ description: Session start routine – bring the local repo up to date and repor
 ---
 
 Run the session start routine from CLAUDE.md ("Session start") and report the
-result to the maintainer **in German**.
+result to the maintainer **in English**.
 
 Rules: show `gh` output unfiltered (no `tail`, `head`, `grep`, no hidden
 stderr). If a step fails, report the error and continue with the next step.
@@ -19,7 +19,8 @@ except for switching to `main` and pulling.
 4. `gh pr list --state open`
 5. `gh issue list --state open`
 6. `gh run list --limit 10`
-7. Live site:
+7. Live site (skip this step and say so while `{{LIVE_URL}}` below is still
+   a placeholder – no domain or server yet):
    - `curl -s {{LIVE_URL}}/version`
    - `git rev-parse origin/main`
    - Compare: is the deployed commit the head of `main`? If not, list the
@@ -27,7 +28,7 @@ except for switching to `main` and pulling.
      and check that CI pushed an image for `origin/main` (step 6).
    - `curl -s -o /dev/null -w "%{http_code}\n" {{LIVE_URL}}/`
 
-Then summarise in German, short:
+Then summarise in English, short:
 - what is live (commit, date) and whether it matches `main`,
 - open PRs, failed or cancelled CI runs,
 - open issues grouped by who has to act,

@@ -1,9 +1,10 @@
 {% extends "base.html" %}
+{% load i18n %}
 
-{% block title %}Seite nicht gefunden – {{ site_short_name }}{% endblock %}
+{% block title %}{% translate "Page not found" %} – {{ site_short_name }}{% endblock %}
 
 {% block content %}
-  <h1>Seite nicht gefunden</h1>
-  <p>Die gesuchte Seite gibt es nicht oder nicht mehr.</p>
-  <p><a href="{% url 'core:home' %}">Zur Startseite</a></p>
+  <h1>{% translate "Page not found" %}</h1>
+  <p>{% translate "The page you are looking for does not exist or has moved." %}</p>
+  <p><a href="{% url 'core:home' %}">{% translate "Go to the home page" %}</a></p>
 {% endblock %}

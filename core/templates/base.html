@@ -1,5 +1,5 @@
-{% load static seo %}<!doctype html>
-<html lang="de-ch">
+{% load static seo i18n %}<!doctype html>
+{% get_current_language as LANGUAGE_CODE %}<html lang="{{ LANGUAGE_CODE }}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,7 +9,6 @@
   <link rel="canonical" href="{{ request.build_absolute_uri }}">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="{{ site_name }}">
-  <meta property="og:locale" content="de_CH">
   <meta property="og:title" content="{{ full_title }}">
   <meta property="og:description" content="{{ meta_description|default:site_description }}">
   <meta property="og:url" content="{{ request.build_absolute_uri }}">
@@ -18,13 +17,13 @@
   {% block extra_head %}{% endblock %}
 </head>
 <body>
-  <a class="skip-link" href="#main">Zum Inhalt springen</a>
+  <a class="skip-link" href="#main">{% translate "Skip to content" %}</a>
 
   <header class="site-header">
     <div class="container header-inner">
       <a class="brand" href="{% url 'core:home' %}"{% if request.resolver_match.view_name == "core:home" %} aria-current="page"{% endif %}>{{ site_short_name }}</a>
       {% if nav_items %}
-        <nav class="main-nav" aria-label="Hauptnavigation">
+        <nav class="main-nav" aria-label="{% translate 'Main navigation' %}">
           <ul>
             {% for item in nav_items %}
               <li><a href="{{ item.url }}"{% if item.active %} aria-current="page"{% endif %}>{{ item.label }}</a></li>
