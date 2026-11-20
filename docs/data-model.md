@@ -4,8 +4,8 @@ One section per app with its models, fields and rules (visibility, ordering,
 retention). Keep this file in sync with every model change. Decisions behind
 it: [ADR 0014](decisions/0014-content-model.md).
 
-> Status (milestone 2, issue #2): all models below are **built**. Still to
-> come: editor group permissions (data migration) and seed data.
+> Status (milestone 2, issue #2): all models and the editor permissions
+> below are **built**. Still to come: seed data.
 
 Conventions: all labels and help texts in English and translatable; every
 image is a `CustomImage`; "live" means published in Wagtail (`live=True`).
@@ -134,5 +134,11 @@ deleted (milestone 7).
 ## Permissions
 
 Wagtail's "Editors" group: add/edit/**publish** on the page tree, all
-permissions on `Place`, `Event`, `Project`, images and documents, view
-`NewsletterSubscriber`. Editors are never superusers.
+permissions on `Place`, `Event`, `Project` (add, change, delete, publish,
+view), images and documents, view `NewsletterSubscriber`. Editors are never
+superusers.
+
+Granted by data migrations per app (`<app>/migrations/0002_*`, page publish
+in `stories/migrations/0002_editors_can_publish_pages.py`) using
+`core.permissions.grant()`, which creates missing permissions itself. A new
+content model gets its own such migration.
