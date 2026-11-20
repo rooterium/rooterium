@@ -179,6 +179,11 @@ English everywhere (ADR 0012):
   web assets are generated from them by a script, not edited by hand. Only
   use images whose usage rights are clear.
 - Never render user content with `|safe`.
+- Public templates have **no inline scripts, inline styles or `style=`
+  attributes**: the Content-Security-Policy blocks them (ADR 0013). JS
+  goes into static ES modules, data into `<script type="application/json">`
+  or `data-` attributes. A new external source needs an ADR and an entry in
+  `CONTENT_SECURITY_POLICY`.
 - Images always use the Wagtail image model `images.CustomImage` (required
   alt text, credit, licence); never a plain `ImageField`.
 - Editors are staff users in an editor group (never superusers). A new

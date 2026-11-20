@@ -25,6 +25,13 @@ Overview of how the project is built and run. Decisions and their rationale:
 - Every public view sets title and meta description via `core.seo.SeoMixin`
   (Wagtail pages: `SeoPageMixin`);
   `base.html` renders `<title>`, description, canonical and Open Graph tags.
+- **Content-Security-Policy** (ADR 0013, `core/middleware.py`, policy in
+  `settings.CONTENT_SECURITY_POLICY`): public pages may load scripts,
+  styles, fonts and images only from our own origin, and frame only
+  `youtube-nocookie.com`. `/admin/` and `/django-admin/` are excluded
+  (Wagtail's admin needs inline code and frames the page preview), as are
+  500 responses (standalone page with inline styles). The map (milestone 4)
+  will likely need `worker-src blob:` for MapLibre.
 - `/version` returns the Git commit of the running image as JSON
   (`APP_COMMIT`, set by CI); local builds report `dev`.
 
