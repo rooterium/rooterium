@@ -1,4 +1,4 @@
-{% load static seo i18n %}<!doctype html>
+{% load static seo i18n wagtailuserbar %}<!doctype html>
 {% get_current_language as LANGUAGE_CODE %}<html lang="{{ LANGUAGE_CODE }}">
 <head>
   <meta charset="utf-8">
@@ -17,11 +17,12 @@
   {% block extra_head %}{% endblock %}
 </head>
 <body>
+  {% wagtailuserbar %}
   <a class="skip-link" href="#main">{% translate "Skip to content" %}</a>
 
   <header class="site-header">
     <div class="container header-inner">
-      <a class="brand" href="{% url 'core:home' %}"{% if request.resolver_match.view_name == "core:home" %} aria-current="page"{% endif %}>{{ site_short_name }}</a>
+      <a class="brand" href="/"{% if request.path == "/" %} aria-current="page"{% endif %}>{{ site_short_name }}</a>
       {% if nav_items %}
         <nav class="main-nav" aria-label="{% translate 'Main navigation' %}">
           <ul>

@@ -38,7 +38,22 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # Wagtail CMS (ADR 0009). No wagtail.embeds: YouTube is embedded without
+    # oEmbed requests (ADR 0013, 0014).
+    "wagtail.contrib.redirects",
+    "wagtail.sites",
+    "wagtail.users",
+    "wagtail.snippets",
+    "wagtail.documents",
+    "wagtail.images",
+    "wagtail.search",
+    "wagtail.admin",
+    "wagtail",
+    "modelcluster",
+    "taggit",
     # Project apps
+    "images",
+    "home",
 ]
 
 MIDDLEWARE = [
@@ -51,6 +66,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "wagtail.contrib.redirects.middleware.RedirectMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -142,6 +158,23 @@ SITE_DESCRIPTION = (
 # Git commit of the running image (Dockerfile build arg GIT_COMMIT, set by CI),
 # shown at /version. "dev" for local builds.
 APP_COMMIT = env("APP_COMMIT", default="dev")
+
+# --- Wagtail --------------------------------------------------------------
+
+WAGTAIL_SITE_NAME = SITE_NAME
+# Base URL for links in admin notification emails: the first trusted origin
+# in production (e.g. https://example.org), localhost in development.
+WAGTAILADMIN_BASE_URL = (
+    CSRF_TRUSTED_ORIGINS[0] if CSRF_TRUSTED_ORIGINS else "http://localhost:8000"
+)
+# Images with required alt text, credit and licence (ADR 0014).
+WAGTAILIMAGES_IMAGE_MODEL = "images.CustomImage"
+# Documents: PDFs only.
+WAGTAILDOCS_EXTENSIONS = ["pdf"]
+# Search in PostgreSQL, no external search service.
+WAGTAILSEARCH_BACKENDS = {"default": {"BACKEND": "wagtail.search.backends.database"}}
+# Localisation is prepared but not enabled in version 1 (ADR 0012).
+WAGTAIL_I18N_ENABLED = False
 
 # --- Email ----------------------------------------------------------------
 

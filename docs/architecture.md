@@ -8,10 +8,20 @@ Overview of how the project is built and run. Decisions and their rationale:
 | Path | Purpose |
 |---|---|
 | `config/` | Settings (one module, configured via environment), URLs, WSGI |
-| `core/` | Base layout, home page, SEO (`core/seo.py`), navigation, `/version`, error pages |
-| `<app>/` | One small Django app per topic (added per project) |
+| `core/` | Base layout, SEO (`core/seo.py`), navigation, `/version`, error pages |
+| `home/` | Wagtail `HomePage` (site root) |
+| `images/` | Wagtail image model with required alt text, credit and licence |
+| `<app>/` | One small Django app per topic (stories, places, events, …) |
 
-- Every public view sets title and meta description via `core.seo.SeoMixin`;
+- Wagtail (ADR 0009, 0014): the editor's admin is at `/admin/`, the Django
+  admin at `/django-admin/` (technical tasks). Wagtail serves all remaining
+  paths (`wagtail_urls` last in `config/urls.py`); feature apps with plain
+  Django views are included before it.
+- Wagtail's background tasks (search index, reference index) run
+  immediately in the request (`django-tasks` default backend); no worker.
+
+- Every public view sets title and meta description via `core.seo.SeoMixin`
+  (Wagtail pages: `SeoPageMixin`);
   `base.html` renders `<title>`, description, canonical and Open Graph tags.
 - `/version` returns the Git commit of the running image as JSON
   (`APP_COMMIT`, set by CI); local builds report `dev`.

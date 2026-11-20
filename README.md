@@ -55,7 +55,8 @@ docker compose up --build     # start web + PostgreSQL, migrations run automatic
 docker compose exec web python manage.py createsuperuser
 ```
 
-Site: <http://localhost:8000> · Admin: <http://localhost:8000/admin/>
+Site: <http://localhost:8000> · Wagtail admin (content): <http://localhost:8000/admin/> ·
+Django admin (technical): <http://localhost:8000/django-admin/>
 
 The project directory is mounted into the container, so code changes reload
 automatically. After changing dependencies (`uv add …`), rebuild with

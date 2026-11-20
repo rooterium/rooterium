@@ -2,7 +2,6 @@
 
 from django.conf import settings
 from django.test import RequestFactory, SimpleTestCase, TestCase, override_settings
-from django.urls import reverse
 from django.views.generic import TemplateView
 
 from core.seo import SeoMixin, build_title
@@ -34,11 +33,11 @@ class SeoMixinTests(SimpleTestCase):
 
 class HomePageTests(TestCase):
     def setUp(self):
-        self.response = self.client.get(reverse("core:home"))
+        self.response = self.client.get("/")
 
     def test_renders(self):
         self.assertEqual(self.response.status_code, 200)
-        self.assertTemplateUsed(self.response, "core/home.html")
+        self.assertTemplateUsed(self.response, "home/home_page.html")
 
     def test_title_and_meta_description(self):
         self.assertContains(
@@ -60,7 +59,7 @@ class HomePageTests(TestCase):
     def test_brand_links_home_and_marks_current_page(self):
         self.assertContains(
             self.response,
-            f'<a class="brand" href="{reverse("core:home")}" aria-current="page">',
+            '<a class="brand" href="/" aria-current="page">',
         )
 
 
