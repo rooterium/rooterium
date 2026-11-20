@@ -1,7 +1,7 @@
 # 0004: Python tooling: uv and Ruff
 
 - Status: accepted
-- Date: YYYY-MM-DD
+- Date: 2026-11-20
 
 ## Context
 

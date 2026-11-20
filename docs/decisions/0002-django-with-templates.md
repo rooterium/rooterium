@@ -1,7 +1,7 @@
 # 0002: Django with server-side templates
 
-- Status: accepted
-- Date: YYYY-MM-DD
+- Status: accepted; the editing interface ("Django admin, no separate CMS") is superseded by 0009, the "htmx first" note is made binding by 0011
+- Date: 2026-11-20
 
 ## Context
 

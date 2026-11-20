@@ -1,7 +1,7 @@
 # 0007: Secrets only in .env
 
 - Status: accepted
-- Date: YYYY-MM-DD
+- Date: 2026-11-20
 
 ## Context
 

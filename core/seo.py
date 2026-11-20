@@ -10,7 +10,7 @@ from django.conf import settings
 
 
 def build_title(page_title: str = "") -> str:
-    """Return the full document title, e.g. "Kontakt – Kurzname"."""
+    """Return the full document title, e.g. "Events – Rooterium"."""
     if not page_title:
         return settings.SITE_TITLE
     return f"{page_title} – {settings.SITE_SHORT_NAME}"

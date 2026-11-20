@@ -1,7 +1,7 @@
 # 0006: Build images in GitHub Actions
 
 - Status: accepted
-- Date: YYYY-MM-DD
+- Date: 2026-11-20
 
 ## Context
 
