@@ -185,15 +185,30 @@ are not rolled back automatically.
 `crontab -e` as `deploy`:
 
 ```cron
+# Rooterium (docs/deployment.md, section 5). Times: Europe/Vienna.
+# Output goes to the journal: journalctl -t rooterium-cron
 # Database dump before the UpCloud backup, nightly 02:00
-0 2 * * * cd /srv/rooterium && scripts/backup-db.sh
+0 2 * * * cd /srv/rooterium && scripts/backup-db.sh 2>&1 | logger -t rooterium-cron
 # Delete newsletter sign-ups not confirmed within 7 days, nightly 03:00
-0 3 * * * cd /srv/rooterium && docker compose -f compose.prod.yaml exec -T web python manage.py prune_newsletter_signups
+0 3 * * * cd /srv/rooterium && docker compose -f compose.prod.yaml exec -T web python manage.py prune_newsletter_signups 2>&1 | logger -t rooterium-cron
 ```
 
-Add project-specific jobs (e.g. deleting old form submissions) here and in
-`docs/STATUS.md`. After changing the time zone, `systemctl restart cron`.
-Schedule the UpCloud backup after the dump (ADR 0008).
+The server has no mail transport, so cron output goes to the journal
+(`journalctl -t rooterium-cron`) instead of being lost. Add
+project-specific jobs here and in `docs/STATUS.md`. After changing the time
+zone, `systemctl restart cron`. Schedule the UpCloud backup after the dump
+(ADR 0008).
+
+Security updates install automatically (`unattended-upgrades`). When one
+needs a reboot (kernel), the server reboots at 04:30, after the nightly
+jobs; the containers come back by themselves (`restart: unless-stopped`,
+Docker enabled at boot). Set in
+`/etc/apt/apt.conf.d/52rooterium-reboot`:
+
+```
+Unattended-Upgrade::Automatic-Reboot "true";
+Unattended-Upgrade::Automatic-Reboot-Time "04:30";
+```
 
 ## 6. Backups and restore
 
