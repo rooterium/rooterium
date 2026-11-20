@@ -4,7 +4,7 @@ Current state of Rooterium and the next steps. **Every PR updates this
 file** (at least "Last updated" and whatever the PR changes). Details live in
 the linked docs; open work lives in GitHub issues.
 
-_Last updated: 2026-11-20 (PR "Add the submission form for events and projects")_
+_Last updated: 2026-11-20 (PR "Add the newsletter sign-up with double opt-in")_
 
 ## Live
 
@@ -103,6 +103,18 @@ Brief and milestones: [`PROJECT_BRIEF.md`](PROJECT_BRIEF.md).
   hour (per Gunicorn worker, LocMemCache). Thank-you page at
   `/suggest/thanks/`. Coordinates and logos are added by the editor (no
   public uploads). **Milestone 6 complete.**
+- **Milestone 7a – newsletter sign-up** (`newsletter/`): `/newsletter/`
+  and a form on the home page (footer link too); stores the consent text as
+  shown and its timestamp; confirmation email with a link valid for 7 days;
+  confirm and unsubscribe only by button (POST), unsubscribing deletes the
+  address; same answer for new, pending and confirmed addresses (no
+  enumeration, no email to confirmed ones); unconfirmed sign-ups deleted
+  after 7 days (on each sign-up and via `prune_newsletter_signups`, cron in
+  `deployment.md`). Spam checks shared with the suggestion forms, moved to
+  `core/spam.py` and `core.forms.SpamCheckForm`. Admin URL of the
+  subscriber list is now `/admin/newsletter-subscribers/` (the public
+  `newsletter` URL namespace needed the name). **Sending** newsletters is
+  not built (see open questions).
 
 ## Open issues
 
@@ -112,7 +124,7 @@ Overview: `gh issue list`. At the time of writing:
 |---|---|---|
 | #1–#5 | Milestones 1–5 – **closed** | – |
 | #6 | M6: events, projects, submission form – **done**, closed by this PR | – |
-| #7 | M7: newsletter, About/Imprint/Privacy | Claude (needs #11, #14) |
+| #7 | M7: newsletter, About/Imprint/Privacy – sign-up done; pages need #14, real emails need #11 | Claude (needs #11, #14) |
 | #8 | M8: deployment to a test server | Maintainer + Claude (needs #9, #10) |
 | #9 | Register the domain | Maintainer / editor |
 | #10 | Hosting account and who pays | Maintainer / editor |
@@ -125,12 +137,12 @@ Overview: `gh issue list`. At the time of writing:
 
 ## Next steps
 
-1. **Milestone 7 (#7)** – newsletter with double opt-in and the About,
-   Imprint and Privacy pages. Blocked: sending real emails needs the email
-   service (#11), the page texts come from the editor (#14). The newsletter
-   sign-up flow can be built and tested locally with the console email
-   backend before #11 is decided. The Privacy page must mention the
-   submitter email of the suggestion forms.
+1. **Milestone 7 (#7)** – remaining: About, Imprint and Privacy pages
+   (texts from the editor, #14). Possible now: the page structure (Wagtail
+   page type, footer links) with placeholder text. The Privacy page must
+   cover the newsletter (consent text, 7-day deletion, unsubscribe = delete)
+   and the submitter email of the suggestion forms; the newsletter consent
+   text should then link to it. Real emails need the email service (#11).
 2. When an email service exists (#11): set `EDITOR_NOTIFICATION_EMAIL`
    in the server's `.env` so suggestions reach the editor.
 3. GHCR package `ghcr.io/rooterium/rooterium`: still private. Making it
@@ -147,6 +159,12 @@ open PRs, nothing deployed (no server). Next is milestone 6 (6a done since,
 see above; milestone 6 is now complete, next is milestone 7).
 
 **Open questions for the maintainer/editor** (not blocking M6):
+
+- How will the editor **send** the newsletter? Not part of the brief.
+  Options: export the confirmed addresses to the email service chosen in
+  #11 (if it has newsletter features), or a simple send function in the
+  admin (needs an unsubscribe link per recipient and a List-Unsubscribe
+  header). Decide together with #11.
 
 - Armenian word next to the logo (the variant A mockup shows one): add it
   only once the editor confirms the exact wording (brief: Armenian script

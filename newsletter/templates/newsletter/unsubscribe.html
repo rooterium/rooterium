@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+  <header class="page-header">
+    <h1>{% translate "Unsubscribe" %}</h1>
+    <p class="lead">{% blocktranslate with email=subscriber.email %}Unsubscribe {{ email }} from the Rooterium newsletter? Your address will be deleted.{% endblocktranslate %}</p>
+    <form method="post">
+      {% csrf_token %}
+      <button class="button" type="submit">{% translate "Yes, unsubscribe me" %}</button>
+    </form>
+  </header>
+{% endblock %}

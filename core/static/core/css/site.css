@@ -889,6 +889,7 @@ a.chip[aria-current="page"] {
 }
 
 .form-field .help,
+.signup-form .help,
 .submission-form .help {
   margin: 0.375rem 0 0;
   font-size: 0.875rem;
@@ -925,6 +926,42 @@ a.chip[aria-current="page"] {
 
 .form-errors p:last-child {
   margin-bottom: 0;
+}
+
+/* Checkbox with its label to the right (consent). */
+.form-check {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.25rem 0.75rem;
+  align-items: start;
+}
+
+.form-check .field-error {
+  grid-column: 1 / -1;
+}
+
+.form-check input {
+  width: 1.5rem;
+  height: 1.5rem;
+  min-height: 0;
+  margin: 0.125rem 0 0;
+  accent-color: var(--accent);
+}
+
+.form-check label {
+  margin: 0;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.form-card,
+.signup-form {
+  max-width: 40rem;
+}
+
+.newsletter-teaser .signup-form {
+  margin: 2rem auto 0;
+  text-align: left;
 }
 
 /* Honeypot: off-screen, not focusable by keyboard (tabindex -1). */

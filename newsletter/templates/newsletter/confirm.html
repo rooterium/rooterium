@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+  <header class="page-header">
+    <h1>{% translate "Confirm your sign-up" %}</h1>
+    {% if subscriber.is_confirmed %}
+      <p class="lead">{% translate "Your sign-up is already confirmed. Thank you!" %}</p>
+    {% else %}
+      <p class="lead">{% blocktranslate with email=subscriber.email %}Subscribe {{ email }} to the Rooterium newsletter?{% endblocktranslate %}</p>
+      <form method="post">
+        {% csrf_token %}
+        <button class="button" type="submit">{% translate "Yes, subscribe me" %}</button>
+      </form>
+    {% endif %}
+  </header>
+{% endblock %}

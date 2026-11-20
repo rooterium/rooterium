@@ -193,7 +193,7 @@ class AdminSmokeTests(TestCase):
             "/admin/snippets/places/place/add/",
             "/admin/snippets/events/event/add/",
             "/admin/snippets/projects/project/add/",
-            "/admin/newsletter/",
+            "/admin/newsletter-subscribers/",
             f"/admin/pages/add/stories/themeindexpage/{home.pk}/",
             f"/admin/pages/add/stories/storypage/{theme.pk}/",
         ]:

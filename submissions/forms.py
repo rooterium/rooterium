@@ -1,10 +1,9 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
+from core.forms import SpamCheckForm
 from events.models import Event
 from projects.models import Project
-
-from . import spam
 
 EMAIL_HELP = _(
     "Only for questions about your suggestion. Never shown publicly and "
@@ -12,16 +11,8 @@ EMAIL_HELP = _(
 )
 
 
-class SubmissionForm(forms.ModelForm):
+class SubmissionForm(SpamCheckForm, forms.ModelForm):
     """Common fields: the submitter's email plus the spam checks."""
-
-    # Honeypot: hidden by CSS (`.form-trap`); people leave it empty.
-    website = forms.CharField(
-        label=_("Leave this field empty"), required=False, max_length=200
-    )
-    # Signed timestamp; rendered by the template from `started_token`, so it
-    # is fresh each time the form is shown (also after errors).
-    started = forms.CharField(required=False, widget=forms.HiddenInput)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -29,22 +20,6 @@ class SubmissionForm(forms.ModelForm):
         email.required = True
         email.label = _("Your email")
         email.help_text = EMAIL_HELP
-        self.fields["website"].widget.attrs.update(
-            {"autocomplete": "off", "tabindex": "-1"}
-        )
-
-    def is_spam(self) -> bool:
-        """Honeypot filled in: treated as success, but nothing is saved."""
-        return bool(self.cleaned_data.get("website"))
-
-    def clean(self):
-        cleaned_data = super().clean()
-        if spam.filled_in_too_fast(cleaned_data.get("started", "")):
-            raise forms.ValidationError(
-                _("Please check your entries and send the form again."),
-                code="too_fast",
-            )
-        return cleaned_data
 
     def save(self, commit=True):
         """Save as an unpublished draft with a first revision, so the

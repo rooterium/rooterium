@@ -1,4 +1,5 @@
-"""Spam protection for the public submission forms, without third parties.
+"""Spam protection for public forms (suggestions, newsletter), without
+third parties.
 
 Three checks (brief, section 2.7):
 
@@ -6,7 +7,8 @@ Three checks (brief, section 2.7):
 - Minimum fill time: the form carries a signed timestamp; a submission
   sooner than `MIN_FILL_SECONDS` after the form was shown is refused, as is
   a missing, forged or stale timestamp.
-- Rate limit: at most `RATE_LIMIT` submissions per client IP and hour,
+- Rate limit: at most `RATE_LIMIT` submissions per form (`scope`), client
+  IP and hour,
   counted in Django's cache. The cache is per process (LocMemCache), so
   with several Gunicorn workers the effective limit is a few times higher
   – enough against floods. The IP is only hashed into the cache key, never
@@ -24,7 +26,7 @@ MAX_FORM_AGE_SECONDS = 24 * 60 * 60
 RATE_LIMIT = 5
 RATE_WINDOW_SECONDS = 60 * 60
 
-_SALT = "submissions.started"
+_SALT = "core.spam.started"
 
 
 def make_started_token() -> str:
@@ -54,18 +56,18 @@ def client_ip(request) -> str:
     return request.META.get("REMOTE_ADDR", "")
 
 
-def _rate_key(request) -> str:
+def _rate_key(request, scope: str) -> str:
     digest = hashlib.sha256(client_ip(request).encode()).hexdigest()[:32]
-    return f"submissions:rate:{digest}"
+    return f"spam:rate:{scope}:{digest}"
 
 
-def rate_limited(request) -> bool:
+def rate_limited(request, scope: str) -> bool:
     """True if this client has used up its submissions for the hour."""
-    return cache.get(_rate_key(request), 0) >= RATE_LIMIT
+    return cache.get(_rate_key(request, scope), 0) >= RATE_LIMIT
 
 
-def count_submission(request) -> None:
-    key = _rate_key(request)
+def count_submission(request, scope: str) -> None:
+    key = _rate_key(request, scope)
     if not cache.add(key, 1, RATE_WINDOW_SECONDS):
         try:
             cache.incr(key)

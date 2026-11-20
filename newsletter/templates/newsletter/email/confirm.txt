@@ -1,0 +1,10 @@
+{% load i18n %}{% autoescape off %}{% translate "Hello," %}
+
+{% translate "Thank you for signing up for the Rooterium newsletter. Please confirm your sign-up with this link:" %}
+
+{{ confirm_url }}
+
+{% blocktranslate count days=days %}The link works for {{ days }} day.{% plural %}The link works for {{ days }} days.{% endblocktranslate %} {% translate "If you did not sign up, simply ignore this email – you will not receive anything, and your address will be deleted." %}
+
+Rooterium
+{% endautoescape %}

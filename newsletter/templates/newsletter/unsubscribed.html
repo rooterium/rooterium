@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+  <header class="page-header">
+    <h1>{% translate "You are unsubscribed" %}</h1>
+    <p class="lead">{% translate "Your address has been deleted. You will not receive any more newsletters." %}</p>
+  </header>
+  <p class="page-footer-link"><a href="{% url 'newsletter:signup' %}">{% translate "Changed your mind? Sign up again" %} →</a></p>
+{% endblock %}

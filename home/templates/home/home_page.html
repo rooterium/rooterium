@@ -112,6 +112,7 @@
 
   <section class="newsletter-teaser" aria-labelledby="newsletter-heading">
     <h2 id="newsletter-heading">{% translate "A new story every ten days" %}</h2>
-    <p>{% translate "The newsletter sign-up is coming soon." %}</p>
+    <p>{% translate "Get each new story by email. Free, no advertising, unsubscribe at any time." %}</p>
+    {% include "newsletter/includes/signup_form.html" with form=newsletter_form %}
   </section>
 {% endblock %}
