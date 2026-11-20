@@ -87,7 +87,7 @@ Overview: `gh issue list`. At the time of writing:
 | #10 | Hosting account and who pays | Maintainer / editor |
 | #11 | Email sending service | Maintainer |
 | #12 | Second GitHub owner, shared password manager | Maintainer / editor |
-| #13 | Mockups of design variant B ("Landkarte") – needed for M4 | Maintainer |
+| #13 | Mockups of design variant B ("Landkarte") – none available; M4 was built from the brief | Maintainer |
 | #14 | Texts for About, Imprint, Privacy – needed for M7 | Editor |
 | #15 | Verify seed place coordinates and descriptions | Editor (after M2) |
 | #16–#23 | Outside version 1 (label `later`) | – |
@@ -102,7 +102,7 @@ Overview: `gh issue list`. At the time of writing:
    the map style against real tiles (layer names, colours).
 3. Milestone 5 (#5): story pages, theme pages, places linked to stories,
    YouTube click-to-load.
-3. Editor: check the seed place coordinates and descriptions (#15) – they
+4. Editor: check the seed place coordinates and descriptions (#15) – they
    can be edited in the Wagtail admin under "Map & directory → Places".
 
 ## Working agreements (summary)
