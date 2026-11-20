@@ -115,6 +115,12 @@ English everywhere (ADR 0012):
       `Dockerfile`, `deploy/`, `scripts/`, `.github/workflows/`, new or
       changed variables in `.env.example`, or anything that needs manual
       steps on the server (`.env`, cron, packages).
+  - **Until a server runs the app, Claude merges these PRs too** (maintainer's
+    decision, 2026-11-20): with no production database or server, a
+    migration or deployment change cannot break anything live. Still say in
+    the PR description that it would be an exception. When the first server
+    is set up (milestone 8, issue #8), the exceptions apply again; remove this
+    paragraph in that PR.
   - If the PR is already merged, say so and skip the merge command.
 - **Deploying** (after Claude's own merge, if the PR changes the app):
   1. Wait until CI on `main` has pushed the image for the merge commit:
