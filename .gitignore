@@ -31,3 +31,7 @@ docker-compose.override.yml
 
 # Server-specific Caddy snippets (see deploy/caddy.d/README.md)
 /deploy/caddy.d/*.caddy
+
+# Temple asset originals and generated web versions (see design/README.md)
+/design/temple/originals/
+/design/temple/web/

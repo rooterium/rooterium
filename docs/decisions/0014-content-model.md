@@ -1,6 +1,6 @@
 # 0014: Content model
 
-- Status: accepted
+- Status: accepted; points 3 and 4 (page tree, theme list) superseded by 0018
 - Date: 2026-11-20
 
 ## Context

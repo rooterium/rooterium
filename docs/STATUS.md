@@ -4,7 +4,7 @@ Current state of Rooterium and the next steps. **Every PR updates this
 file** (at least "Last updated" and whatever the PR changes). Details live in
 the linked docs; open work lives in GitHub issues.
 
-_Last updated: 2026-11-20 (PR "Add example content with real photos")_
+_Last updated: 2026-11-26 (PR "Add the temple assets and decisions")_
 
 ## Live
 
@@ -31,6 +31,43 @@ _Last updated: 2026-11-20 (PR "Add example content with real photos")_
 - Relief (ADR 0016): Mapterhorn terrain extract (max zoom 8, 22.6 MB)
   copied into the `media` volume (`/app/media/maps/terrain.pmtiles`,
   checksum matched, served by Caddy with range requests), 2026-11-20.
+
+## Temple redesign (version 2, in progress)
+
+On 2026-11-22 the editor delivered a new design package
+([`handoff/design-package-2026-11-22.md`](handoff/design-package-2026-11-22.md)):
+the site becomes an abandoned temple carved into a cliff, with a portal,
+an entrance video, a chapel with six sections and a hall per section. The
+maintainer's build brief is [`TEMPLE_BRIEF.md`](TEMPLE_BRIEF.md); it
+replaces sections 2 and 6 of the project brief for the home page and the
+theme structure. Decisions: ADR 0017 (temple navigation, map moves to
+`/map/`), 0018 (six sections, category pages), 0019 (AI assets,
+originals, video as Wagtail documents served by Caddy).
+
+| Milestone | State |
+|---|---|
+| T1 Assets and decisions | **Done** (this PR): ADRs, `design/temple/manifest.json` (21 assets with SHA-256), `build_temple_assets.py` (fetch, build), grain tile `core/static/core/img/grain.png`, issues #57–#65 |
+| T2 Content model | Next. Tag `main` as `v1-map` before it merges |
+| T3 Visual layer and frame | Open |
+| T4 Home journey | Open |
+| T5 Section, category and article pages | Open |
+| T6 Deploy to the test server | Open |
+
+Notes from T1:
+
+- Originals (69 MB) are on the maintainer's machine in
+  `design/temple/originals/` (git-ignored), checked against the manifest.
+  The CDN links may expire: keep a copy in the shared storage (#12).
+- Videos are encoded at CRF 22 with `-tune grain` instead of the brief's
+  CRF 26 (which smoothed the grain); still under 3 MB per clip (portal
+  loop 0.4 MB, entrance 2.2 MB, Symbols descent 1.4 MB). Each video's last
+  frame matches its still closely, but not pixel for pixel: hold the
+  `-last.webp` still after a video, not the PNG it was made from.
+- The handoff package was anonymised before committing (file name and
+  byline): the editor is not named in the public repo.
+- ADR 0019 reads the old rule "Armenian symbols are never AI-generated" as
+  "no AI image is the depiction a visitor learns a symbol from": AI
+  khachkars appear as scenery in hall headers, never in articles.
 
 ## Infrastructure
 
@@ -186,7 +223,6 @@ Overview: `gh issue list`. At the time of writing:
 | # | Topic | Who |
 |---|---|---|
 | #1–#6, #8 | Milestones 1–6 and 8 – **closed** | – |
-| #6 | M6: events, projects, submission form – **done**, closed by this PR | – |
 | #7 | M7: newsletter, About/Imprint/Privacy – code done; texts (#14) and real emails (#11) open | Editor / maintainer |
 | #9 | Register the final domain (test phase runs on `rooterium.pocketapp.ch`) | Maintainer / editor |
 | #10 | Hosting: UpCloud server running; open: who pays | Maintainer / editor |
@@ -194,9 +230,18 @@ Overview: `gh issue list`. At the time of writing:
 | #14 | Texts for About, Imprint, Privacy – needed for M7 | Editor |
 | #15 | Verify seed place coordinates and descriptions | Editor (after M2) |
 | #16–#23 | Outside version 1 (label `later`) | – |
+| #57 | Review the temple build's assumptions A1–A15 (after T6) | Editor |
+| #58 | Rights for the Higgsfield images and videos – before the announcement | Editor |
+| #59 | Portal tagline and chapel heading | Editor |
+| #60 | Symbols category covers; hall images and descent videos for the other five sections | Editor |
+| #61–#63 | Manuscript menu, article layout in the halls, 9:16 assets (label `later`) | – |
+| #64 | Logo | Editor |
+| #65 | Armenian name next to the title (`SITE_NATIVE_NAME`) | Editor |
 
 ## Next steps
 
+0. **Temple redesign**: milestone T2 (content model) is next, see the
+   table above and `docs/TEMPLE_BRIEF.md`, section 9.
 1. **Maintainer**: the admin account exists (1 superuser) and UpCloud
    backups run at 02:15. Still open:
    - an editor account in the admin (Settings → Users; staff, group
@@ -243,7 +288,7 @@ pages) is done: no horizontal scrolling, no console or CSP errors; card
 and list links were below 44 px and now the whole card or row is the tap
 target (PR "Make whole cards the tap target on phones").
 
-**Design catch-up (in progress):** the variant B mockup did exist on the
+**Design catch-up (done, superseded by the temple redesign above):** the variant B mockup did exist on the
 design canvas; it is now in `design/mockup-2b-map.png` (#13 closed). The
 live site is being brought in line with it in small PRs: (1) header and
 footer – done; (2) home page layout – done: two columns (text, chips and
@@ -264,14 +309,14 @@ mockup are content (real photos, story texts) and the Armenian name
   header). Decide together with #11.
 - Armenian word next to the logo (both mockups show "Արմատներ"): set
   `SITE_NATIVE_NAME` in `config/settings.py` once the editor confirms the
-  exact wording (brief: Armenian script only from verified sources).
+  exact wording (brief: Armenian script only from verified sources); #65.
 - Footer "a personal project by [Name]": set `SITE_OWNER` in
   `config/settings.py` once the editor agrees to be named. The mockup's
   "Contact" link has no page yet (not in the brief).
 - Map: modern political borders are deliberately not shown (ADR 0015);
   the editor decides later whether to show modern or historic borders.
 - Real logo: the favicon is an interim "R" mark
-  (`design/build_web_assets.py`).
+  (`design/build_web_assets.py`); #64.
 
 **Before the site is announced** (it is reachable but `noindex`):
 
@@ -284,12 +329,17 @@ mockup are content (real photos, story texts) and the Armenian name
   password manager (next steps, item 1).
 - Seed place coordinates checked (#15); final domain (#9); `ROBOTS_TAG`
   switched to `all`.
+- Rights for the temple images and videos confirmed (#58); the About page
+  says the temple imagery is AI-generated (ADR 0019).
 
 **Local development state** (maintainer's machine, not in git):
 
 - `.env` created from `.env.example` with a random `SECRET_KEY`.
 - Map tiles built: `media/maps/rooterium.pmtiles` (Protomaps build
   20261118, 40 MB). Without them the map shows only markers.
+- Temple originals in `design/temple/originals/` and web versions in
+  `design/temple/web/` (2026-11-26; rebuild with
+  `design/temple/build_temple_assets.py fetch` / `build`, needs ffmpeg).
 - Database seeded with `seed_demo` (rerun after milestone 7: it now also
   creates placeholder About, Imprint and Privacy pages); the demo story "The monastery of the
   spear" was additionally filled with every block type (placeholders) to

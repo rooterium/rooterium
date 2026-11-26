@@ -1,6 +1,6 @@
 # 0016: Relief on the home page map
 
-- Status: accepted
+- Status: accepted; the map moves to `/map/` (ADR 0017), the relief stays
 - Date: 2026-11-20
 
 ## Context

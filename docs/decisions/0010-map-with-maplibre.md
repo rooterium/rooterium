@@ -1,6 +1,6 @@
 # 0010: Interactive map with MapLibre GL JS
 
-- Status: accepted (library); the tile source is decided in milestone 4
+- Status: accepted (library); the tile source is decided in milestone 4; the map moves from the home page to `/map/` (ADR 0017)
 - Date: 2026-11-20
 
 ## Context
