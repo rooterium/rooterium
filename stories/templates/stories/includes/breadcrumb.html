@@ -1,0 +1,12 @@
+{% load i18n wagtailcore_tags %}
+{# Chapel › Section › Category › current page (temple brief, section 6). `page` is the current page; the last item is not a link. #}
+<nav class="breadcrumb" aria-label="{% translate 'Breadcrumb' %}">
+  <ol>
+    <li><a href="{{ chapel_url }}">{% translate "Chapel" %}</a></li>
+    {% with section=page.theme_page category=page.category %}
+      {% if section and section.pk != page.pk %}<li><a href="{% pageurl section %}">{{ section.title }}</a></li>{% endif %}
+      {% if category %}<li><a href="{% pageurl category %}">{{ category.title }}</a></li>{% endif %}
+    {% endwith %}
+    <li><span aria-current="page">{{ page.title }}</span></li>
+  </ol>
+</nav>

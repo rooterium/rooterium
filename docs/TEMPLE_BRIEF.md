@@ -260,7 +260,7 @@ T2. **Content model** (done, PR "Add sections, category pages and temple fields"
 T3. **Visual layer and frame** (done, PR "Add the temple frame and move the map to /map/"): tokens (gold retired), grain, header,
     footer, mobile menu, `/map/` moved out of the home page.
 T4. **Home journey** (done, PR "Turn the home page into the temple entrance"): portal, pause, entrance, chapel, fallbacks.
-T5. **Section, category and article pages**, descent (video and
+T5. **Section, category and article pages** (done, PR "Add the temple halls and the descent"), descent (video and
     crossfade).
 T6. **Deploy to the test server**: copy web assets with `scp`, run
     `load_temple_assets` and the migrations, check the live site at 1280 px

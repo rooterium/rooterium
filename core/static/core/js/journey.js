@@ -6,6 +6,9 @@
 // - the portal loop, with a pause button (WCAG 2.2.2, kept for the session);
 // - the entrance video after "Enter" (or a click anywhere on the portal),
 //   with "Skip"; it ends on the chapel still, and the chapel fades in;
+// - the descent into a section (descent.js).
+
+import { initDescent } from "./descent.js";
 
 const PAUSED_KEY = "rooterium:portal-paused";
 
@@ -153,6 +156,8 @@ function init() {
   window.addEventListener("popstate", () => {
     if (!window.location.hash) window.scrollTo({ top: 0, behavior: "instant" });
   });
+
+  initDescent(chapel, motion);
 }
 
 if (portal && chapel) {

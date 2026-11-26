@@ -4,7 +4,7 @@ Current state of Rooterium and the next steps. **Every PR updates this
 file** (at least "Last updated" and whatever the PR changes). Details live in
 the linked docs; open work lives in GitHub issues.
 
-_Last updated: 2026-11-26 (PR "Turn the home page into the temple entrance")_
+_Last updated: 2026-11-26 (PR "Add the temple halls and the descent")_
 
 ## Live
 
@@ -49,9 +49,21 @@ originals, video as Wagtail documents served by Caddy).
 | T1 Assets and decisions | **Done** (PR #66): ADRs, `design/temple/manifest.json` (21 assets with SHA-256), `build_temple_assets.py` (fetch, build), grain tile `core/static/core/img/grain.png`, issues #57–#65 |
 | T2 Content model | **Done** (PR #67, re-sort changed in #68): six sections, `CategoryPage`, section and home page temple fields, MP4 documents served directly, `places.0004`, `restructure_sections`, `load_temple_assets`, seed and example content re-sorted. Tag `v1-map` set on `66dc806` |
 | T3 Visual layer and frame | **Done** (PR #69): gold retired (`--ornament`, muted parchment), cards with 2 px corners, film grain over the whole site, screen utilities (vignette, flicker, faded images, focal-point classes), header with the name (→ `/#chapel`) and a "Sections" menu (full-screen on phones), footer "Around the temple", map at `/map/` with parchment markers |
-| T4 Home journey | **Done** (this PR): portal (poster, loop with Pause/Play kept for the session, title, tagline, Enter), entrance video with Skip and Escape ending on the chapel still, chapel with the six sections, `#chapel` history entry, no videos without JS / with reduced motion / with data saver, focal points for the phone crop |
-| T5 Section, category and article pages | Next |
-| T6 Deploy to the test server | Open |
+| T4 Home journey | **Done** (PR #70): portal (poster, loop with Pause/Play kept for the session, title, tagline, Enter), entrance video with Skip and Escape ending on the chapel still, chapel with the six sections, `#chapel` history entry, no videos without JS / with reduced motion / with data saver, focal points for the phone crop |
+| T5 Section, category and article pages | **Done** (this PR): hall header (full-height hall image under a see-through header, section, root symbol, title, motto, "Into the hall"), category cards (plain grain card without a cover), articles, links back to the chapel / all articles / map; category and article pages with the breadcrumb Chapel › Section › Category; faded treatment for photos; descent from the chapel (video with Skip, or a 1.2 s crossfade with a slow zoom) |
+| T6 Deploy to the test server | Next |
+
+Notes from T5:
+
+- Checked in headless Chrome: chapel → Symbols plays the descent video
+  (focus on Skip) and lands on `/symbols/` in the same crop; chapel →
+  Music crossfades into the hall image and lands on `/music/`; with reduced
+  motion the link navigates at once. Section, category and article pages at
+  1280 px and 390 px without horizontal overflow.
+- The hall images are shown without the faded filter (they are already
+  "old film" and must match the end of the descent); only photos in cards
+  and articles get it.
+- `/stories/` is linked from every section page ("All articles").
 
 Notes from T4:
 

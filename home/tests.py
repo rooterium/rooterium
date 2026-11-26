@@ -180,6 +180,25 @@ class TempleEntranceTests(TestCase):
         self.assertContains(response, "data-pause")
         self.assertContains(response, "data-skip")
 
+    def test_chapel_links_carry_the_descent_and_the_hall_image(self):
+        from wagtail.documents import get_document_model
+
+        from images.testing import make_image
+
+        symbols = self.sections["symbols"]
+        symbols.hall_image = make_image()
+        symbols.descent_video = get_document_model().objects.create(
+            title="descent", file="documents/descent.mp4"
+        )
+        symbols.save_revision().publish()
+        response = self.get()
+        self.assertContains(response, f'data-descent="{symbols.descent_video.url}"')
+        self.assertContains(response, "data-hall=")
+        self.assertContains(response, 'data-label-skip="Skip"')
+        music = self.sections["music"]
+        link = response.content.decode().split(f'href="{music.url}"')[1].split(">")[0]
+        self.assertNotIn("data-descent", link)
+
     def test_old_home_sections_are_gone(self):
         response = self.get()
         self.assertNotContains(response, "data-map")

@@ -8,9 +8,7 @@
 {% block content %}
   <article class="story">
     <header class="story-header">
-      {% with theme_page=page.theme_page %}
-        <a class="eyebrow" href="{% pageurl theme_page %}">{{ page.get_theme_display }}</a>
-      {% endwith %}
+      {% include "stories/includes/breadcrumb.html" %}
       <h1>{{ page.title }}</h1>
       <p class="lead">{{ page.teaser }}</p>
       <p class="meta">
@@ -21,7 +19,7 @@
 
     <figure class="story-hero">
       {% image page.hero_image width-1600 as hero %}
-      <img src="{{ hero.url }}" width="{{ hero.width }}" height="{{ hero.height }}" alt="{{ page.hero_image.default_alt_text }}">
+      <img class="faded" src="{{ hero.url }}" width="{{ hero.width }}" height="{{ hero.height }}" alt="{{ page.hero_image.default_alt_text }}">
       {% include "stories/includes/credit.html" with image=page.hero_image %}
     </figure>
 
@@ -71,4 +69,8 @@
       </div>
     </section>
   {% endif %}
+
+  {% with section=page.theme_page %}{% if section %}
+    <p class="hall-links story-back"><a href="{% pageurl section %}">← {% blocktranslate with section=section.title %}Back to {{ section }}{% endblocktranslate %}</a> <a href="{{ chapel_url }}">{% translate "Back to the chapel" %}</a></p>
+  {% endif %}{% endwith %}
 {% endblock %}

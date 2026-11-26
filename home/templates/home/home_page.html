@@ -55,7 +55,7 @@
     </div>
   {% endif %}
 
-  <section id="chapel" class="screen chapel vignette flicker" aria-labelledby="chapel-heading" data-chapel>
+  <section id="chapel" class="screen chapel vignette flicker" aria-labelledby="chapel-heading" data-chapel data-label-skip="{% translate 'Skip' %}">
     {% if page.chapel_image %}
       {% image page.chapel_image width-1920 format-webp as chapel %}
       {% image page.chapel_image width-960 format-webp as chapel_small %}

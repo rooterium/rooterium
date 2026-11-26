@@ -98,6 +98,9 @@ for the portal and the chapel).
 Parent: `HomePage`. Children: `CategoryPage` and `StoryPage`. Lists its
 live categories (page order) and the live stories directly below it,
 newest first. Slugs: the value, except `people` → `key-people`.
+The page is the section's hall: the hall image is its full-height header
+and the end frame of the descent from the chapel (`core/js/descent.js`:
+the descent video if set, else a crossfade to the hall image).
 
 ### `CategoryPage` (page)
 

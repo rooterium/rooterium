@@ -253,10 +253,14 @@ class StoryOverviewTests(TestCase):
         response = self.client.get(self.religion.url)
         self.assertContains(response, "The monastery of the spear")
         self.assertNotContains(response, "The duduk")
+        # Hall links instead of the version 1 theme chips; the header's
+        # Sections menu marks the section.
         self.assertContains(
-            response,
-            f'<a class="chip" href="{self.religion.url}" aria-current="page">Religion</a>',
-            html=True,
+            response, '<a href="/#chapel">← Back to the chapel</a>', html=True
+        )
+        self.assertContains(response, 'href="/stories/"')
+        self.assertContains(
+            response, f'<a href="{self.religion.url}" aria-current="page">'
         )
 
 
@@ -331,3 +335,56 @@ class SectionHierarchyTests(TestCase):
         story = make_story(legacy)
         self.assertEqual(story.get_theme_display(), "Religion")
         self.assertEqual(self.client.get(story.url).status_code, 200)
+
+
+class HallPageTests(TestCase):
+    """Section, category and article pages in the temple look (T5)."""
+
+    def setUp(self):
+        from core.sections import ensure_sections
+
+        sections = ensure_sections()
+        self.symbols = sections["symbols"]
+        self.music = sections["music"]
+        self.category = CategoryPage.objects.get(slug="eternity-and-the-sun")
+        self.story = make_story(self.category, title="The eternity sign")
+        self.story.save_revision().publish()
+
+    def test_section_page_has_the_hall_header(self):
+        self.symbols.hall_image = make_image()
+        self.symbols.save_revision().publish()
+        response = self.client.get(self.symbols.url)
+        self.assertContains(response, 'class="site-header site-header--over"')
+        self.assertContains(
+            response, '<h1 id="hall-title" class="hall-title">Symbols</h1>', html=True
+        )
+        self.assertContains(response, "Symbols are the language of memory.")
+        self.assertContains(response, 'href="#hall-contents"')
+        self.assertContains(response, 'rel="preload" as="image"')
+        self.assertContains(response, "category-card--plain")
+
+    def test_section_without_articles_says_so(self):
+        response = self.client.get(self.music.url)
+        self.assertContains(
+            response, "The first articles of this hall are being written."
+        )
+
+    def test_category_page_has_the_breadcrumb(self):
+        response = self.client.get(self.category.url)
+        crumb = (
+            response.content.decode().split('class="breadcrumb"')[1].split("</nav>")[0]
+        )
+        self.assertIn('href="/#chapel">Chapel</a>', crumb)
+        self.assertIn(f'href="{self.symbols.url}">Symbols</a>', crumb)
+        self.assertIn('<span aria-current="page">Eternity and the sun</span>', crumb)
+
+    def test_article_has_the_full_breadcrumb_and_faded_images(self):
+        response = self.client.get(self.story.url)
+        crumb = (
+            response.content.decode().split('class="breadcrumb"')[1].split("</nav>")[0]
+        )
+        for part in ("Chapel", "Symbols", "Eternity and the sun"):
+            self.assertIn(f">{part}</a>", crumb)
+        self.assertIn('<span aria-current="page">The eternity sign</span>', crumb)
+        self.assertContains(response, '<img class="faded"')
+        self.assertContains(response, "← Back to Symbols")

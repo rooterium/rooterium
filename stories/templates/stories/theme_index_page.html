@@ -1,38 +1,68 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n wagtailcore_tags wagtailimages_tags temple %}
+{% comment %}
+  A section of the temple: its hall (ADR 0017, temple brief section 6). The
+  header is the hall image at full height, in the same crop as the end of
+  the descent from the chapel (core/js/descent.js), so the change of page
+  is seamless; the title and motto fade in over it.
+{% endcomment %}
+
+{% block header_class %} site-header--over{% endblock %}
+{% block main_class %}hall-main{% endblock %}
+
+{% block extra_head %}
+  {% if page.hall_image %}
+    {% image page.hall_image width-1920 format-webp as hall %}
+    <link rel="preload" as="image" href="{{ hall.url }}" fetchpriority="high">
+  {% endif %}
+{% endblock %}
 
 {% block content %}
-  <header class="page-header">
-    <span class="eyebrow">{% translate "Section" %}</span>
-    <h1>{{ page.title }}</h1>
-    {% if page.motto %}<p class="lead">{{ page.motto }}</p>{% endif %}
-    {% if page.intro %}<p class="lead">{{ page.intro }}</p>{% endif %}
-    {% include "stories/includes/theme_chips.html" with current=page %}
+  <header class="screen hall vignette flicker" aria-labelledby="hall-title">
+    {% if page.hall_image %}
+      {% image page.hall_image width-1920 format-webp as hall %}
+      {% image page.hall_image width-960 format-webp as hall_small %}
+      <img class="screen-media {{ page.hall_image|focus_classes }}" src="{{ hall.url }}" srcset="{{ hall_small.url }} {{ hall_small.width }}w, {{ hall.url }} {{ hall.width }}w" sizes="100vw" width="{{ hall.width }}" height="{{ hall.height }}" alt="" fetchpriority="high">
+    {% endif %}
+    <div class="hall-content container">
+      <p class="eyebrow hall-eyebrow">{% translate "Section" %}{% if page.root_symbol %} · {{ page.root_symbol }}{% endif %}</p>
+      <h1 id="hall-title" class="hall-title">{{ page.title }}</h1>
+      {% if page.motto %}<p class="hall-motto">{{ page.motto }}</p>{% endif %}
+      <a class="hall-scroll" href="#hall-contents">{% translate "Into the hall" %} <span aria-hidden="true">↓</span></a>
+    </div>
   </header>
 
-  {% if categories %}
-    <section aria-labelledby="categories-heading">
-      <h2 id="categories-heading">{% translate "Categories" %}</h2>
-      <div class="story-grid">
-        {% for category in categories %}
-          {% include "stories/includes/category_card.html" %}
-        {% endfor %}
-      </div>
-    </section>
-  {% endif %}
+  <div id="hall-contents" class="container hall-body">
+    {% if page.intro %}<p class="lead hall-intro">{{ page.intro }}</p>{% endif %}
 
-  {% if stories or not categories %}
-    <section{% if categories %} aria-labelledby="stories-heading"{% endif %}>
-      {% if categories %}<h2 id="stories-heading">{% translate "Articles" %}</h2>{% endif %}
-      <div class="story-grid">
-        {% for story in stories %}
-          {% include "stories/includes/story_card.html" with hide_theme=True %}
-        {% empty %}
-          <p>{% translate "No stories yet." %}</p>
-        {% endfor %}
-      </div>
-    </section>
-  {% endif %}
+    {% if categories %}
+      <section class="hall-section" aria-labelledby="categories-heading">
+        <h2 id="categories-heading">{% translate "Categories" %}</h2>
+        <div class="story-grid">
+          {% for category in categories %}
+            {% include "stories/includes/category_card.html" %}
+          {% endfor %}
+        </div>
+      </section>
+    {% endif %}
 
-  <p class="page-footer-link"><a href="{% url 'map' %}">{% translate "Explore the map" %} →</a></p>
+    {% if stories or not categories %}
+      <section class="hall-section"{% if categories %} aria-labelledby="stories-heading"{% endif %}>
+        {% if categories %}<h2 id="stories-heading">{% translate "Articles" %}</h2>{% endif %}
+        <div class="story-grid">
+          {% for story in stories %}
+            {% include "stories/includes/story_card.html" with hide_theme=True %}
+          {% empty %}
+            <p class="hall-empty">{% translate "The first articles of this hall are being written." %}</p>
+          {% endfor %}
+        </div>
+      </section>
+    {% endif %}
+
+    <p class="hall-links">
+      <a href="{{ chapel_url }}">← {% translate "Back to the chapel" %}</a>
+      <a href="{% url 'stories:list' %}">{% translate "All articles" %}</a>
+      <a href="{% url 'map' %}">{% translate "Explore the map" %}</a>
+    </p>
+  </div>
 {% endblock %}
