@@ -114,3 +114,19 @@ class LoadExampleContentTests(TestCase):
         info.assert_not_called()
         fetch.assert_not_called()
         self.assertEqual(StoryPage.objects.live().count(), len(content.STORIES))
+
+    def test_stories_sit_in_their_sections_and_categories(self):
+        self.load()
+        expected = {
+            "The monastery of the spear": ("religion", None),
+            "The duduk, voice of apricot wood": ("music", None),
+            "The eternity sign": ("symbols", "Eternity and the sun"),
+            "A temple older than Christianity in Armenia": ("history", None),
+            "Khachkars, crosses carved in stone": ("symbols", "Cross and khachkar"),
+            "Ararat, the mountain on the horizon": ("symbols", "Ararat"),
+        }
+        for title, (section, category) in expected.items():
+            with self.subTest(title=title):
+                story = StoryPage.objects.get(title=title)
+                self.assertEqual(story.theme, section)
+                self.assertEqual(story.category and story.category.title, category)

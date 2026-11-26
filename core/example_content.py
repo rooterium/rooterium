@@ -124,7 +124,7 @@ PLACES = [
     },
     {
         "name": "Garni Temple",
-        "theme": Theme.RELIGION,
+        "theme": Theme.HISTORY,
         "latitude": Decimal("40.112421"),
         "longitude": Decimal("44.730277"),
         "short_description": "A colonnaded temple in the Ionic order above the "
@@ -179,7 +179,7 @@ THEME_INTROS = {
     Theme.MUSIC: "From the duduk to sacred song: the sounds of Armenia.",
     Theme.SYMBOLS: "Ararat, the eternity sign and other signs that carry "
     "Armenian identity.",
-    Theme.HISTORY: "Kingdoms, fortresses and monasteries: how Armenia's past "
+    Theme.HISTORY: "Kingdoms, temples and monasteries: how Armenia's past "
     "shaped the places you can still visit today.",
     Theme.ARTIFACTS: "Objects that survived the centuries, and what they "
     "tell us about the people who made them.",
@@ -189,12 +189,9 @@ THEME_INTROS = {
     "Christianity: faith, legends and holy places.",
 }
 
-# Intros of earlier example content that the loader may replace: the
-# version 1 themes (their pages became sections, ADR 0018) and the History
-# intro that mentioned temples (the Garni story moved to Religion).
+# Intros of the version 1 themes that the loader may replace (their pages
+# became sections, ADR 0018).
 LEGACY_THEME_INTROS = {
-    "Kingdoms, temples and monasteries: how Armenia's past shaped the "
-    "places you can still visit today.",
     "Crafts, feasts and customs that families carried from village to "
     "village and across the world.",
     "Legends and holy relics: the stories Armenians have told about their "
@@ -376,7 +373,7 @@ STORIES = [
     },
     {
         "title": "A temple older than Christianity in Armenia",
-        "theme": Theme.RELIGION,
+        "theme": Theme.HISTORY,
         "days_ago": 32,
         "hero": "garni",
         "teaser": "Garni is the only largely preserved Hellenistic building "

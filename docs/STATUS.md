@@ -4,7 +4,7 @@ Current state of Rooterium and the next steps. **Every PR updates this
 file** (at least "Last updated" and whatever the PR changes). Details live in
 the linked docs; open work lives in GitHub issues.
 
-_Last updated: 2026-11-26 (PR "Add sections, category pages and temple fields")_
+_Last updated: 2026-11-26 (PR "Keep the Garni story in History")_
 
 ## Live
 
@@ -66,8 +66,10 @@ Notes from T2:
   production): Myths became Religion, the Traditions story moved, Artifacts
   and Key people and the eight Symbols categories were created, every
   moved URL redirects (301), the videos are served with range requests.
-- The History section has no story after the re-sort (all six example
-  stories now sit in Religion, Symbols and Music, as the brief lists).
+- Re-sort changed by the maintainer (2026-11-26): "A temple older than
+  Christianity in Armenia" (Garni) stays in History, so no section with
+  example content is empty; the Garni place stays in History too. Artifacts
+  and Key people have no stories yet (no example content for them).
 - The site still shows the map home page and the version 1 frame; the
   section and category pages use the old styling until T3–T5.
 - Section pages are in the page tree in creation order (Artifacts and Key
