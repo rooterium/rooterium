@@ -262,7 +262,7 @@ T3. **Visual layer and frame** (done, PR "Add the temple frame and move the map 
 T4. **Home journey** (done, PR "Turn the home page into the temple entrance"): portal, pause, entrance, chapel, fallbacks.
 T5. **Section, category and article pages** (done, PR "Add the temple halls and the descent"), descent (video and
     crossfade).
-T6. **Deploy to the test server**: copy web assets with `scp`, run
+T6. **Deploy to the test server** (done 2026-11-26, see `docs/STATUS.md`): copy web assets with `scp`, run
     `load_temple_assets` and the migrations, check the live site at 1280 px
     and 390 px, update `docs/STATUS.md` with screenshots' findings and a
     session handoff. The site is not productive yet, so Claude merges and

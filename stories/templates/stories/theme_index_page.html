@@ -13,7 +13,8 @@
 {% block extra_head %}
   {% if page.hall_image %}
     {% image page.hall_image width-1920 format-webp as hall %}
-    <link rel="preload" as="image" href="{{ hall.url }}" fetchpriority="high">
+    {% image page.hall_image width-960 format-webp as hall_small %}
+    <link rel="preload" as="image" imagesrcset="{{ hall_small.url }} {{ hall_small.width }}w, {{ hall.url }} {{ hall.width }}w" imagesizes="100vw" fetchpriority="high">
   {% endif %}
 {% endblock %}
 
