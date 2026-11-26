@@ -1,5 +1,6 @@
 /* Rooterium site styles: plain CSS, no framework (ADR 0011).
-   Palette V2 and typography from docs/PROJECT_BRIEF.md, section 6.
+   Palette V2 and typography from docs/PROJECT_BRIEF.md, section 6; temple
+   frame and film layer from docs/TEMPLE_BRIEF.md, section 7 (ADR 0017).
    Dark only in version 1. Contrast pairs are checked by
    core/tests/test_design_tokens.py – keep it in sync with the tokens. */
 
@@ -85,7 +86,9 @@
   --accent: #a6352c; /* pomegranate: buttons, active states; never as text */
   --accent-hover: #8e2c24; /* darker pomegranate for button hover */
   --accent-2: #d98a3f; /* apricot: links, hover, focus */
-  --gold: #c8a15d; /* markers, lines, ornaments */
+  /* Muted parchment: markers, fine lines, ornaments. Replaces the gold of
+     version 1 (the temple design rejects "golden glow", ADR 0017). */
+  --ornament: #b3a68e;
   --line: #2b2621; /* decorative dividers only (no contrast requirement) */
 
   /* Typography */
@@ -97,7 +100,7 @@
   --max-width: 85rem; /* 1360 px, as in the variant B mockup */
   --prose-width: 42rem;
   --gutter: 1rem;
-  --radius: 0.75rem;
+  --radius: 2px; /* no rounded "app" cards in the temple design */
   --touch: 44px;
 }
 
@@ -288,29 +291,34 @@ small {
   top: 1rem;
 }
 
-/* --- Header ------------------------------------------------------------- */
+/* --- Header (temple frame) ---------------------------------------------- */
 
 .site-header {
+  position: relative;
+  z-index: 20;
   border-bottom: 1px solid var(--line);
 }
 
 .header-inner {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: wrap; /* the narrowest phones: the menu goes under the name */
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem 1.5rem;
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
 }
 
-/* Block with a 44 px line box: name and Armenian word share a baseline. */
+/* The name in spaced capitals; a 44 px line box keeps it a touch target. */
 .brand {
   display: inline-block;
   line-height: var(--touch);
   font-family: var(--font-heading);
   font-weight: 600;
   font-size: 1.75rem; /* 28 px: smallest size for Cormorant */
+  letter-spacing: 0.28em;
+  margin-right: -0.28em; /* no trailing space after the last letter */
+  text-transform: uppercase;
   color: var(--text);
   white-space: nowrap;
   text-decoration: none;
@@ -320,58 +328,157 @@ small {
   color: var(--text);
 }
 
-/* Armenian name next to the logo (variant B mockup): small and quiet. */
+/* Above the full-screen phone menu, so the name stays visible. */
+.brand {
+  position: relative;
+  z-index: 2;
+}
+
+/* Narrow phones: less spacing, so name and menu fit on one line. */
+@media (max-width: 26rem) {
+  .brand {
+    letter-spacing: 0.16em;
+    margin-right: -0.16em;
+  }
+
+  .sections-toggle {
+    padding: 0 0.75rem;
+  }
+}
+
+/* Armenian name next to the title: small and quiet. */
 .brand-native {
   margin-left: 0.75rem;
   font-family: "Noto Serif Armenian", Georgia, serif;
   font-size: 0.875rem;
   font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
   color: var(--text-muted);
 }
 
-.main-nav ul {
-  display: flex;
-  flex-wrap: wrap;
+.sections-menu {
+  position: relative;
+}
+
+.sections-toggle {
+  display: inline-flex;
   align-items: center;
-  gap: 0 0.25rem;
+  gap: 0.625rem;
+  min-height: var(--touch);
+  padding: 0 1rem;
+  border: 1px solid var(--muted);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text);
+  cursor: pointer;
+  list-style: none;
+}
+
+.sections-toggle::-webkit-details-marker {
+  display: none;
+}
+
+/* Chevron, turned when open (shape shows the state, not colour). */
+.sections-toggle::after {
+  content: "";
+  width: 0.45em;
+  height: 0.45em;
+  border-right: 1.5px solid currentcolor;
+  border-bottom: 1.5px solid currentcolor;
+  transform: translateY(-25%) rotate(45deg);
+}
+
+.sections-menu[open] .sections-toggle::after {
+  transform: translateY(25%) rotate(-135deg);
+}
+
+.sections-toggle:hover {
+  border-color: var(--ornament);
+}
+
+.sections-panel {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  min-width: 18rem;
+  padding: 0.5rem 0;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: 0 1rem 2.5rem rgb(0 0 0 / 65%);
+}
+
+.sections-panel ul {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.main-nav a {
-  display: inline-flex;
-  align-items: center;
+.sections-panel a {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   min-height: var(--touch);
-  padding: 0 0.75rem;
-  font-size: 0.9375rem;
-  font-weight: 500;
+  padding: 0.5rem 1.25rem;
   color: var(--text);
   text-decoration: none;
-  border-radius: 999px;
 }
 
-.main-nav a:hover {
+.sections-name {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.75rem; /* 28 px */
+  line-height: 1.15;
+}
+
+.sections-symbol {
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.sections-panel a:hover .sections-name {
   color: var(--accent-2);
 }
 
-.main-nav .nav-subscribe {
-  margin-left: 0.5rem;
-  padding: 0 1.25rem;
-  font-weight: 600;
-}
-
-.main-nav .nav-subscribe:hover {
-  color: var(--text);
-}
-
-/* Current page: underline in gold plus the weight, not colour alone. */
-.main-nav a[aria-current="page"] {
-  font-weight: 700;
+.sections-panel a[aria-current="page"] .sections-name {
   text-decoration: underline;
-  text-decoration-color: var(--gold);
+  text-decoration-color: var(--accent);
   text-decoration-thickness: 2px;
-  text-underline-offset: 0.4em;
+  text-underline-offset: 0.2em;
+}
+
+/* Phones: the open menu is a full-screen list under the toggle. */
+@media (max-width: 47.99rem) {
+  .sections-menu[open] .sections-toggle {
+    position: relative;
+    z-index: 2;
+    background: var(--bg);
+  }
+
+  .sections-menu[open] .sections-panel {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    min-width: 0;
+    padding: 5rem var(--gutter) 2rem;
+    overflow-y: auto;
+    background: var(--bg);
+    border: 0;
+    box-shadow: none;
+  }
+
+  .sections-panel a {
+    padding-left: 0;
+    padding-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+}
+
+html.menu-open {
+  overflow: hidden;
 }
 
 /* --- Main --------------------------------------------------------------- */
@@ -390,7 +497,7 @@ main {
 .prose blockquote {
   margin: 1.5rem 0;
   padding-left: 1.25rem;
-  border-left: 2px solid var(--gold);
+  border-left: 2px solid var(--ornament);
   font-size: 1.125rem;
   color: var(--text-secondary);
 }
@@ -623,7 +730,7 @@ main {
   text-decoration: none;
 }
 
-/* Markers: gold dot plus name; the button is the whole marker. */
+/* Markers: parchment dot plus name; the button is the whole marker. */
 .map-marker {
   display: flex;
   align-items: center;
@@ -648,8 +755,8 @@ main {
   height: 14px;
   margin-left: 15px; /* centres the dot in a 44 px hit area */
   border-radius: 50%;
-  background: #e3c48a;
-  box-shadow: 0 0 16px 5px rgb(200 161 93 / 85%);
+  background: var(--text);
+  box-shadow: 0 0 14px 4px rgb(179 166 142 / 55%);
 }
 
 .map-marker--event::before {
@@ -682,12 +789,15 @@ main {
   z-index: 2;
 }
 
-/* Selected: larger dot with a pomegranate ring (shape, not colour alone). */
+/* Selected: larger pomegranate dot with a parchment ring (size and shape,
+   not colour alone). */
 .map-marker[aria-pressed="true"]::before {
   width: 18px;
   height: 18px;
   margin-left: 13px;
-  border: 3px solid var(--accent);
+  border: 3px solid var(--text);
+  background: var(--accent);
+  box-shadow: 0 0 14px 4px rgb(166 53 44 / 60%);
 }
 
 /* MapLibre controls in the dark palette. */
@@ -1459,23 +1569,43 @@ figcaption .credit a {
   border-left-color: var(--accent);
 }
 
-/* --- Footer ------------------------------------------------------------- */
+/* --- Footer (temple frame) ---------------------------------------------- */
 
 .site-footer {
   border-top: 1px solid var(--line);
-  padding: 2rem 0;
+  padding: 2rem 0 2.5rem;
   font-size: 0.875rem;
   color: var(--text-muted);
 }
 
 .footer-inner {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 1rem 2rem;
+  display: grid;
+  gap: 1.25rem 3rem;
 }
 
-.footer-inner p {
+@media (min-width: 48rem) {
+  .footer-inner {
+    grid-template-columns: auto auto 1fr;
+    align-items: end;
+  }
+
+  .footer-note {
+    justify-self: end;
+    text-align: right;
+  }
+}
+
+.footer-heading {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.footer-note {
   margin: 0;
 }
 
@@ -1492,16 +1622,133 @@ figcaption .credit a {
   display: inline-flex;
   align-items: center;
   min-height: var(--touch);
+  color: var(--text-secondary);
   text-decoration: none;
 }
 
-.footer-links a:hover {
+.footer-links a:hover,
+.footer-links a[aria-current="page"] {
+  color: var(--text);
   text-decoration: underline;
+  text-decoration-color: var(--ornament);
 }
 
-.footer-inner {
-  align-items: center;
+/* --- Film layer (temple brief, section 7) ------------------------------- */
+
+/* Grain over the whole site: the generated tile (design/temple/
+   build_temple_assets.py), blended so mid-grey is neutral and blacks stay
+   black. Stepped jumps, about six a second; static under reduced motion
+   (see Motion). Never takes clicks. */
+body::after {
+  content: "";
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  z-index: 1000;
+  width: 200%;
+  height: 200%;
+  background: url("../img/grain.png");
+  opacity: 0.14;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  animation: grain 1s steps(1, end) infinite;
 }
+
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  17% { transform: translate(-5%, -10%); }
+  33% { transform: translate(-15%, 5%); }
+  50% { transform: translate(7%, -20%); }
+  67% { transform: translate(-5%, 20%); }
+  83% { transform: translate(15%, 0); }
+  100% { transform: translate(0, 10%); }
+}
+
+/* A full-screen screen (portal, chapel, hall header). */
+.screen {
+  position: relative;
+  display: grid;
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--bg);
+}
+
+.screen-media {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--focus-x, 50%) var(--focus-y, 50%);
+}
+
+/* Darkened edges. */
+.vignette::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse at center, transparent 40%, rgb(0 0 0 / 72%) 100%),
+    linear-gradient(to bottom, rgb(0 0 0 / 35%), transparent 25%, transparent 55%, rgb(0 0 0 / 80%));
+  pointer-events: none;
+}
+
+/* Very light film flicker: opacity only, fewer than three changes a
+   second, no flashes (WCAG 2.3.1). Off under reduced motion. */
+.flicker::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+  animation: flicker 4.2s steps(1, end) infinite;
+}
+
+@keyframes flicker {
+  0% { opacity: 0; }
+  22% { opacity: 0.05; }
+  34% { opacity: 0; }
+  61% { opacity: 0.035; }
+  70% { opacity: 0; }
+  88% { opacity: 0.025; }
+  100% { opacity: 0; }
+}
+
+/* Faded "old film" treatment for photos and stills, never for text. */
+.faded {
+  filter: saturate(0.78) sepia(0.14) contrast(0.95) brightness(0.94);
+}
+
+/* Focal point of a cropped full-screen image or video, as classes (the CSP
+   allows no style attributes): core.templatetags.temple.focus_classes. */
+.focus-x-0 { --focus-x: 0%; }
+.focus-x-1 { --focus-x: 10%; }
+.focus-x-2 { --focus-x: 20%; }
+.focus-x-3 { --focus-x: 30%; }
+.focus-x-4 { --focus-x: 40%; }
+.focus-x-5 { --focus-x: 50%; }
+.focus-x-6 { --focus-x: 60%; }
+.focus-x-7 { --focus-x: 70%; }
+.focus-x-8 { --focus-x: 80%; }
+.focus-x-9 { --focus-x: 90%; }
+.focus-x-10 { --focus-x: 100%; }
+.focus-y-0 { --focus-y: 0%; }
+.focus-y-1 { --focus-y: 10%; }
+.focus-y-2 { --focus-y: 20%; }
+.focus-y-3 { --focus-y: 30%; }
+.focus-y-4 { --focus-y: 40%; }
+.focus-y-5 { --focus-y: 50%; }
+.focus-y-6 { --focus-y: 60%; }
+.focus-y-7 { --focus-y: 70%; }
+.focus-y-8 { --focus-y: 80%; }
+.focus-y-9 { --focus-y: 90%; }
+.focus-y-10 { --focus-y: 100%; }
 
 /* --- Motion ------------------------------------------------------------- */
 

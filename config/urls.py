@@ -9,6 +9,7 @@ from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
 from core import dev_media
+from home.views import MapView
 
 admin_title = _("%(site)s administration") % {"site": settings.SITE_SHORT_NAME}
 admin.site.site_header = admin_title
@@ -27,6 +28,7 @@ urlpatterns = [
     path("projects/", include("projects.urls")),
     path("suggest/", include("submissions.urls")),
     path("newsletter/", include("newsletter.urls")),
+    path("map/", MapView.as_view(), name="map"),
     path("", include("core.urls")),
     # Wagtail pages last: it catches every remaining path.
     path("", include(wagtail_urls)),

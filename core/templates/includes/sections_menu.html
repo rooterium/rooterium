@@ -1,0 +1,19 @@
+{% load i18n %}
+{# The six sections as a disclosure: works without JavaScript (details/summary); core/js/menu.js adds Escape and click-outside. Full-screen list on phones. #}
+{% with sections=section_pages %}{% if sections %}
+<details class="sections-menu" data-sections-menu>
+  <summary class="sections-toggle">{% translate "Sections" %}</summary>
+  <nav class="sections-panel" aria-label="{% translate 'Sections' %}">
+    <ul>
+      {% for section in sections %}
+        <li>
+          <a href="{{ section.url }}"{% if request.path == section.url %} aria-current="page"{% endif %}>
+            <span class="sections-name">{{ section.title }}</span>
+            {% if section.root_symbol %}<span class="sections-symbol">{{ section.root_symbol }}</span>{% endif %}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </nav>
+</details>
+{% endif %}{% endwith %}

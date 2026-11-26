@@ -257,7 +257,7 @@ T1. **Assets and decisions** (done, PR "Add the temple assets and decisions"): d
 T2. **Content model** (done, PR "Add sections, category pages and temple fields"): sections, section page fields, category page,
     story parent rules, home page journey fields, data migration, updated
     `seed_demo` / `example_content`, `load_temple_assets`.
-T3. **Visual layer and frame**: tokens (gold retired), grain, header,
+T3. **Visual layer and frame** (done, PR "Add the temple frame and move the map to /map/"): tokens (gold retired), grain, header,
     footer, mobile menu, `/map/` moved out of the home page.
 T4. **Home journey**: portal, pause, entrance, chapel, fallbacks.
 T5. **Section, category and article pages**, descent (video and

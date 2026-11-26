@@ -4,7 +4,7 @@ Current state of Rooterium and the next steps. **Every PR updates this
 file** (at least "Last updated" and whatever the PR changes). Details live in
 the linked docs; open work lives in GitHub issues.
 
-_Last updated: 2026-11-26 (PR "Keep the Garni story in History")_
+_Last updated: 2026-11-26 (PR "Add the temple frame and move the map to /map/")_
 
 ## Live
 
@@ -47,11 +47,22 @@ originals, video as Wagtail documents served by Caddy).
 | Milestone | State |
 |---|---|
 | T1 Assets and decisions | **Done** (PR #66): ADRs, `design/temple/manifest.json` (21 assets with SHA-256), `build_temple_assets.py` (fetch, build), grain tile `core/static/core/img/grain.png`, issues #57–#65 |
-| T2 Content model | **Done** (this PR): six sections, `CategoryPage`, section and home page temple fields, MP4 documents served directly, `places.0004`, `restructure_sections`, `load_temple_assets`, seed and example content re-sorted. Tag `v1-map` set on `66dc806` |
-| T3 Visual layer and frame | Next |
-| T4 Home journey | Open |
+| T2 Content model | **Done** (PR #67, re-sort changed in #68): six sections, `CategoryPage`, section and home page temple fields, MP4 documents served directly, `places.0004`, `restructure_sections`, `load_temple_assets`, seed and example content re-sorted. Tag `v1-map` set on `66dc806` |
+| T3 Visual layer and frame | **Done** (this PR): gold retired (`--ornament`, muted parchment), cards with 2 px corners, film grain over the whole site, screen utilities (vignette, flicker, faded images, focal-point classes), header with the name (→ `/#chapel`) and a "Sections" menu (full-screen on phones), footer "Around the temple", map at `/map/` with parchment markers |
+| T4 Home journey | Next |
 | T5 Section, category and article pages | Open |
 | T6 Deploy to the test server | Open |
+
+Notes from T3:
+
+- `/stories/` (all articles) is no longer in the header or footer: the
+  brief's frame lists only the sections and "Around the temple" (Map,
+  Events, Projects, Newsletter). The section pages link to it from T5.
+- The selected map marker is pomegranate (2.98:1 on the background, just
+  under 3:1) with a 3 px parchment ring and a larger size, which carry the
+  contrast.
+- Until T4 the home page still shows the old map layout (same include as
+  `/map/`).
 
 Notes from T2:
 

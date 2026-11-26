@@ -1,84 +1,10 @@
 {% extends "base.html" %}
 {% load i18n static wagtailcore_tags wagtailimages_tags %}
 
-{% block extra_head %}
-  <link rel="stylesheet" href="{% static 'core/vendor/maplibre-gl-6.16.0/maplibre-gl.css' %}">
-  <script src="{% static 'core/vendor/pmtiles-4.5.0/pmtiles.js' %}" defer></script>
-  <script type="module" src="{% static 'core/js/map.js' %}"></script>
-{% endblock %}
+{% block extra_head %}{% include "home/includes/map_head.html" %}{% endblock %}
 
 {% block content %}
-  {# Layout of the variant B mockup (design/mockup-2b-map.png): text, theme chips and the place card on the left, the map on the right. #}
-  <section id="explore" class="explore" aria-labelledby="explore-heading"
-           data-map
-           data-tiles="{{ map_tiles_url|default:'' }}"
-           data-terrain="{{ map_terrain_url|default:'' }}"
-           data-worker="{% static 'core/vendor/maplibre-gl-6.16.0/maplibre-gl-worker.mjs' %}"
-           data-maplibre="{% static 'core/vendor/maplibre-gl-6.16.0/maplibre-gl.mjs' %}">
-    <div class="explore-intro">
-      <span class="eyebrow">{% translate "Explore Armenia on the map" %}</span>
-      <h1 id="explore-heading">{% translate "Every root has a place." %}</h1>
-      <p class="lead">{% translate "Mountains, monasteries, legends and the people who keep traditions alive. Choose a theme, then a place on the map." %}</p>
-    </div>
-
-    <div class="chips explore-chips" role="group" aria-label="{% translate 'Filter by theme' %}">
-      {% for value, label in map_filters %}
-        <button type="button" class="chip" data-filter="{{ value }}" aria-pressed="{% if value == 'all' %}true{% else %}false{% endif %}">{{ label }}</button>
-      {% endfor %}
-    </div>
-
-    <div class="explore-map">
-      <div class="segmented" role="group" aria-label="{% translate 'Map view' %}">
-        <button type="button" class="segmented-option" data-view="homeland" aria-pressed="true">{% translate "Homeland" %}</button>
-        <button type="button" class="segmented-option" data-view="diaspora" aria-pressed="false">{% translate "Diaspora worldwide" %}</button>
-      </div>
-      <div class="map-frame">
-        <div class="map" data-map-canvas role="region" aria-label="{% translate 'Map of historic Armenia and the South Caucasus' %}"></div>
-        <div class="map-diaspora" data-diaspora hidden>
-          <p class="eyebrow">{% translate "Coming later" %}</p>
-          <p>{% translate "The diaspora world map – Armenian communities, places and stories all over the world – is in preparation." %}</p>
-        </div>
-      </div>
-    </div>
-
-      <aside class="map-card card" data-card aria-live="polite">
-        <div data-card-default>
-          <p>{% translate "Choose a place on the map to read about it." %}</p>
-        </div>
-        <div data-card-feature hidden>
-          <p class="eyebrow" data-card-category></p>
-          <h2 class="map-card-title" data-card-title></h2>
-          <p data-card-description></p>
-          <p><a data-card-link href=""></a></p>
-        </div>
-        <div data-card-panel="events" hidden>
-          <p class="eyebrow">{% translate "Events" %}</p>
-          {% include "home/includes/event_list.html" %}
-        </div>
-        <div data-card-panel="projects" hidden>
-          <p class="eyebrow">{% translate "Projects" %}</p>
-          <p>{% translate "Projects are not on the map yet." %}</p>
-          {% include "home/includes/project_list.html" %}
-        </div>
-      </aside>
-
-    {# Always rendered: works without JavaScript, WebGL or tiles, and for screen readers. #}
-    <details class="place-list">
-      <summary>{% translate "All places as a list" %}</summary>
-      <ul>
-        {% for place in places %}
-          <li data-place-item data-category="{{ place.theme }}">
-            <strong>{{ place.name }}</strong> <span class="meta">({{ place.get_theme_display }})</span><br>
-            {{ place.short_description }}
-          </li>
-        {% empty %}
-          <li>{% translate "No places yet." %}</li>
-        {% endfor %}
-      </ul>
-    </details>
-
-    {{ map_features|json_script:"map-features" }}
-  </section>
+  {% include "home/includes/map_explore.html" %}
 
   <section class="home-section" aria-labelledby="stories-heading">
     <div class="section-head">

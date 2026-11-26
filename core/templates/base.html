@@ -21,28 +21,22 @@
   <link rel="apple-touch-icon" href="{% static 'core/img/apple-touch-icon.png' %}">
   <link rel="preload" href="{% static 'core/fonts/manrope-latin-wght-normal.woff2' %}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{% static 'core/css/site.css' %}">
+  <script type="module" src="{% static 'core/js/menu.js' %}"></script>
   {% block extra_head %}{% endblock %}
 </head>
 <body>
   {% wagtailuserbar %}
   <a class="skip-link" href="#main">{% translate "Skip to content" %}</a>
 
+  {% block header %}
+  {# Temple frame (ADR 0017): the name links to the chapel; one "Sections" menu, nothing else. #}
   <header class="site-header">
     <div class="container header-inner">
-      <a class="brand" href="/"{% if request.path == "/" %} aria-current="page"{% endif %}>{{ site_short_name }}{% if site_native_name %} <span class="brand-native" lang="hy">{{ site_native_name }}</span>{% endif %}</a>
-      <nav class="main-nav" aria-label="{% translate 'Main navigation' %}">
-        <ul>
-          {% for item in nav_items %}
-            <li><a href="{{ item.url }}"{% if item.active %} aria-current="page"{% endif %}>{{ item.label }}</a></li>
-          {% endfor %}
-          {% with about=about_page %}{% if about %}
-            <li><a href="{{ about.url }}"{% if request.path == about.url %} aria-current="page"{% endif %}>{% translate "About" %}</a></li>
-          {% endif %}{% endwith %}
-          <li><a class="button nav-subscribe" href="{% url 'newsletter:signup' %}">{% translate "Subscribe" %}</a></li>
-        </ul>
-      </nav>
+      <a class="brand" href="{{ chapel_url }}">{{ site_short_name }}{% if site_native_name %} <span class="brand-native" lang="hy">{{ site_native_name }}</span>{% endif %}</a>
+      {% include "includes/sections_menu.html" %}
     </div>
   </header>
+  {% endblock %}
 
   <main id="main" class="container">
     {% if messages %}
@@ -57,15 +51,24 @@
 
   <footer class="site-footer">
     <div class="container footer-inner">
-      <p>{% blocktranslate with name=site_name owner=site_owner %}{{ name }} is a personal project by {{ owner }}. Content in English, more languages to come.{% endblocktranslate %}</p>
-      <nav aria-label="{% translate 'Footer' %}">
+      <nav class="footer-group" aria-labelledby="around-heading">
+        <h2 id="around-heading" class="footer-heading">{% translate "Around the temple" %}</h2>
         <ul class="footer-links">
-          {% for footer_page in footer_pages %}
-            <li><a href="{{ footer_page.url }}">{{ footer_page.title }}</a></li>
+          {% for item in around_items %}
+            <li><a href="{{ item.url }}"{% if item.active %} aria-current="page"{% endif %}>{{ item.label }}</a></li>
           {% endfor %}
-          <li><a href="{% url 'newsletter:signup' %}">{% translate "Newsletter" %}</a></li>
         </ul>
       </nav>
+      {% with pages=footer_pages %}{% if pages %}
+        <nav class="footer-group" aria-label="{% translate 'About this site' %}">
+          <ul class="footer-links">
+            {% for footer_page in pages %}
+              <li><a href="{{ footer_page.url }}"{% if request.path == footer_page.url %} aria-current="page"{% endif %}>{{ footer_page.title }}</a></li>
+            {% endfor %}
+          </ul>
+        </nav>
+      {% endif %}{% endwith %}
+      <p class="footer-note">{% blocktranslate with name=site_name owner=site_owner %}{{ name }} is a personal project by {{ owner }}. Content in English, more languages to come.{% endblocktranslate %}</p>
     </div>
   </footer>
 </body>
