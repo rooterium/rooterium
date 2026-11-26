@@ -38,7 +38,7 @@
   </header>
   {% endblock %}
 
-  <main id="main" class="container">
+  <main id="main" class="{% block main_class %}container{% endblock %}">
     {% if messages %}
       <div class="messages" role="status">
         {% for message in messages %}

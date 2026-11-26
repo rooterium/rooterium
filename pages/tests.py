@@ -51,7 +51,7 @@ class SimplePageTests(TestCase):
             self.client.get("/newsletter/"), "How we handle your data"
         )
         privacy = make_page(Purpose.PRIVACY, "Privacy")
-        for url in ["/newsletter/", "/", "/suggest/event/"]:
+        for url in ["/newsletter/", "/suggest/event/"]:
             with self.subTest(url=url):
                 self.assertContains(
                     self.client.get(url),

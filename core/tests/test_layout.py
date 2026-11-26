@@ -57,7 +57,10 @@ class HomePageTests(TestCase):
         self.assertContains(self.response, '<html lang="en">')
 
     def test_brand_links_to_the_chapel(self):
-        self.assertContains(self.response, '<a class="brand" href="/#chapel">')
+        # Every page but the portal has the header.
+        self.assertContains(
+            self.client.get("/stories/"), '<a class="brand" href="/#chapel">'
+        )
 
 
 class ErrorPageTests(TestCase):

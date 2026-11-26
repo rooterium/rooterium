@@ -3,19 +3,15 @@ from django.utils.translation import gettext_lazy as _
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.models import Page
 
-from core import spam
 from core.seo import SeoPageMixin
-from newsletter.forms import SignupForm
-from stories.models import image_field, video_field
-
-from .map import map_context
+from stories.models import image_field, theme_pages, video_field
 
 
 class HomePage(SeoPageMixin, Page):
-    """Site root. Today the interactive map (milestone 4); with the temple
-    redesign the entrance: portal, entrance video, chapel (ADR 0017). The
-    journey fields are optional: without them the page falls back to still
-    images or plain text."""
+    """Site root: the temple entrance (ADR 0017). Portal, entrance video and
+    chapel with the six sections; the map lives at /map/. The journey fields
+    are optional: without them the page falls back to still images or plain
+    text, and core/js/journey.js only adds the videos."""
 
     tagline = models.CharField(
         _("tagline"),
@@ -76,15 +72,7 @@ class HomePage(SeoPageMixin, Page):
         return self.seo_title
 
     def get_context(self, request, *args, **kwargs):
-        from stories.models import StoryPage
-
         context = super().get_context(request, *args, **kwargs)
-        context.update(map_context(request))
-        context["latest_stories"] = (
-            StoryPage.objects.live()
-            .select_related("hero_image")
-            .order_by("-date", "-pk")[:3]
-        )
-        context["newsletter_form"] = SignupForm()
-        context["started_token"] = spam.make_started_token()
+        # Every live section, also those without stories yet (brief, 6).
+        context["sections"] = theme_pages()
         return context

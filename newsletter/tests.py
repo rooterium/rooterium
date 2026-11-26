@@ -145,8 +145,10 @@ class SignupTests(TestCase):
             response = self.client.post("/newsletter/", signup_data())
         self.assertRedirects(response, "/newsletter/check-your-inbox/")
 
-    def test_home_page_has_the_signup_form(self):
-        response = self.client.get("/")
+    def test_signup_page_has_the_form(self):
+        # The home page is the temple entrance now (ADR 0017); the sign-up
+        # lives on its own page, linked in the footer.
+        response = self.client.get("/newsletter/")
         self.assertContains(response, 'action="/newsletter/"')
         self.assertContains(response, 'name="started"')
 

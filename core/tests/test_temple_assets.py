@@ -119,3 +119,23 @@ class EditorDocumentPermissionTests(TestCase):
         editor.groups.add(Group.objects.get(name="Editors"))
         self.assertTrue(permission_policy.user_has_permission(editor, "add"))
         self.assertTrue(permission_policy.user_has_permission(editor, "choose"))
+
+
+class FocusTests(TestCase):
+    def test_loader_sets_focal_points_for_the_phone_crop(self):
+        from core.templatetags.temple import focus_classes
+
+        with tempfile.TemporaryDirectory() as tmp, override_settings(DEBUG=True):
+            ensure_sections()
+            folder = Path(tmp)
+            for file_name, *_ in assets.IMAGES.values():
+                (folder / file_name).write_bytes(webp())
+            for file_name, _ in assets.VIDEOS.values():
+                (folder / file_name).write_bytes(b"video")
+            call_command("load_temple_assets", str(folder), stdout=io.StringIO())
+        portal = get_image_model().objects.get(title="Temple: portal")
+        self.assertEqual(focus_classes(portal), "focus-x-6 focus-y-6")
+        music = get_image_model().objects.get(title="Temple: Music hall")
+        self.assertIsNone(music.focal_point_x)
+        self.assertEqual(focus_classes(music), "focus-x-5 focus-y-5")
+        self.assertEqual(focus_classes(None), "focus-x-5 focus-y-5")
