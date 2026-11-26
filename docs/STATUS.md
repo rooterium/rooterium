@@ -4,7 +4,7 @@ Current state of Rooterium and the next steps. **Every PR updates this
 file** (at least "Last updated" and whatever the PR changes). Details live in
 the linked docs; open work lives in GitHub issues.
 
-_Last updated: 2026-11-26 (PR "Add the temple halls and the descent")_
+_Last updated: 2026-11-26 (PR "Record the temple deploy and fix the hall crops on phones")_
 
 ## Live
 
@@ -31,8 +31,15 @@ _Last updated: 2026-11-26 (PR "Add the temple halls and the descent")_
 - Relief (ADR 0016): Mapterhorn terrain extract (max zoom 8, 22.6 MB)
   copied into the `media` volume (`/app/media/maps/terrain.pmtiles`,
   checksum matched, served by Caddy with range requests), 2026-11-20.
+- **Temple redesign live since 2026-11-26** (T6, commit `ce85673`): the
+  home page is the temple entrance, six sections with the Symbols
+  categories, the map at `/map/`. The example content is re-sorted into
+  the sections (brief, section 5; Garni stays in History). The 8 temple
+  images and 3 videos are in the collection "Temple" (`media` volume,
+  about 7 MB). Old URLs (`/myths/…`, `/traditions/…`,
+  `/symbols/the-eternity-sign/`) redirect (301).
 
-## Temple redesign (version 2, in progress)
+## Temple redesign (version 2)
 
 On 2026-11-22 the editor delivered a new design package
 ([`handoff/design-package-2026-11-22.md`](handoff/design-package-2026-11-22.md)):
@@ -50,8 +57,48 @@ originals, video as Wagtail documents served by Caddy).
 | T2 Content model | **Done** (PR #67, re-sort changed in #68): six sections, `CategoryPage`, section and home page temple fields, MP4 documents served directly, `places.0004`, `restructure_sections`, `load_temple_assets`, seed and example content re-sorted. Tag `v1-map` set on `66dc806` |
 | T3 Visual layer and frame | **Done** (PR #69): gold retired (`--ornament`, muted parchment), cards with 2 px corners, film grain over the whole site, screen utilities (vignette, flicker, faded images, focal-point classes), header with the name (→ `/#chapel`) and a "Sections" menu (full-screen on phones), footer "Around the temple", map at `/map/` with parchment markers |
 | T4 Home journey | **Done** (PR #70): portal (poster, loop with Pause/Play kept for the session, title, tagline, Enter), entrance video with Skip and Escape ending on the chapel still, chapel with the six sections, `#chapel` history entry, no videos without JS / with reduced motion / with data saver, focal points for the phone crop |
-| T5 Section, category and article pages | **Done** (this PR): hall header (full-height hall image under a see-through header, section, root symbol, title, motto, "Into the hall"), category cards (plain grain card without a cover), articles, links back to the chapel / all articles / map; category and article pages with the breadcrumb Chapel › Section › Category; faded treatment for photos; descent from the chapel (video with Skip, or a 1.2 s crossfade with a slow zoom) |
-| T6 Deploy to the test server | Next |
+| T5 Section, category and article pages | **Done** (PR #71): hall header (full-height hall image under a see-through header, section, root symbol, title, motto, "Into the hall"), category cards (plain grain card without a cover), articles, links back to the chapel / all articles / map; category and article pages with the breadcrumb Chapel › Section › Category; faded treatment for photos; descent from the chapel (video with Skip, or a 1.2 s crossfade with a slow zoom) |
+| T6 Deploy to the test server | **Done** 2026-11-26, see below; phone crops of the halls and the hall preload fixed in this PR |
+
+Deploy log T6 (on the server, 2026-11-26; maintainer approved the deletion
+of the empty Traditions page "with a backup first"):
+
+1. Production checked read-only: same tree as the local rehearsal (five
+   theme pages, six stories, no placeholder events or projects).
+2. Backup: `scripts/backup-db.sh` (61 tables), kept as
+   `/srv/rooterium/backups/pre-temple-2026-11-26.dump` (outside the daily
+   names; delete it by hand once the temple version is accepted).
+3. `scripts/deploy.sh` (commit `ce85673`): migrations `home.0003`,
+   `places.0003`, `places.0004`, `stories.0003`.
+4. `restructure_sections`: Myths → Religion, "Khachkars" moved, **the empty
+   Traditions page deleted** (the only deletion), Artifacts and Key people
+   and the eight Symbols categories created.
+5. `load_example_content --allow-production`: three stories moved into
+   their categories, intros for Artifacts, Key people, Religion.
+6. `design/temple/web/` copied with `scp` and `docker compose cp`,
+   `load_temple_assets --allow-production`, temporary copies removed.
+   After this PR's deploy: copied and run once more to add the focal
+   points of the Symbols and Music halls (existing images get them when
+   they have none).
+7. Checked live: every page 200, old URLs 301, videos `206` with
+   `video/mp4` and caching from Caddy, CSP unchanged, `noindex`. Headless
+   Chrome at 1280 and 390 px: portal (loop plays), chapel, Symbols hall,
+   a category and an article without horizontal overflow or errors;
+   reduced motion shows stills; Enter → `#chapel` with focus on the
+   heading; chapel → Symbols descent lands on `/symbols/`.
+
+Findings and open points from T6:
+
+- On phones the Symbols hall cropped the khachkar in half (centre crop);
+  focal points for the Symbols and Music halls fix it (this PR). The
+  History, Artifacts, Key people and Religion halls are still centred:
+  the editor can set focal points in the admin (Images → the image →
+  focal point) after looking at them on a phone.
+- The editor reviews the result on the test server: assumptions A1–A15
+  (#57), rights for the AI images and videos (#58, before the
+  announcement), tagline and chapel heading (#59, the portal shows a
+  bracketed placeholder), missing covers, hall images and descent videos
+  (#60). Artifacts and Key people have no articles yet.
 
 Notes from T5:
 
@@ -92,14 +139,7 @@ Notes from T3:
 
 Notes from T2:
 
-- **Not deployed**: the brief deploys the temple milestones together in
-  T6, so the live site stays on version 1 until then (live commit lags
-  `main`). At T6, after `scripts/deploy.sh` has run the migrations:
-  `restructure_sections`, `load_example_content --allow-production`, then
-  copy `design/temple/web/` and run `load_temple_assets` (runbook:
-  `deployment.md`, section 4). If an unrelated deploy happens earlier, the
-  migrations run without the restructure; pages still render (legacy
-  values get a label via `core.themes.theme_label`). Rehearsed on the local database (same content as
+- Deployed together with T3–T5 in T6 (see the deploy log above). Rehearsed on the local database (same content as
   production): Myths became Religion, the Traditions story moved, Artifacts
   and Key people and the eight Symbols categories were created, every
   moved URL redirects (301), the videos are served with range requests.
@@ -299,8 +339,10 @@ Overview: `gh issue list`. At the time of writing:
 
 ## Next steps
 
-0. **Temple redesign**: milestone T2 (content model) is next, see the
-   table above and `docs/TEMPLE_BRIEF.md`, section 9.
+0. **Temple redesign is live** (T1–T6 done). Next: the editor reviews it
+   on the test server (#57–#60); changes from that review follow in normal
+   PRs. Set focal points for the remaining hall images if their phone crop
+   needs it.
 1. **Maintainer**: the admin account exists (1 superuser) and UpCloud
    backups run at 02:15. Still open:
    - an editor account in the admin (Settings → Users; staff, group

@@ -84,6 +84,8 @@ IMAGES = {
 FOCUS = {
     "portal": (0.63, 0.55),  # the arch
     "chapel": (0.65, 0.5),  # the lectern and the woman in taraz
+    "hall-symbols": (0.62, 0.5),  # the khachkar
+    "hall-music": (0.6, 0.6),  # the old man and the instruments
 }
 
 # key: (file, title)
