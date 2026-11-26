@@ -56,11 +56,8 @@ class HomePageTests(TestCase):
     def test_language_is_english(self):
         self.assertContains(self.response, '<html lang="en">')
 
-    def test_brand_links_home_and_marks_current_page(self):
-        self.assertContains(
-            self.response,
-            '<a class="brand" href="/" aria-current="page">',
-        )
+    def test_brand_links_to_the_chapel(self):
+        self.assertContains(self.response, '<a class="brand" href="/#chapel">')
 
 
 class ErrorPageTests(TestCase):
@@ -116,16 +113,49 @@ class WebAssetTests(TestCase):
 
 
 class HeaderFooterTests(TestCase):
-    """Header and footer follow the variant B mockup (design/)."""
+    """Temple frame (ADR 0017, temple brief section 6)."""
 
-    def test_header_has_map_link_and_subscribe_button(self):
+    def setUp(self):
+        from core.sections import ensure_sections
+
+        self.sections = ensure_sections()
+
+    def test_header_has_only_the_name_and_the_sections_menu(self):
         response = self.client.get("/stories/")
-        self.assertContains(response, '<a href="/#explore">Map</a>', html=True)
+        header = response.content.decode().split('<header class="site-header">')[1]
+        header = header.split("</header>")[0]
+        self.assertIn('<summary class="sections-toggle">Sections</summary>', header)
+        self.assertNotIn("Subscribe", header)
+        self.assertNotIn("/map/", header)
+
+    def test_sections_menu_lists_the_six_sections_in_order(self):
+        content = self.client.get("/stories/").content.decode()
+        menu = content.split('class="sections-panel"')[1].split("</nav>")[0]
+        positions = [
+            menu.index(f'href="{page.url}"') for page in self.sections.values()
+        ]
+        self.assertEqual(positions, sorted(positions))
+        self.assertIn('<span class="sections-symbol">duduk</span>', menu)
+
+    def test_current_section_is_marked(self):
+        music = self.sections["music"]
         self.assertContains(
-            response,
-            '<a class="button nav-subscribe" href="/newsletter/">Subscribe</a>',
-            html=True,
+            self.client.get(music.url), f'<a href="{music.url}" aria-current="page">'
         )
+
+    def test_footer_links_around_the_temple(self):
+        response = self.client.get("/stories/")
+        self.assertContains(response, "Around the temple")
+        for href, label in [
+            ("/map/", "Map"),
+            ("/events/", "Events"),
+            ("/projects/", "Projects"),
+            ("/newsletter/", "Newsletter"),
+        ]:
+            with self.subTest(label=label):
+                self.assertContains(
+                    response, f'<a href="{href}">{label}</a>', html=True
+                )
 
     def test_about_link_only_when_the_page_is_live(self):
         from home.models import HomePage

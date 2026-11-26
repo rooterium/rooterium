@@ -94,7 +94,7 @@ class EventListPageTests(TestCase):
         on_map = make_event(latitude=Decimal("40.18"), longitude=Decimal("44.51"))
         make_event(title="[Without position]")
         response = self.client.get("/events/")
-        self.assertContains(response, f'href="/?place=event-{on_map.pk}#explore"')
+        self.assertContains(response, f'href="/map/?place=event-{on_map.pk}"')
         self.assertContains(response, "Show on the map", count=1)
 
     def test_empty_list(self, _):

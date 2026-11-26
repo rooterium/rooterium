@@ -61,9 +61,22 @@ class ContrastTests(SimpleTestCase):
         self.check("text", "accent-hover", self.TEXT)
 
     def test_ui_colours(self):
-        for fg in ("gold", "muted", "accent-2"):
+        for fg in ("ornament", "muted", "accent-2"):
             with self.subTest(fg=fg):
                 self.check(fg, "bg", self.UI)
+
+    def test_gold_is_retired(self):
+        # The temple design rejects "golden glow" (ADR 0017).
+        self.assertNotIn("gold", self.t)
+        self.assertNotIn("var(--gold)", CSS.read_text())
+
+    def test_selected_marker_has_a_parchment_ring(self):
+        # Pomegranate alone is just under 3:1 on the background; the ring in
+        # --text (and the larger size) carries the contrast.
+        css = CSS.read_text()
+        rule = css.split('.map-marker[aria-pressed="true"]::before {')[1].split("}")[0]
+        self.assertIn("border: 3px solid var(--text);", rule)
+        self.check("text", "bg", self.UI)
 
     def test_accent_is_not_enough_for_text(self):
         # Documents why --accent must never be used as a text colour.

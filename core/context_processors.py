@@ -4,19 +4,19 @@ from django.conf import settings
 from django.templatetags.static import static
 from django.urls import reverse
 
-from .navigation import MAIN_NAVIGATION
+from .navigation import AROUND_THE_TEMPLE, CHAPEL_URL
 
 
 def site(request):
     current = request.resolver_match
     current_name = current.view_name if current else None
-    nav_items = [
+    around_items = [
         {
             "label": label,
             "url": target if target.startswith("/") else reverse(target),
             "active": target == current_name,
         }
-        for label, target in MAIN_NAVIGATION
+        for label, target in AROUND_THE_TEMPLE
     ]
     return {
         "site_name": settings.SITE_NAME,
@@ -28,12 +28,20 @@ def site(request):
         "default_og_image": request.build_absolute_uri(
             static("core/img/og-default.jpg")
         ),
-        "nav_items": nav_items,
+        "around_items": around_items,
+        "chapel_url": CHAPEL_URL,
         # Callables: only queried when a template uses them.
+        "section_pages": _section_pages,
         "footer_pages": _footer_pages,
         "about_page": _about_page,
         "privacy_url": lambda: _privacy_url(request),
     }
+
+
+def _section_pages():
+    from stories.models import theme_pages
+
+    return theme_pages()
 
 
 def _footer_pages():

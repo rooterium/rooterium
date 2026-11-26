@@ -1,7 +1,9 @@
 from django.test import TestCase
 from wagtail.models import Site
 
+from core.themes import Theme
 from home.models import HomePage
+from places.tests import make_place
 
 
 class HomePageSetupTests(TestCase):
@@ -114,3 +116,19 @@ class HomeLayoutTests(TestCase):
         self.assertContains(response, 'class="signup-form signup-form--inline"')
         self.assertContains(response, 'href="/suggest/event/"')
         self.assertContains(response, 'href="/suggest/project/"')
+
+
+class MapPageTests(TestCase):
+    """The map moved from the home page to /map/ (ADR 0017)."""
+
+    def test_map_page_renders_the_map_module(self):
+        place = make_place(name="Geghard Monastery", theme=Theme.RELIGION)
+        response = self.client.get("/map/")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "<title>Map – Rooterium</title>", html=True)
+        self.assertContains(response, 'id="map-features"')
+        self.assertContains(response, "data-map")
+        self.assertContains(response, place.name)
+        self.assertContains(response, "core/js/map.js")
+        for value in Theme.values:
+            self.assertContains(response, f'data-filter="{value}"')

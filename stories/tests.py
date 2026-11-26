@@ -139,7 +139,7 @@ class StoryPageDesignTests(TestCase):
         story.save_revision().publish()
         response = self.client.get(story.url)
         self.assertContains(response, "Places in this story")
-        self.assertContains(response, f'href="/?place=place-{place.pk}#explore"')
+        self.assertContains(response, f'href="/map/?place=place-{place.pk}"')
 
     def test_draft_places_are_not_listed(self):
         story = make_story(self.religion)
@@ -242,14 +242,12 @@ class StoryOverviewTests(TestCase):
         self.assertContains(response, 'rel="next"')
         self.assertEqual(self.client.get("/stories/?page=2").status_code, 200)
 
-    def test_main_navigation_links_to_stories(self):
+    def test_overview_renders_outside_the_frame_navigation(self):
+        # Not in the temple header or footer (temple brief, section 6); the
+        # section pages link to it.
         response = self.client.get("/stories/")
-        self.assertContains(
-            response, '<a href="/stories/" aria-current="page">Stories</a>', html=True
-        )
-        self.assertContains(
-            self.client.get("/"), '<a href="/stories/">Stories</a>', html=True
-        )
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "The monastery of the spear")
 
     def test_theme_page_shows_its_stories_and_theme_links(self):
         response = self.client.get(self.religion.url)

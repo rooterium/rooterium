@@ -16,7 +16,7 @@
           <h2 class="event-title"><a href="{{ event.link }}" rel="noopener">{{ event.title }}</a></h2>
           <p class="meta">{{ event.city }}, {{ event.country }}</p>
           {% if event.latitude is not None %}
-            <p class="event-map-link"><a href="/?place=event-{{ event.pk }}#explore">{% translate "Show on the map" %} →</a></p>
+            <p class="event-map-link"><a href="{% url 'map' %}?place=event-{{ event.pk }}">{% translate "Show on the map" %} →</a></p>
           {% endif %}
         </div>
       </li>

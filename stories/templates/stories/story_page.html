@@ -53,7 +53,7 @@
               <span class="eyebrow">{{ place.get_theme_display }}</span>
               <h3>{{ place.name }}</h3>
               <p>{{ place.short_description }}</p>
-              <p><a href="/?place=place-{{ place.pk }}#explore">{% translate "Show on the map" %} →</a></p>
+              <p><a href="{% url 'map' %}?place=place-{{ place.pk }}">{% translate "Show on the map" %} →</a></p>
             </li>
           {% endfor %}
         </ul>

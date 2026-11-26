@@ -106,7 +106,7 @@ function buildStyle(tilesUrl, terrainUrl) {
       '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a>, ' +
       '<a href="https://protomaps.com">Protomaps</a>',
   };
-  const gold = token("--gold");
+  const ornament = token("--ornament");
   const relief = reliefLayers(style, terrainUrl);
   style.layers = [
     // Outside land (the sea) uses the page background.
@@ -157,7 +157,7 @@ function buildStyle(tilesUrl, terrainUrl) {
       filter: ["==", ["geometry-type"], "Polygon"],
       paint: { "fill-color": "#0a0d0f" },
     },
-    // Fine gold coastlines and lake shores.
+    // Fine parchment coastlines and lake shores.
     {
       id: "shoreline",
       type: "line",
@@ -165,7 +165,7 @@ function buildStyle(tilesUrl, terrainUrl) {
       "source-layer": "water",
       filter: ["==", ["geometry-type"], "Polygon"],
       paint: {
-        "line-color": gold,
+        "line-color": ornament,
         "line-opacity": ["interpolate", ["linear"], ["zoom"], 4, 0.5, 9, 0.7],
         "line-width": ["interpolate", ["linear"], ["zoom"], 4, 0.6, 9, 1.2],
       },
@@ -406,7 +406,7 @@ async function init() {
   labelsChanged = updateLabels;
   updateLabels();
 
-  // Deep link from a story: /?place=place-3#explore selects that marker.
+  // Deep link from a story or event: /map/?place=place-3 selects that marker.
   const wanted = new URLSearchParams(window.location.search).get("place");
   const entry = markers.find((m) => m.feature.id === wanted);
   if (entry) {
