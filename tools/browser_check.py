@@ -14,7 +14,8 @@ Not part of the app; development helper only. Run on the host:
         --eval 'document.documentElement.scrollWidth'
 
 Options: --cookie sessionid=… (to view as a logged-in user),
---wait SECONDS (time to collect messages before --eval/screenshot).
+--wait SECONDS (time to collect messages before --eval/screenshot),
+--reduced-motion (emulate prefers-reduced-motion: reduce).
 """
 
 import argparse
@@ -105,6 +106,11 @@ async def check(args):
                 deviceScaleFactor=1,
                 mobile=args.width < 600,
             )
+            if args.reduced_motion:
+                await call(
+                    "Emulation.setEmulatedMedia",
+                    features=[{"name": "prefers-reduced-motion", "value": "reduce"}],
+                )
             await call("Network.enable")
             await call("Network.setBlockedURLs", urls=BLOCKED)
             await call("Page.enable")
@@ -153,6 +159,11 @@ def main():
     parser.add_argument("--cookie", help="e.g. sessionid=…")
     parser.add_argument("--eval", help="JavaScript expression, may return a promise")
     parser.add_argument("--wait", type=float, default=3.0)
+    parser.add_argument(
+        "--reduced-motion",
+        action="store_true",
+        help="emulate prefers-reduced-motion: reduce",
+    )
     asyncio.run(check(parser.parse_args()))
 
 

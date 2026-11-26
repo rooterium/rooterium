@@ -1750,6 +1750,194 @@ body::after {
 .focus-y-9 { --focus-y: 90%; }
 .focus-y-10 { --focus-y: 100%; }
 
+/* --- Temple entrance: portal, entrance, chapel (ADR 0017) ---------------- */
+
+main.journey {
+  padding: 0;
+}
+
+/* Buttons over full-screen images and videos: pause, skip. */
+.screen-control {
+  position: absolute;
+  right: var(--gutter);
+  bottom: var(--gutter);
+  z-index: 3;
+  min-height: var(--touch);
+  min-width: var(--touch);
+  padding: 0 1.125rem;
+  border: 1px solid rgb(238 227 209 / 55%);
+  background: rgb(11 10 9 / 55%);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.screen-control:hover {
+  border-color: var(--text);
+}
+
+.portal {
+  cursor: pointer;
+}
+
+.portal-content {
+  align-self: center;
+  justify-self: center;
+  width: min(100%, 64rem);
+  padding: 4rem var(--gutter);
+  text-align: center;
+  text-shadow: 0 2px 18px rgb(0 0 0 / 85%);
+  /* A soft dark backdrop: the text sits on bright mist. */
+  background: radial-gradient(closest-side, rgb(11 10 9 / 55%), transparent);
+}
+
+.portal-title {
+  margin: 0 0 1rem;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: clamp(2.25rem, 9vw, 5.5rem); /* never below 28 px */
+  line-height: 1;
+  letter-spacing: 0.28em;
+  margin-right: -0.28em;
+  text-transform: uppercase;
+}
+
+.portal-tagline {
+  margin: 0 0 2.25rem;
+  font-size: 1.0625rem;
+  color: var(--text);
+}
+
+.portal-enter {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touch);
+  padding: 0 2rem;
+  border: 1px solid rgb(238 227 209 / 65%);
+  background: rgb(11 10 9 / 40%);
+  color: var(--text);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  text-decoration: none;
+  text-shadow: none;
+}
+
+.portal-enter:hover {
+  border-color: var(--text);
+  background: rgb(11 10 9 / 65%);
+  color: var(--text);
+}
+
+/* The entrance video covers everything while it plays. */
+.entrance {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: #000;
+  transition: opacity 0.9s ease;
+}
+
+.entrance.is-leaving {
+  opacity: 0;
+}
+
+/* Full width at the bottom, over a dark gradient: the list must stay
+   readable over the bright linen of the lectern. */
+.chapel-content {
+  align-self: end;
+  width: 100%;
+  max-width: none;
+  padding-top: 8rem;
+  padding-bottom: 3rem;
+  padding-left: max(var(--gutter), calc((100% - var(--max-width)) / 2 + var(--gutter)));
+  padding-right: max(var(--gutter), calc((100% - var(--max-width)) / 2 + var(--gutter)));
+  background: linear-gradient(to bottom, transparent, rgb(11 10 9 / 82%) 7rem, rgb(11 10 9 / 92%));
+  text-shadow: 0 2px 14px rgb(0 0 0 / 90%);
+}
+
+.chapel-heading {
+  margin: 0 0 1rem;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 2.25rem; /* 36 px */
+  line-height: 1.1;
+}
+
+.chapel-heading:focus {
+  outline: none;
+}
+
+.chapel-list {
+  display: grid;
+  gap: 0 2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 40rem) {
+  .chapel-list {
+    grid-template-columns: repeat(2, minmax(0, 18rem));
+  }
+}
+
+@media (min-width: 64rem) {
+  .chapel-list {
+    grid-template-columns: repeat(3, minmax(0, 18rem));
+  }
+}
+
+.chapel-list a {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: var(--touch);
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgb(179 166 142 / 35%);
+  color: var(--text);
+  text-decoration: none;
+}
+
+.chapel-name {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.75rem; /* 28 px */
+  line-height: 1.15;
+}
+
+.chapel-symbol {
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+}
+
+.chapel-list a:hover .chapel-name {
+  color: var(--accent-2);
+}
+
+/* After the entrance video: the still stays, the section list fades in. */
+.chapel.is-arriving .chapel-content {
+  animation: arrive 1.4s ease both;
+}
+
+@keyframes arrive {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* --- Motion ------------------------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {

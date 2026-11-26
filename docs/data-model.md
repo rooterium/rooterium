@@ -59,9 +59,9 @@ image is a `CustomImage`; "live" means published in Wagtail (`live=True`).
 Site root, at most one; created by data migration `home.0002` (replaces
 Wagtail's welcome page, default `Site` → `localhost`, default site so every
 host name matches). Parent of the section pages and the text pages (About,
-Imprint, Privacy). Shows the map, latest stories, upcoming events, projects
-and the newsletter sign-up (`HomePage.get_context()`) until the temple
-journey replaces it (ADR 0017, milestone T4).
+Imprint, Privacy). The temple entrance (ADR 0017): portal, entrance video,
+chapel with every live section (`HomePage.get_context()` → `sections`). The
+map moved to `/map/` (`home/map.py`, `home.views.MapView`).
 
 Temple entrance fields (admin panel "Temple entrance"), all optional:
 
@@ -74,7 +74,12 @@ Temple entrance fields (admin panel "Temple entrance"), all optional:
 | `chapel_heading` | text, ≤ 100 | heading over the section list (#59) |
 | `chapel_image` | `CustomImage` | chapel still behind the section list (the entrance video's last frame) |
 
-Images and videos are `SET_NULL` on delete.
+Images and videos are `SET_NULL` on delete. Without them the page falls
+back to text on a dark background; the tagline falls back to a bracketed
+placeholder (#59), the chapel heading to "Choose a path". Focal points of
+the portal and chapel images decide the crop on phones
+(`core.templatetags.temple.focus_classes`; `load_temple_assets` sets them
+for the portal and the chapel).
 
 ## `stories`
 

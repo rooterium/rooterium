@@ -20,7 +20,11 @@ from .blocks import StoryBodyBlock
 def theme_pages():
     """Live section pages in the order of the section list."""
     order = {value: index for index, value in enumerate(Theme.values)}
-    pages = ThemeIndexPage.objects.live().filter(theme__in=Theme.values)
+    pages = (
+        ThemeIndexPage.objects.live()
+        .filter(theme__in=Theme.values)
+        .select_related("hall_image", "descent_video")
+    )
     return sorted(pages, key=lambda p: order[p.theme])
 
 

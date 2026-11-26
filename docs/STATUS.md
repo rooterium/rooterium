@@ -4,7 +4,7 @@ Current state of Rooterium and the next steps. **Every PR updates this
 file** (at least "Last updated" and whatever the PR changes). Details live in
 the linked docs; open work lives in GitHub issues.
 
-_Last updated: 2026-11-26 (PR "Add the temple frame and move the map to /map/")_
+_Last updated: 2026-11-26 (PR "Turn the home page into the temple entrance")_
 
 ## Live
 
@@ -48,10 +48,24 @@ originals, video as Wagtail documents served by Caddy).
 |---|---|
 | T1 Assets and decisions | **Done** (PR #66): ADRs, `design/temple/manifest.json` (21 assets with SHA-256), `build_temple_assets.py` (fetch, build), grain tile `core/static/core/img/grain.png`, issues #57–#65 |
 | T2 Content model | **Done** (PR #67, re-sort changed in #68): six sections, `CategoryPage`, section and home page temple fields, MP4 documents served directly, `places.0004`, `restructure_sections`, `load_temple_assets`, seed and example content re-sorted. Tag `v1-map` set on `66dc806` |
-| T3 Visual layer and frame | **Done** (this PR): gold retired (`--ornament`, muted parchment), cards with 2 px corners, film grain over the whole site, screen utilities (vignette, flicker, faded images, focal-point classes), header with the name (→ `/#chapel`) and a "Sections" menu (full-screen on phones), footer "Around the temple", map at `/map/` with parchment markers |
-| T4 Home journey | Next |
-| T5 Section, category and article pages | Open |
+| T3 Visual layer and frame | **Done** (PR #69): gold retired (`--ornament`, muted parchment), cards with 2 px corners, film grain over the whole site, screen utilities (vignette, flicker, faded images, focal-point classes), header with the name (→ `/#chapel`) and a "Sections" menu (full-screen on phones), footer "Around the temple", map at `/map/` with parchment markers |
+| T4 Home journey | **Done** (this PR): portal (poster, loop with Pause/Play kept for the session, title, tagline, Enter), entrance video with Skip and Escape ending on the chapel still, chapel with the six sections, `#chapel` history entry, no videos without JS / with reduced motion / with data saver, focal points for the phone crop |
+| T5 Section, category and article pages | Next |
 | T6 Deploy to the test server | Open |
+
+Notes from T4:
+
+- Checked in headless Chrome (1280 px, 390 px, reduced motion): the loop
+  plays and the entrance video preloads only after the load event; Enter →
+  video (focus on Skip) → `#chapel`, focus on the heading; Skip and Back
+  work; reduced motion shows stills only. First screen about 0.6 MB
+  (poster 59 kB, loop 384 kB, CSS, fonts, grain), well under the 4 MB
+  budget.
+- The tagline shows the bracketed placeholder "[A forgotten temple deep in
+  the soul]" (the concept line of the design package) until the editor
+  writes one (#59).
+- The home page no longer has the newsletter form or the site header (the
+  brief: no header on the portal, a short footer only).
 
 Notes from T3:
 

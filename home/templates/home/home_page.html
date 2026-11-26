@@ -1,42 +1,82 @@
 {% extends "base.html" %}
-{% load i18n static wagtailcore_tags wagtailimages_tags %}
+{% load i18n static wagtailcore_tags wagtailimages_tags temple %}
+{% comment %}
+  The temple entrance (ADR 0017, temple brief section 6): portal, entrance,
+  chapel. Complete without JavaScript: "Enter" is a link to #chapel and
+  every section a plain link. core/js/journey.js adds the videos (not with
+  reduced motion or data saver).
+{% endcomment %}
 
-{% block extra_head %}{% include "home/includes/map_head.html" %}{% endblock %}
+{% block extra_head %}
+  {% if page.portal_poster %}
+    {% image page.portal_poster width-1920 format-webp as poster %}
+    {% image page.portal_poster width-960 format-webp as poster_small %}
+    <link rel="preload" as="image" imagesrcset="{{ poster_small.url }} {{ poster_small.width }}w, {{ poster.url }} {{ poster.width }}w" imagesizes="100vw" fetchpriority="high">
+  {% endif %}
+  <script type="module" src="{% static 'core/js/journey.js' %}"></script>
+{% endblock %}
+
+{# No site header on the portal (brief, section 6); the chapel has the sections itself. #}
+{% block header %}{% endblock %}
+
+{% block main_class %}journey{% endblock %}
 
 {% block content %}
-  {% include "home/includes/map_explore.html" %}
-
-  <section class="home-section" aria-labelledby="stories-heading">
-    <div class="section-head">
-      <h2 id="stories-heading">{% translate "Latest stories" %}</h2>
-      <a class="section-head-link" href="{% url 'stories:list' %}">{% translate "All stories" %} →</a>
+  <section id="portal" class="screen portal vignette flicker" aria-labelledby="portal-title" data-portal>
+    {% if page.portal_poster %}
+      {# Renditions again: variables from extra_head are not visible in this block. #}
+      {% image page.portal_poster width-1920 format-webp as poster %}
+      {% image page.portal_poster width-960 format-webp as poster_small %}
+      <img class="screen-media {{ page.portal_poster|focus_classes }}" src="{{ poster.url }}" srcset="{{ poster_small.url }} {{ poster_small.width }}w, {{ poster.url }} {{ poster.width }}w" sizes="100vw" width="{{ poster.width }}" height="{{ poster.height }}" alt="" fetchpriority="high" data-portal-poster>
+    {% endif %}
+    {% if page.portal_video %}
+      <video class="screen-media {{ page.portal_poster|focus_classes }}" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1" hidden data-portal-video{% if page.portal_poster %} poster="{{ poster.url }}"{% endif %}>
+        <source src="{{ page.portal_video.url }}" type="video/mp4">
+      </video>
+    {% endif %}
+    <div class="portal-content">
+      <h1 id="portal-title" class="portal-title">{{ site_short_name }}</h1>
+      <p class="portal-tagline">{# Placeholder until the editor writes the tagline (#59): the concept line of the design package. #}{{ page.tagline|default:_("[A forgotten temple deep in the soul]") }}</p>
+      <a class="portal-enter" href="#chapel" data-enter>{% translate "Enter" %}</a>
     </div>
-    <div class="story-grid">
-      {% for story in latest_stories %}
-        {% include "stories/includes/story_card.html" %}
-      {% empty %}
-        <p>{% translate "No stories yet." %}</p>
-      {% endfor %}
-    </div>
+    {% if page.portal_video %}
+      {# WCAG 2.2.2: the loop runs longer than 5 s, so it can be paused; the choice is kept for the session. #}
+      <button type="button" class="screen-control portal-pause" hidden data-pause data-label-pause="{% translate 'Pause' %}" data-label-play="{% translate 'Play' %}">{% translate "Pause" %}</button>
+    {% endif %}
   </section>
 
-  <div class="home-columns">
-    <section class="card" aria-labelledby="events-heading">
-      <h2 id="events-heading">{% translate "Upcoming events" %}</h2>
-      {% include "home/includes/event_list.html" %}
-      <p class="section-link"><a href="{% url 'events:list' %}">{% translate "All events" %} →</a> <a href="{% url 'submissions:event' %}">{% translate "Suggest an event" %} →</a></p>
-    </section>
-    <section class="card" aria-labelledby="projects-heading">
-      <h2 id="projects-heading">{% translate "Projects we love" %}</h2>
-      <p class="meta">{% translate "Shops, start-ups and initiatives that carry Armenian traditions into today." %}</p>
-      {% include "home/includes/project_list.html" %}
-      <p class="section-link"><a href="{% url 'projects:list' %}">{% translate "All projects" %} →</a> <a href="{% url 'submissions:project' %}">{% translate "Suggest a project" %} →</a></p>
-    </section>
-  </div>
+  {% if page.entrance_video %}
+    {# Full-screen layer for the entrance video, shown by journey.js only. #}
+    <div class="entrance" hidden data-entrance>
+      <video class="screen-media {{ page.chapel_image|focus_classes }}" muted playsinline preload="none" aria-hidden="true" tabindex="-1" data-entrance-video>
+        <source src="{{ page.entrance_video.url }}" type="video/mp4">
+      </video>
+      <button type="button" class="screen-control entrance-skip" data-skip>{% translate "Skip" %}</button>
+    </div>
+  {% endif %}
 
-  <section id="newsletter" class="newsletter-band" aria-labelledby="newsletter-heading">
-    <h2 id="newsletter-heading">{% translate "A new story every ten days" %}</h2>
-    <p>{% translate "Get each new story by email. No spam, unsubscribe anytime." %}</p>
-    {% include "newsletter/includes/signup_form.html" with form=newsletter_form inline=True %}
+  <section id="chapel" class="screen chapel vignette flicker" aria-labelledby="chapel-heading" data-chapel>
+    {% if page.chapel_image %}
+      {% image page.chapel_image width-1920 format-webp as chapel %}
+      {% image page.chapel_image width-960 format-webp as chapel_small %}
+      <img class="screen-media {{ page.chapel_image|focus_classes }}" src="{{ chapel.url }}" srcset="{{ chapel_small.url }} {{ chapel_small.width }}w, {{ chapel.url }} {{ chapel.width }}w" sizes="100vw" width="{{ chapel.width }}" height="{{ chapel.height }}" alt="" loading="lazy" data-chapel-image>
+    {% endif %}
+    <div class="chapel-content container">
+      <h2 id="chapel-heading" class="chapel-heading" tabindex="-1">{{ page.chapel_heading|default:_("Choose a path") }}</h2>
+      {% if sections %}
+        <ul class="chapel-list">
+          {% for section in sections %}
+            <li>
+              <a href="{% pageurl section %}" data-section-link{% if section.descent_video %} data-descent="{{ section.descent_video.url }}"{% endif %}{% if section.hall_image %}{% image section.hall_image width-1920 format-webp as hall %} data-hall="{{ hall.url }}" data-hall-focus="{{ section.hall_image|focus_classes }}"{% endif %}>
+                <span class="chapel-name">{{ section.title }}</span>
+                {% if section.root_symbol %}<span class="chapel-symbol">{{ section.root_symbol }}</span>{% endif %}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>{% translate "The halls of the temple are still being prepared." %}</p>
+      {% endif %}
+    </div>
   </section>
 {% endblock %}

@@ -63,7 +63,10 @@ class Command(BaseCommand):
         with transaction.atomic():
             self.collection = self.temple_collection()
             loaded = {
-                "image": {k: self.image(*spec) for k, spec in assets.IMAGES.items()},
+                "image": {
+                    k: self.image(*spec, focus=assets.FOCUS.get(k))
+                    for k, spec in assets.IMAGES.items()
+                },
                 "video": {k: self.video(*spec) for k, spec in assets.VIDEOS.items()},
             }
             self.fill(HomePage.objects.get(), assets.HOME_FIELDS, loaded)
@@ -84,11 +87,13 @@ class Command(BaseCommand):
         data = (self.folder / file_name).read_bytes()
         return data, hash_filelike(io.BytesIO(data))
 
-    def image(self, file_name, title, alt, credit):
+    def image(self, file_name, title, alt, credit, focus=None):
         Image = get_image_model()
         data, digest = self.read(file_name)
         image = Image.objects.filter(title=title).first()
         if image and image.get_file_hash() == digest:
+            if focus and image.focal_point_x is None:
+                self.set_focus(image, focus)
             return image
         if image:
             image.renditions.all().delete()
@@ -106,8 +111,25 @@ class Command(BaseCommand):
         image.file = ContentFile(data, name=file_name)
         image._set_image_file_metadata()
         image.save()
+        if focus and image.focal_point_x is None:
+            self.set_focus(image, focus)
         self.stdout.write(f"  {action}: {title}")
         return image
+
+    def set_focus(self, image, focus):
+        """A small focal point at the given fractions of width and height."""
+        x, y = focus
+        image.focal_point_x = round(image.width * x)
+        image.focal_point_y = round(image.height * y)
+        image.focal_point_width = image.focal_point_height = round(image.width / 10)
+        image.save(
+            update_fields=[
+                "focal_point_x",
+                "focal_point_y",
+                "focal_point_width",
+                "focal_point_height",
+            ]
+        )
 
     def video(self, file_name, title):
         Document = get_document_model()

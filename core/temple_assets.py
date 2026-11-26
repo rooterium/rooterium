@@ -15,6 +15,10 @@ CREDIT_VIDEO = "AI video (Higgsfield, Kling 3.0)"
 
 # key: (file, title, alt text, credit). Alt texts describe what the AI
 # image shows; the editor may refine them in the admin.
+#
+# FOCUS: focal points (fractions of width and height) for the crop on
+# phones (brief A8; the screens use object-fit: cover). Set when the image
+# is created; the editor can move them in the admin.
 IMAGES = {
     "portal": (
         "img01-1920.webp",
@@ -75,6 +79,11 @@ IMAGES = {
         "interior of a stone church with a cross-stone",
         CREDIT_STILL,
     ),
+}
+
+FOCUS = {
+    "portal": (0.63, 0.55),  # the arch
+    "chapel": (0.65, 0.5),  # the lectern and the woman in taraz
 }
 
 # key: (file, title)

@@ -259,7 +259,7 @@ T2. **Content model** (done, PR "Add sections, category pages and temple fields"
     `seed_demo` / `example_content`, `load_temple_assets`.
 T3. **Visual layer and frame** (done, PR "Add the temple frame and move the map to /map/"): tokens (gold retired), grain, header,
     footer, mobile menu, `/map/` moved out of the home page.
-T4. **Home journey**: portal, pause, entrance, chapel, fallbacks.
+T4. **Home journey** (done, PR "Turn the home page into the temple entrance"): portal, pause, entrance, chapel, fallbacks.
 T5. **Section, category and article pages**, descent (video and
     crossfade).
 T6. **Deploy to the test server**: copy web assets with `scp`, run
