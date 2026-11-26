@@ -3,7 +3,7 @@
 
 {% block content %}
   <header class="page-header">
-    {% if theme_page %}<a class="eyebrow" href="{% pageurl theme_page %}">{{ theme_page.title }}</a>{% endif %}
+    {% include "stories/includes/breadcrumb.html" %}
     <h1>{{ page.title }}</h1>
     {% if page.intro %}<p class="lead">{{ page.intro }}</p>{% endif %}
   </header>
@@ -12,9 +12,9 @@
     {% for story in stories %}
       {% include "stories/includes/story_card.html" with hide_theme=True %}
     {% empty %}
-      <p>{% translate "No articles in this category yet." %}</p>
+      <p class="hall-empty">{% translate "No articles in this category yet." %}</p>
     {% endfor %}
   </div>
 
-  {% if theme_page %}<p class="page-footer-link"><a href="{% pageurl theme_page %}">← {% blocktranslate with section=theme_page.title %}Back to {{ section }}{% endblocktranslate %}</a></p>{% endif %}
+  {% if theme_page %}<p class="hall-links"><a href="{% pageurl theme_page %}">← {% blocktranslate with section=theme_page.title %}Back to {{ section }}{% endblocktranslate %}</a></p>{% endif %}
 {% endblock %}

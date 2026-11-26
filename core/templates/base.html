@@ -30,7 +30,7 @@
 
   {% block header %}
   {# Temple frame (ADR 0017): the name links to the chapel; one "Sections" menu, nothing else. #}
-  <header class="site-header">
+  <header class="site-header{% block header_class %}{% endblock %}">
     <div class="container header-inner">
       <a class="brand" href="{{ chapel_url }}">{{ site_short_name }}{% if site_native_name %} <span class="brand-native" lang="hy">{{ site_native_name }}</span>{% endif %}</a>
       {% include "includes/sections_menu.html" %}

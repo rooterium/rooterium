@@ -893,7 +893,7 @@ main {
 .story-grid {
   display: grid;
   gap: 1.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17.5rem), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17.5rem), 1fr));
 }
 
 .story-card {
@@ -1936,6 +1936,178 @@ main.journey {
     opacity: 1;
     transform: none;
   }
+}
+
+/* --- Halls: section, category and article pages (temple brief, 6) ------- */
+
+/* On section pages the header lies over the hall image, so the image fills
+   the screen exactly as at the end of the descent. */
+.site-header--over {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  border-bottom: 0;
+  background: linear-gradient(to bottom, rgb(11 10 9 / 70%), transparent);
+}
+
+main.hall-main {
+  padding: 0;
+}
+
+.hall-content {
+  align-self: end;
+  padding-top: 7rem;
+  padding-bottom: 2.5rem;
+  text-shadow: 0 2px 16px rgb(0 0 0 / 90%);
+  animation: arrive 1.6s ease 0.2s both;
+}
+
+.hall-eyebrow {
+  color: var(--text-secondary);
+}
+
+.hall-title {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: clamp(3rem, 10vw, 6rem);
+  line-height: 1;
+}
+
+.hall-motto {
+  max-width: 36rem;
+  margin: 0 0 1.5rem;
+  font-family: var(--font-heading);
+  font-size: 1.75rem; /* 28 px */
+  line-height: 1.25;
+}
+
+.hall-scroll {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: var(--touch);
+  color: var(--text);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.hall-scroll:hover {
+  color: var(--accent-2);
+}
+
+.hall-body {
+  padding-top: 3rem;
+  padding-bottom: 4rem;
+}
+
+.hall-intro {
+  max-width: var(--prose-width);
+}
+
+.hall-section {
+  margin-top: 2.5rem;
+}
+
+.hall-empty {
+  color: var(--text-secondary);
+}
+
+.hall-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.75rem;
+  margin-top: 3rem;
+}
+
+.hall-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touch);
+}
+
+.story-back {
+  max-width: var(--prose-width);
+  margin-inline: auto;
+}
+
+/* Breadcrumb: Chapel › Section › Category › page. */
+.breadcrumb ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 0 0 0.5rem;
+  padding: 0;
+  list-style: none;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.breadcrumb li + li::before {
+  content: "›";
+  margin: 0 0.5rem;
+  color: var(--ornament);
+}
+
+.breadcrumb a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touch);
+  color: var(--text-secondary);
+}
+
+.breadcrumb a:hover {
+  color: var(--accent-2);
+}
+
+.breadcrumb [aria-current="page"] {
+  color: var(--text-muted);
+}
+
+/* Category without a cover: its title on a dark card with grain (A12). */
+.category-card--plain {
+  display: flex;
+  align-items: flex-end;
+  min-height: 13rem;
+  background:
+    linear-gradient(to top, rgb(11 10 9 / 85%), rgb(22 19 17 / 40%)),
+    url("../img/grain.png") var(--surface);
+  border-color: rgb(179 166 142 / 30%);
+}
+
+.card {
+  border-color: rgb(179 166 142 / 22%);
+}
+
+/* The descent: a full-screen video, or a crossfade with a slow zoom. */
+.descent {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: #000;
+}
+
+.descent.is-crossfade {
+  background: transparent;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+.descent.is-crossfade.is-visible {
+  opacity: 1;
+}
+
+.descent-zoom {
+  transform: scale(1.08);
+  transition: transform 1.2s ease-out;
+}
+
+.descent.is-visible .descent-zoom {
+  transform: none;
 }
 
 /* --- Motion ------------------------------------------------------------- */
