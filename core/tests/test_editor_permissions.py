@@ -36,7 +36,7 @@ class EditorPermissionTests(TestCase):
 
     def test_editor_can_publish_pages(self):
         home = HomePage.objects.get()
-        theme = ThemeIndexPage(title="Myths", theme=Theme.MYTHS)
+        theme = ThemeIndexPage(title="Religion", theme=Theme.RELIGION)
         home.add_child(instance=theme)
         perms = theme.permissions_for_user(self.editor)
         self.assertTrue(perms.can_add_subpage())

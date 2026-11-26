@@ -2,7 +2,9 @@
 
 One section per app with its models, fields and rules (visibility, ordering,
 retention). Keep this file in sync with every model change. Decisions behind
-it: [ADR 0014](decisions/0014-content-model.md).
+it: [ADR 0014](decisions/0014-content-model.md), sections and categories:
+[ADR 0018](decisions/0018-six-sections-and-categories.md), temple assets:
+[ADR 0019](decisions/0019-temple-assets-and-video.md).
 
 > Status: everything below is **built** (milestone 2, issue #2). Placeholder
 > content for the prototype: `manage.py seed_demo` (refuses to run with
@@ -11,14 +13,29 @@ it: [ADR 0014](decisions/0014-content-model.md).
 > `manage.py load_example_content` (same flag; data in
 > `core/example_content.py`, photos from Wikimedia Commons with author,
 > licence and source; replaces only `[placeholder]` objects).
+>
+> Temple redesign (milestone T2): `manage.py restructure_sections` brings a
+> version 1 page tree to the six sections and creates the Symbols
+> categories (`core/sections.py`; no flag, it is structural);
+> `manage.py load_temple_assets <folder>` loads the temple images and videos
+> (`core/temple_assets.py`; `--allow-production` like the others).
 
 Conventions: all labels and help texts in English and translatable; every
 image is a `CustomImage`; "live" means published in Wagtail (`live=True`).
 
 ## `core` – shared
 
-- `core.themes.Theme` (`TextChoices`): `history`, `traditions`, `myths`,
-  `symbols`, `music`.
+- `core.themes.Theme` (`TextChoices`): the six **sections**, in chapel
+  order: `music`, `symbols`, `history`, `artifacts`, `people` ("Key
+  people"), `religion`. Internally still called "theme" (`Theme`,
+  `ThemeIndexPage`, the `theme` fields); the admin and the site say
+  "section" (ADR 0018). `LEGACY_THEMES` maps the version 1 values
+  (`myths` → `religion`, `traditions` → `history`); `theme_label()` shows
+  a label for any stored value.
+- `core.sections`: the section pages' default root symbols and motto, the
+  eight Symbols categories, `ensure_sections()`.
+- `core.revisions`: `latest_version()` / `save_version()` – code that fills
+  in page fields starts from the editor's draft and never publishes it.
 - `core.geo.latitude_field()` / `longitude_field()`: `Decimal(9,6)` with
   range validators.
 - Admin menu: "Map & directory" groups places, events and projects
@@ -41,21 +58,53 @@ image is a `CustomImage`; "live" means published in Wagtail (`live=True`).
 
 Site root, at most one; created by data migration `home.0002` (replaces
 Wagtail's welcome page, default `Site` → `localhost`, default site so every
-host name matches). Parent of the theme pages and the text pages (About,
+host name matches). Parent of the section pages and the text pages (About,
 Imprint, Privacy). Shows the map, latest stories, upcoming events, projects
-and the newsletter sign-up (`HomePage.get_context()`).
+and the newsletter sign-up (`HomePage.get_context()`) until the temple
+journey replaces it (ADR 0017, milestone T4).
 
-## `stories`
-
-### `ThemeIndexPage` (page)
+Temple entrance fields (admin panel "Temple entrance"), all optional:
 
 | Field | Type | Rules |
 |---|---|---|
-| `theme` | `Theme` | required, unique |
-| `intro` | text | optional |
+| `tagline` | text, ≤ 200 | one line under the title on the portal (#59) |
+| `portal_poster` | `CustomImage` | still of the portal; shown while the loop loads and instead of videos |
+| `portal_video` | document (MP4) | looping portal video |
+| `entrance_video` | document (MP4) | played after "Enter", ends on the chapel |
+| `chapel_heading` | text, ≤ 100 | heading over the section list (#59) |
+| `chapel_image` | `CustomImage` | chapel still behind the section list (the entrance video's last frame) |
 
-Parent: `HomePage`. Children: `StoryPage` only. Lists its live stories,
-newest first.
+Images and videos are `SET_NULL` on delete.
+
+## `stories`
+
+### `ThemeIndexPage` (page) – "section page" in the admin
+
+| Field | Type | Rules |
+|---|---|---|
+| `theme` | `Theme` | required, unique; labelled "section" |
+| `intro` | text | optional |
+| `root_symbol` | text, ≤ 60 | optional, e.g. "duduk"; second line in the chapel list |
+| `motto` | text, ≤ 200 | optional, one line over the hall image |
+| `hall_image` | `CustomImage` | optional; full-width header of the section |
+| `descent_video` | document (MP4) | optional; without it the chapel crossfades into the hall image |
+| `cover_image` | `CustomImage` | optional; for the chapel list |
+
+Parent: `HomePage`. Children: `CategoryPage` and `StoryPage`. Lists its
+live categories (page order) and the live stories directly below it,
+newest first. Slugs: the value, except `people` → `key-people`.
+
+### `CategoryPage` (page)
+
+| Field | Type | Rules |
+|---|---|---|
+| `title` | (Wagtail) | |
+| `intro` | text | optional; what the category covers |
+| `cover_image` | `CustomImage` | optional; without it the card shows the title |
+
+Parent: `ThemeIndexPage`. Children: `StoryPage`. Order = page order in the
+section. Generic for all sections; Symbols has eight from the design
+package (`core.sections.SYMBOLS_CATEGORIES`).
 
 ### `StoryPage` (page)
 
@@ -68,10 +117,12 @@ newest first.
 | `body` | StreamField | blocks (`stories/blocks.py`): paragraph (bold, italic, link, lists), heading (h2/h3), quote (text, source, link), image (image, caption), youtube (URL validated to a video ID, title), book_excerpt (text, book title, author, page, link) |
 | `related_places` | many-to-many `Place` | optional |
 
-Parent: `ThemeIndexPage` only; no children. Theme = parent's theme
-(`story.theme`). Meta description falls back to the teaser, the Open Graph
+Parent: `ThemeIndexPage` or `CategoryPage`; no children. Section = the
+nearest `ThemeIndexPage` above it (`story.theme_page`, `story.theme`);
+`story.category` is the category page or `None`. Meta description falls back to the teaser, the Open Graph
 image is the hero image (1200 × 630). Computed: `reading_time` (220 words
-per minute), `more_stories()` (other live stories of the theme). The page
+per minute), `more_stories()` (other live stories anywhere in the
+section). The page
 lists its live related places with a link to the home map
 (`/?place=place-<id>#explore` selects the marker). The YouTube block is a
 two-click embed (`core/static/core/js/video.js`): nothing loads from
@@ -90,7 +141,7 @@ YouTube until the visitor clicks.
 | Field | Type | Rules |
 |---|---|---|
 | `name` | text | required |
-| `theme` | `Theme` | required |
+| `theme` | `Theme` | required; labelled "section" (`places.0004` moved Myths → Religion, Traditions → History, revisions included) |
 | `latitude` | decimal(9,6) | required, −90…90 |
 | `longitude` | decimal(9,6) | required, −180…180 |
 | `short_description` | text, ≤ 300 | required, 1–2 sentences |
@@ -180,7 +231,16 @@ locally. Editors already have page permissions on the whole tree.
 Wagtail's "Editors" group: add/edit/**publish** on the page tree, all
 permissions on `Place`, `Event`, `Project` (add, change, delete, publish,
 view), images and documents, view `NewsletterSubscriber`. Editors are never
-superusers.
+superusers. The page types added later (`CategoryPage`) are covered by the
+tree permissions; no extra migration.
+
+## Documents (Wagtail's own model)
+
+PDFs and MP4 videos (`WAGTAILDOCS_EXTENSIONS`), served directly from
+`MEDIA_ROOT/documents/` (`WAGTAILDOCS_SERVE_METHOD = "direct"`, ADR 0019):
+Caddy in production, `core.dev_media` locally, both with range requests.
+Every document is public by its URL. The temple images and videos live in
+the collection "Temple".
 
 Granted by data migrations per app (`<app>/migrations/0002_*`, page publish
 in `stories/migrations/0002_editors_can_publish_pages.py`) using

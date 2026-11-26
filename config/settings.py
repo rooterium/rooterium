@@ -187,8 +187,11 @@ WAGTAILADMIN_BASE_URL = (
 )
 # Images with required alt text, credit and licence (ADR 0014).
 WAGTAILIMAGES_IMAGE_MODEL = "images.CustomImage"
-# Documents: PDFs only.
-WAGTAILDOCS_EXTENSIONS = ["pdf"]
+# Documents: PDFs and the temple videos (MP4, ADR 0019). Served directly
+# from MEDIA_ROOT (Caddy in production, core.dev_media locally) so videos
+# get range requests; every document is public by its URL.
+WAGTAILDOCS_EXTENSIONS = ["pdf", "mp4"]
+WAGTAILDOCS_SERVE_METHOD = "direct"
 # Search in PostgreSQL, no external search service.
 WAGTAILSEARCH_BACKENDS = {"default": {"BACKEND": "wagtail.search.backends.database"}}
 # Localisation is prepared but not enabled in version 1 (ADR 0012).

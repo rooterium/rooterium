@@ -189,6 +189,18 @@ The script pulls the repo and images, runs migrations, restarts the
 containers and removes old images. The commit is baked into the image by CI
 (`GIT_COMMIT` build arg → `APP_COMMIT`); locally built images report `dev`.
 
+**One-off steps after a deploy** are listed in the PR and in
+`docs/STATUS.md`. For the temple redesign (models from milestone T2, run once at the T6
+deploy, after `scripts/deploy.sh` has run the migrations):
+
+```bash
+ssh deploy@80.47.231.164 'cd /srv/rooterium && docker compose -f compose.prod.yaml exec -T web python manage.py restructure_sections'
+ssh deploy@80.47.231.164 'cd /srv/rooterium && docker compose -f compose.prod.yaml exec -T web python manage.py load_example_content --allow-production'
+# temple images and videos: copy the web versions into the media volume, then load them
+scp -r design/temple/web deploy@80.47.231.164:/tmp/temple-web
+ssh deploy@80.47.231.164 'cd /srv/rooterium && docker compose -f compose.prod.yaml cp /tmp/temple-web web:/tmp/temple-web && docker compose -f compose.prod.yaml exec -T web python manage.py load_temple_assets /tmp/temple-web --allow-production'
+```
+
 **Rollback** to an earlier build: set `IMAGE_TAG=sha-<commit>` in `.env` and
 run `scripts/deploy.sh` again (set it back to `latest` afterwards). Migrations
 are not rolled back automatically.

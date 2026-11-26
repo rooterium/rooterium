@@ -1,0 +1,12 @@
+{% load i18n wagtailcore_tags wagtailimages_tags %}
+{# A category of a section as a card (ADR 0018). Without a cover only the title and intro; the temple styling follows in milestone T5. #}
+<article class="story-card card">
+  {% if category.cover_image %}
+    {% image category.cover_image fill-640x400 as thumb %}
+    <img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.height }}" alt="{{ category.cover_image.default_alt_text }}" loading="lazy">
+  {% endif %}
+  <div class="story-card-body">
+    <h3><a href="{% pageurl category %}">{{ category.title }}</a></h3>
+    {% if category.intro %}<p>{{ category.intro }}</p>{% endif %}
+  </div>
+</article>

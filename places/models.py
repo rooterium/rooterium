@@ -17,7 +17,7 @@ class Place(DraftStateMixin, RevisionMixin, models.Model):
     """A place of interest on the map (snippet with draft/publish)."""
 
     name = models.CharField(_("name"), max_length=200)
-    theme = models.CharField(_("theme"), max_length=20, choices=Theme.choices)
+    theme = models.CharField(_("section"), max_length=20, choices=Theme.choices)
     latitude = latitude_field()
     longitude = longitude_field()
     short_description = models.TextField(

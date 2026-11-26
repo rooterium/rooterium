@@ -6,7 +6,9 @@ the Commons API; Commons throttles scripted downloads, so a folder is the
 reliable way on a server), then creates or updates places, theme intros,
 stories, events and projects, and the About page. Replaces the
 [placeholder] objects of `seed_demo`; objects the editor has written are
-left alone. Safe to run more than once.
+left alone. The example stories are always put in their section and
+category (ADR 0018), even when their text is left alone. Safe to run more
+than once.
 """
 
 import datetime
@@ -26,6 +28,7 @@ from django.utils import timezone
 from wagtail.images import get_image_model
 
 from core import example_content as content
+from core.sections import category
 from core.themes import Theme
 from events.models import Event
 from pages.models import Purpose, SimplePage
@@ -112,7 +115,15 @@ class Command(BaseCommand):
             places = {data["name"]: self.place(data) for data in content.PLACES}
             theme_pages = self.theme_pages()
             for data in content.STORIES:
-                self.story(data, theme_pages[data["theme"]], images, places)
+                parent = theme_pages[data["theme"]]
+                if data.get("category"):
+                    parent = category(data["theme"], data["category"])
+                    if parent is None:
+                        raise CommandError(
+                            f"Category {data['category']} missing: run "
+                            "restructure_sections first."
+                        )
+                self.story(data, parent, images, places)
             self.events()
             self.projects()
             self.about()
@@ -182,8 +193,15 @@ class Command(BaseCommand):
         for theme in Theme:
             page = ThemeIndexPage.objects.filter(theme=theme).first()
             if not page:
-                raise CommandError("Theme pages missing: run seed_demo first.")
-            if is_placeholder(page.intro) or not page.intro:
+                raise CommandError(
+                    "Section pages missing: run restructure_sections (or "
+                    "seed_demo) first."
+                )
+            if (
+                not page.intro
+                or is_placeholder(page.intro)
+                or page.intro in content.LEGACY_THEME_INTROS
+            ):
                 page.intro = content.THEME_INTROS[theme]
                 self.publish(page, "theme intro")
             pages[theme] = page
@@ -206,9 +224,13 @@ class Command(BaseCommand):
         return stream
 
     def story(self, data, parent, images, places):
-        story = StoryPage.objects.child_of(parent).filter(title=data["title"]).first()
+        story = StoryPage.objects.filter(title=data["title"]).first()
         if story:
             story = story.specific
+            if story.get_parent().pk != parent.pk:
+                story.move(parent, pos="last-child")
+                story = StoryPage.objects.get(pk=story.pk)
+                self.stdout.write(f"  moved to {parent.title}: {story}")
             if not is_placeholder(story.teaser):
                 return  # written by the editor
         else:

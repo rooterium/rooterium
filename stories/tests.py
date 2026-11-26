@@ -11,7 +11,7 @@ from home.models import HomePage
 from images.testing import make_image
 from places.tests import make_place
 from stories.blocks import StoryBodyBlock, YouTubeBlock, youtube_id
-from stories.models import StoryPage, ThemeIndexPage
+from stories.models import CategoryPage, StoryPage, ThemeIndexPage
 
 
 class YouTubeTests(TestCase):
@@ -119,21 +119,21 @@ class StoryPageTests(TestCase):
 class StoryPageDesignTests(TestCase):
     def setUp(self):
         self.home = HomePage.objects.get()
-        self.myths = ThemeIndexPage(title="Myths", theme=Theme.MYTHS)
-        self.home.add_child(instance=self.myths)
+        self.religion = ThemeIndexPage(title="Religion", theme=Theme.RELIGION)
+        self.home.add_child(instance=self.religion)
 
     def test_reading_time_is_at_least_one_minute(self):
-        story = make_story(self.myths)
+        story = make_story(self.religion)
         self.assertEqual(story.reading_time, 1)
         long = make_story(
-            self.myths,
+            self.religion,
             title="Long",
             body=[("paragraph", "<p>" + "word " * 1000 + "</p>")],
         )
         self.assertEqual(long.reading_time, 5)
 
     def test_related_place_links_to_the_map(self):
-        story = make_story(self.myths)
+        story = make_story(self.religion)
         place = make_place()
         story.related_places.add(place)
         story.save_revision().publish()
@@ -142,29 +142,29 @@ class StoryPageDesignTests(TestCase):
         self.assertContains(response, f'href="/?place=place-{place.pk}#explore"')
 
     def test_draft_places_are_not_listed(self):
-        story = make_story(self.myths)
+        story = make_story(self.religion)
         story.related_places.add(make_place(name="[Draft]", live=False))
         story.save_revision().publish()
         self.assertNotContains(self.client.get(story.url), "Places in this story")
 
     def test_more_stories_of_the_same_theme(self):
-        story = make_story(self.myths, title="One")
-        other = make_story(self.myths, title="Two")
+        story = make_story(self.religion, title="One")
+        other = make_story(self.religion, title="Two")
         symbols = ThemeIndexPage(title="Symbols", theme=Theme.SYMBOLS)
         self.home.add_child(instance=symbols)
         make_story(symbols, title="Elsewhere")
         self.assertEqual(list(story.more_stories()), [other.page_ptr.specific])
         response = self.client.get(story.url)
-        self.assertContains(response, "More on Myths")
+        self.assertContains(response, "More on Religion")
 
     def test_story_uses_its_hero_image_for_open_graph(self):
-        story = make_story(self.myths)
+        story = make_story(self.religion)
         response = self.client.get(story.url)
         self.assertContains(response, ".fill-1200x630.")
 
     def test_youtube_is_not_loaded_before_a_click(self):
         story = make_story(
-            self.myths,
+            self.religion,
             body=[
                 (
                     "youtube",
@@ -208,15 +208,15 @@ class AdminSmokeTests(TestCase):
 class StoryOverviewTests(TestCase):
     def setUp(self):
         home = HomePage.objects.get()
-        self.myths = ThemeIndexPage(title="Myths", theme=Theme.MYTHS)
+        self.religion = ThemeIndexPage(title="Religion", theme=Theme.RELIGION)
         self.music = ThemeIndexPage(title="Music", theme=Theme.MUSIC)
-        home.add_child(instance=self.myths)
+        home.add_child(instance=self.religion)
         home.add_child(instance=self.music)
-        self.spear = make_story(self.myths, title="The monastery of the spear")
+        self.spear = make_story(self.religion, title="The monastery of the spear")
         self.duduk = make_story(self.music, title="The duduk")
 
     def test_lists_all_live_stories_with_title_and_description(self):
-        draft = make_story(self.myths, title="[Draft story]")
+        draft = make_story(self.religion, title="[Draft story]")
         draft.unpublish()
         response = self.client.get("/stories/")
         self.assertContains(response, "<title>Stories – Rooterium</title>", html=True)
@@ -226,7 +226,7 @@ class StoryOverviewTests(TestCase):
 
     def test_theme_links_go_to_the_theme_pages(self):
         response = self.client.get("/stories/")
-        self.assertContains(response, f'href="{self.myths.url}"')
+        self.assertContains(response, f'href="{self.religion.url}"')
         self.assertContains(response, f'href="{self.music.url}"')
         self.assertContains(
             response,
@@ -252,11 +252,84 @@ class StoryOverviewTests(TestCase):
         )
 
     def test_theme_page_shows_its_stories_and_theme_links(self):
-        response = self.client.get(self.myths.url)
+        response = self.client.get(self.religion.url)
         self.assertContains(response, "The monastery of the spear")
         self.assertNotContains(response, "The duduk")
         self.assertContains(
             response,
-            f'<a class="chip" href="{self.myths.url}" aria-current="page">Myths</a>',
+            f'<a class="chip" href="{self.religion.url}" aria-current="page">Religion</a>',
             html=True,
         )
+
+
+class SectionHierarchyTests(TestCase):
+    """Sections, categories and the section lookup (ADR 0018)."""
+
+    def setUp(self):
+        self.home = HomePage.objects.get()
+        self.symbols = ThemeIndexPage(title="Symbols", theme=Theme.SYMBOLS)
+        self.home.add_child(instance=self.symbols)
+        self.category = CategoryPage(title="Tree of life", intro="Its roots.")
+        self.symbols.add_child(instance=self.category)
+
+    def test_six_sections_in_chapel_order(self):
+        self.assertEqual(
+            Theme.values,
+            ["music", "symbols", "history", "artifacts", "people", "religion"],
+        )
+        self.assertEqual(Theme.PEOPLE.label, "Key people")
+
+    def test_section_of_a_story_in_a_category_is_the_nearest_section(self):
+        story = make_story(self.category)
+        self.assertEqual(story.theme, "symbols")
+        self.assertEqual(story.get_theme_display(), "Symbols")
+        self.assertEqual(story.theme_page.pk, self.symbols.pk)
+        self.assertEqual(story.category.pk, self.category.pk)
+
+    def test_story_directly_in_a_section_has_no_category(self):
+        story = make_story(self.symbols)
+        self.assertEqual(story.theme, "symbols")
+        self.assertIsNone(story.category)
+
+    def test_allowed_parents_and_children(self):
+        self.assertEqual(
+            set(ThemeIndexPage.allowed_subpage_models()), {CategoryPage, StoryPage}
+        )
+        self.assertEqual(
+            set(CategoryPage.allowed_parent_page_models()), {ThemeIndexPage}
+        )
+        self.assertEqual(set(CategoryPage.allowed_subpage_models()), {StoryPage})
+        self.assertEqual(
+            set(StoryPage.allowed_parent_page_models()), {ThemeIndexPage, CategoryPage}
+        )
+
+    def test_more_stories_come_from_the_whole_section(self):
+        in_category = make_story(self.category, title="In the category")
+        direct = make_story(self.symbols, title="Directly in the section")
+        music = ThemeIndexPage(title="Music", theme=Theme.MUSIC)
+        self.home.add_child(instance=music)
+        make_story(music, title="Other section")
+        self.assertEqual(list(in_category.more_stories()), [direct])
+
+    def test_section_page_lists_categories_and_direct_stories(self):
+        make_story(self.category, title="In the category")
+        make_story(self.symbols, title="Directly in the section")
+        response = self.client.get(self.symbols.url)
+        self.assertContains(response, "Tree of life")
+        self.assertContains(response, "Directly in the section")
+        self.assertNotContains(response, "In the category")
+
+    def test_category_page_lists_its_stories(self):
+        make_story(self.category, title="In the category")
+        response = self.client.get(self.category.url)
+        self.assertContains(response, "<h1>Tree of life</h1>", html=True)
+        self.assertContains(response, "In the category")
+        self.assertContains(response, f'href="{self.symbols.url}"')
+
+    def test_legacy_value_does_not_break_the_label(self):
+        legacy = ThemeIndexPage(title="Myths", theme=Theme.RELIGION)
+        self.home.add_child(instance=legacy)
+        ThemeIndexPage.objects.filter(pk=legacy.pk).update(theme="myths")
+        story = make_story(legacy)
+        self.assertEqual(story.get_theme_display(), "Religion")
+        self.assertEqual(self.client.get(story.url).status_code, 200)

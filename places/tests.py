@@ -27,7 +27,7 @@ class PlaceTests(TestCase):
     def test_latitude_out_of_range_is_invalid(self):
         place = Place(
             name="Nowhere",
-            theme=Theme.MYTHS,
+            theme=Theme.RELIGION,
             latitude=Decimal("91"),
             longitude=Decimal("44"),
             short_description="x",
@@ -35,3 +35,29 @@ class PlaceTests(TestCase):
         with self.assertRaises(ValidationError) as cm:
             place.full_clean()
         self.assertIn("latitude", cm.exception.message_dict)
+
+
+class RemapLegacyThemesMigrationTests(TestCase):
+    """places.0004: Myths → Religion, Traditions → History, revisions too."""
+
+    def test_remaps_rows_and_revisions(self):
+        import importlib
+
+        from django.apps import apps
+
+        migration = importlib.import_module(
+            "places.migrations.0004_remap_legacy_themes"
+        )
+        place = make_place(name="Geghard Monastery", theme=Theme.RELIGION)
+        revision = place.save_revision()
+        revision.content["theme"] = "myths"
+        revision.save()
+        Place.objects.filter(pk=place.pk).update(theme="myths")
+        other = make_place(name="Gyumri", theme=Theme.HISTORY)
+        Place.objects.filter(pk=other.pk).update(theme="traditions")
+        migration.forwards(apps, None)
+        place.refresh_from_db()
+        other.refresh_from_db()
+        revision.refresh_from_db()
+        self.assertEqual((place.theme, other.theme), ("religion", "history"))
+        self.assertEqual(revision.content["theme"], "religion")

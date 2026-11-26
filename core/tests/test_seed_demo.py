@@ -7,7 +7,7 @@ from events.models import Event
 from pages.models import SimplePage
 from places.models import Place
 from projects.models import Project
-from stories.models import StoryPage, ThemeIndexPage
+from stories.models import CategoryPage, StoryPage, ThemeIndexPage
 
 
 @override_settings(DEBUG=True)
@@ -18,17 +18,31 @@ class SeedDemoTests(TestCase):
     def counts(self):
         return [
             m.objects.count()
-            for m in (Place, ThemeIndexPage, StoryPage, Event, Project, SimplePage)
+            for m in (
+                Place,
+                ThemeIndexPage,
+                CategoryPage,
+                StoryPage,
+                Event,
+                Project,
+                SimplePage,
+            )
         ]
 
     def test_creates_the_seed_data_from_the_brief(self):
         self.seed()
-        self.assertEqual(self.counts(), [5, 5, 3, 3, 4, 3])
+        self.assertEqual(self.counts(), [5, 6, 8, 3, 3, 4, 3])
 
     def test_running_twice_creates_no_duplicates(self):
         self.seed()
         self.seed()
-        self.assertEqual(self.counts(), [5, 5, 3, 3, 4, 3])
+        self.assertEqual(self.counts(), [5, 6, 8, 3, 3, 4, 3])
+
+    def test_stories_sit_in_their_section_and_category(self):
+        self.seed()
+        sign = StoryPage.objects.get(title="The eternity sign")
+        self.assertEqual(sign.get_parent().title, "Eternity and the sun")
+        self.assertEqual(sign.theme, "symbols")
 
     def test_places_are_flagged_to_be_checked(self):
         self.seed()
@@ -41,7 +55,7 @@ class SeedDemoTests(TestCase):
         self.assertEqual(Place.objects.public().count(), 5)
         self.assertEqual(Event.objects.upcoming().count(), 3)
         story = StoryPage.objects.get(title="The monastery of the spear")
-        self.assertEqual(story.theme, "myths")
+        self.assertEqual(story.theme, "religion")
         self.assertEqual(
             list(story.related_places.values_list("name", flat=True)),
             ["Geghard Monastery"],
