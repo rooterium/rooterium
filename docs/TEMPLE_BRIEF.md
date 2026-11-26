@@ -140,7 +140,8 @@ Handling:
   History; then the example content is re-sorted explicitly:
   "The monastery of the spear" → Religion, "The duduk, voice of apricot
   wood" → Music, "The eternity sign" → Symbols / Eternity and the sun,
-  "A temple older than Christianity in Armenia" → Religion,
+  "A temple older than Christianity in Armenia" → History (changed
+  2026-11-26 so that no section is empty),
   "Khachkars, crosses carved in stone" → Symbols / Cross and khachkar,
   "Ararat, the mountain on the horizon" → Symbols / Ararat. Update
   `core/example_content.py` and `seed_demo` to match, so a fresh database
