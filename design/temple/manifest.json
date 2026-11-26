@@ -1,0 +1,215 @@
+{
+  "description": "Approved temple assets from the editor's handoff package (docs/handoff/design-package-2026-11-22.md). Originals live in design/temple/originals/ (git-ignored); fetch and check them with build_temple_assets.py.",
+  "assets": [
+    {
+      "key": "img01",
+      "kind": "image",
+      "title": "Temple portal in the cliff, mist",
+      "use": "Portal poster and still (home)",
+      "model": "Higgsfield Soul Cinema, 2k",
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_33i3XUdNcs3AoG3JgTC0SjtwpkM/hf_20261122_141726_25f1de4b-2f34-49a0-a62b-e7d071a457a3.png",
+      "bytes": 2568039,
+      "sha256": "6f8417ef88a8a5e3385b65be9cfc7eed0d8930f62213dd1a2373d02c839527cf"
+    },
+    {
+      "key": "img02",
+      "kind": "image",
+      "title": "Cave chapel, woman in taraz",
+      "use": "Chapel still (home, section list)",
+      "model": "Higgsfield Soul Cinema, 2k",
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_33i3XUdNcs3AoG3JgTC0SjtwpkM/hf_20261122_142628_3b7bc4cd-f3a2-4de5-8fd1-a11b1486b9ab.png",
+      "bytes": 2752650,
+      "sha256": "38c3399d2b42a348a29467299045e2f835deac9428e1fe0099b196360cb06060"
+    },
+    {
+      "key": "img03",
+      "kind": "image",
+      "title": "Manuscript with flash",
+      "use": "Kept for later (manuscript menu, option A)",
+      "model": "Higgsfield Soul Cinema, 2k",
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_33i3XUdNcs3AoG3JgTC0SjtwpkM/hf_20261122_140846_4b6b5913-ff86-4476-a1ac-498659501698.png",
+      "bytes": 2110109,
+      "sha256": "4e06576aebaaccad0d063e4c4ebab85a2b7e60ebca25a5fb8546fa8c1cbb1e77"
+    },
+    {
+      "key": "img04",
+      "kind": "image",
+      "title": "Manuscript, double exposure with tree",
+      "use": "Kept for later (manuscript menu, option B)",
+      "model": "Higgsfield Soul Cinema, 2k",
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_33i3XUdNcs3AoG3JgTC0SjtwpkM/hf_20261122_140845_f9c8e941-4b63-47c1-9219-50821562eae4.png",
+      "bytes": 2328244,
+      "sha256": "f1cf7b07081c3a1b62e7b9344758bcf070453da8240a1b4c6bdcd79fded2b547"
+    },
+    {
+      "key": "img05",
+      "kind": "image",
+      "title": "Music: duduk and kamancha",
+      "use": "Music hall image",
+      "model": "Higgsfield Soul Cinema, 2k",
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_33i3XUdNcs3AoG3JgTC0SjtwpkM/hf_20261122_140648_39f9fd82-9d20-4f7d-a9ff-6df086f1a079.png",
+      "bytes": 3016389,
+      "sha256": "ab599006af5fb04abab47b0deb166bcd1399b18448a239890ba013a87b48b553"
+    },
+    {
+      "key": "img06",
+      "kind": "image",
+      "title": "Symbols: flash on the rock wall",
+      "use": "Kept for later (Symbols, option A)",
+      "model": "Higgsfield Soul Cinema, 2k",
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_33i3XUdNcs3AoG3JgTC0SjtwpkM/hf_20261122_140845_2cb1bf8f-d407-4162-9ed5-37141fdde70d.png",
+      "bytes": 2678634,
+      "sha256": "c5b7331c8d272de63094437a8bcdd990333732a1309666445d976023ab506d62"
+    },
+    {
+      "key": "img07",
+      "kind": "image",
+      "title": "Symbols: embroidery and stone",
+      "use": "Kept for later (Symbols, option B)",
+      "model": "Higgsfield Soul Cinema, 2k",
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_33i3XUdNcs3AoG3JgTC0SjtwpkM/hf_20261122_140845_0e386949-f5b9-4a4e-9ab8-24aacfe4c88a.png",
+      "bytes": 2942312,
+      "sha256": "e3165bf5ea8a51d353deece57fdcb238a2f6f351db0068450ea53a6542496a57"
+    },
+    {
+      "key": "img08",
+      "kind": "image",
+      "title": "History: Ararat through a fortress breach",
+      "use": "History hall image",
+      "model": "Higgsfield Soul Cinema, 2k",
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_33i3XUdNcs3AoG3JgTC0SjtwpkM/hf_20261122_140614_3a065163-2680-4e7a-b416-07c91127c5dc.png",
+      "bytes": 2773774,
+      "sha256": "b60c8e383cff5a82a63ea3d832bcf4021b37342396c677bcbe68ee1e87b88628"
+    },
+    {
+      "key": "img09",
+      "kind": "image",
+      "title": "Artifacts: storeroom in flash",
+      "use": "Artifacts hall image",
+      "model": "Higgsfield Soul Cinema, 2k",
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_33i3XUdNcs3AoG3JgTC0SjtwpkM/hf_20261122_140613_e92974b6-4754-42f9-ab40-62f29353991f.png",
+      "bytes": 3046429,
+      "sha256": "1fa4a8cb054734410d4945441a384eba919e8f5eee156ef2824a8be898c342ee"
+    },
+    {
+      "key": "img10",
+      "kind": "image",
+      "title": "Key people: figures with hidden faces",
+      "use": "Key people hall image",
+      "model": "Higgsfield Soul Cinema, 2k",
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_33i3XUdNcs3AoG3JgTC0SjtwpkM/hf_20261122_140647_2a739c43-13b1-4f46-b277-531dd6866b7b.png",
+      "bytes": 2344796,
+      "sha256": "be86605d62976046a1773e60d54d1b2d3d1db442f21a6a9028b31ec78b088330"
+    },
+    {
+      "key": "img11",
+      "kind": "image",
+      "title": "Religion: pagan fire through a church",
+      "use": "Religion hall image",
+      "model": "Higgsfield Soul Cinema, 2k",
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_33i3XUdNcs3AoG3JgTC0SjtwpkM/hf_20261122_140648_359233fc-d719-4bd6-8292-b66ac3858ac1.png",
+      "bytes": 2683620,
+      "sha256": "8011d5b5fe24efe6649ce9099f093d211cd8954e27f7898285556e5cf52db6f8"
+    },
+    {
+      "key": "img12",
+      "kind": "image",
+      "title": "Religion: monk in veghar at the manuscript",
+      "use": "Kept for later (Religion, Christian part)",
+      "model": "Higgsfield Soul Cinema, 2k",
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_33i3XUdNcs3AoG3JgTC0SjtwpkM/hf_20261122_142627_5383beba-14c0-40a4-a2fe-1afe0a1babae.png",
+      "bytes": 3153077,
+      "sha256": "379274694bce62828fd1b22a110720af8ad50ae59505a459d7049c4a845b4cf5"
+    },
+    {
+      "key": "img13",
+      "kind": "image",
+      "title": "Griffin with flash on a shelf",
+      "use": "Kept for later (Artifacts category cover)",
+      "model": "Higgsfield Soul Cinema, 2k",
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_33i3XUdNcs3AoG3JgTC0SjtwpkM/hf_20261122_140058_2b53a03a-ea90-42e5-a67e-9dcda9e7ad2d.png",
+      "bytes": 4112664,
+      "sha256": "fb6dc215964cbe0d2757fb5274cb3ac649186d46e6f0a2c7adcf5181f817a2b5"
+    },
+    {
+      "key": "img14",
+      "kind": "image",
+      "title": "Griffin in a rock niche",
+      "use": "Kept for later (Artifacts category cover)",
+      "model": "Higgsfield Soul Cinema, 2k",
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_33i3XUdNcs3AoG3JgTC0SjtwpkM/hf_20261122_140059_4321e590-8d82-484d-8c29-a019c5f7055f.png",
+      "bytes": 3314907,
+      "sha256": "a89f01696c8f70e61ebd5759c921f0a8aaaefac3fab88018b1fde0c29b6f59d4"
+    },
+    {
+      "key": "img15",
+      "kind": "image",
+      "title": "Veiled girl and cathedral ruins",
+      "use": "Kept for later (memory flashes)",
+      "model": "Higgsfield Soul Cinema, 2k",
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_33i3XUdNcs3AoG3JgTC0SjtwpkM/hf_20261122_140059_400a382c-d25b-4f3b-9667-c55d9fbf9510.png",
+      "bytes": 4090852,
+      "sha256": "cc5b2e6b8c599f22eabc1a6d2b9d7c066d129eb7737179d36e2c4f85948b2499"
+    },
+    {
+      "key": "img16",
+      "kind": "image",
+      "title": "Girl under an arch, flash",
+      "use": "Kept for later (memory flashes)",
+      "model": "Higgsfield Soul Cinema, 2k",
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_33i3XUdNcs3AoG3JgTC0SjtwpkM/hf_20261122_140058_b50568fa-4032-413b-98b5-1b5c09e25e18.png",
+      "bytes": 5046136,
+      "sha256": "8eb0651baa6730f374191b40b54dda3ca975edec16e915fb411dc30cc4d6fb0b"
+    },
+    {
+      "key": "img17",
+      "kind": "image",
+      "title": "Woman with a manuscript behind a pomegranate branch",
+      "use": "Not used (style benchmark)",
+      "model": "Higgsfield Soul Cinema, 2k",
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_33i3XUdNcs3AoG3JgTC0SjtwpkM/hf_20261122_135525_9a751021-c2aa-47d7-a637-c8f47054289d.png",
+      "bytes": 3043334,
+      "sha256": "9bd5af329aaf7414422da08f44a2a6a660070663c99687e2499fa6929af711bb"
+    },
+    {
+      "key": "vid-portal-loop",
+      "kind": "video",
+      "title": "Portal loop (5 s, image 1 to image 1)",
+      "use": "Portal background video (home)",
+      "model": "Higgsfield Kling 3.0, std",
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_33i3XUdNcs3AoG3JgTC0SjtwpkM/hf_20261122_144202_b554a85e-43bd-4655-82de-36153162f27b.mp4",
+      "bytes": 1525314,
+      "sha256": "41260e74908a61f595197c072aa16577a054eb1bab3a22fd2766f488748cfc5e"
+    },
+    {
+      "key": "vid-entrance",
+      "kind": "video",
+      "title": "Entering the temple (6 s, image 1 to image 2)",
+      "use": "Entrance video (home)",
+      "model": "Higgsfield Kling 3.0, std",
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_33i3XUdNcs3AoG3JgTC0SjtwpkM/hf_20261122_143658_811c2db6-db89-47d7-9595-8fddf1a3fb40.mp4",
+      "bytes": 8317296,
+      "sha256": "8403e420e370150f648e9a16b13140d1a98aff1cd2b8aa0b759fe26a7ef84070"
+    },
+    {
+      "key": "hall-symbols",
+      "kind": "image",
+      "title": "Khachkar in the dark, light from above",
+      "use": "Symbols hall image",
+      "model": "Higgsfield Soul Cinema, 2k",
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_33i3XUdNcs3AoG3JgTC0SjtwpkM/hf_20261122_145237_a8dd51a5-0eed-440c-8868-9d527ea7f135.png",
+      "bytes": 1287044,
+      "sha256": "ec64b129f1747dbf58db97665c83ce54b05f122909198eb72964db8dd1bb29d6"
+    },
+    {
+      "key": "vid-descent-symbols",
+      "kind": "video",
+      "title": "Descent into Symbols (6 s, image 2 to khachkar)",
+      "use": "Descent video into Symbols",
+      "model": "Higgsfield Kling 3.0, std",
+      "source": "https://d8j0ntlcm91z4.cloudfront.net/user_33i3XUdNcs3AoG3JgTC0SjtwpkM/hf_20261122_145350_01e1ad92-b957-48ef-b7bc-b4c2ccdd077d.mp4",
+      "bytes": 5576831,
+      "sha256": "a389e34c2b71c968c25a8be0755e3bbe56deaafe4f40e2585ffd2b7b3a59f04b"
+    }
+  ]
+}

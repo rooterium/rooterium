@@ -26,6 +26,11 @@ anyone curious, can learn about their roots.
 
 ## 2. Scope of version 1 (MVP)
 
+> **Replaced by the temple redesign** for the home page and the theme
+> structure: `docs/TEMPLE_BRIEF.md` (ADR 0017, 0018, 0019). Everything
+> else in this section is kept (the map moves to `/map/`; events, projects,
+> newsletter and forms stay, linked from the footer).
+
 In scope:
 
 1. **Home page = interactive map** (design variant B, see section 6).
@@ -119,6 +124,11 @@ gets an ADR in `docs/decisions/`):
   names, dates or statistics anywhere.
 
 ## 6. Design
+
+> **Replaced by the temple redesign** for the home page and the theme
+> structure: `docs/TEMPLE_BRIEF.md` (ADR 0017, 0018, 0019). The rest of
+> this section stays binding where the temple brief does not change it
+> (palette except gold, accessibility, typography); AI images: ADR 0019.
 
 Direction: the discovery of an old, mysterious world, a mix of digital
 atlas, historical manuscript and interactive museum. Dark, warm, mysterious,

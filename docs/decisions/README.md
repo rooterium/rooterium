@@ -19,10 +19,13 @@ deviations and additions.
 | 0007 | [Secrets only in .env](0007-secrets-in-env.md)                         | accepted |
 | 0008 | [Backups with UpCloud's backup service](0008-backups-with-upcloud.md) | accepted |
 | 0009 | [Wagtail as CMS](0009-wagtail-as-cms.md)                               | accepted |
-| 0010 | [Interactive map with MapLibre GL JS](0010-map-with-maplibre.md)       | accepted (tile source: 0015) |
+| 0010 | [Interactive map with MapLibre GL JS](0010-map-with-maplibre.md)       | accepted (tile source: 0015; map moves to `/map/`: 0017) |
 | 0011 | [Interactivity with plain JavaScript modules and htmx](0011-interactivity-without-spa.md) | accepted |
 | 0012 | [English first, translatable from day one](0012-english-and-i18n.md)   | accepted |
 | 0013 | [Privacy by default](0013-privacy-by-default.md)                       | accepted |
-| 0014 | [Content model](0014-content-model.md)                                 | accepted |
+| 0014 | [Content model](0014-content-model.md)                                 | accepted, points 3–4 superseded by 0018 |
 | 0015 | [Map tiles and map style](0015-map-tiles-and-style.md)               | accepted (relief: 0016) |
-| 0016 | [Relief on the home page map](0016-map-relief.md)                     | accepted |
+| 0016 | [Relief on the home page map](0016-map-relief.md)                     | accepted (map moves to `/map/`: 0017) |
+| 0017 | [Temple navigation replaces the map home page](0017-temple-navigation.md) | accepted |
+| 0018 | [Six sections and category pages](0018-six-sections-and-categories.md) | accepted |
+| 0019 | [Temple imagery: AI assets, originals and video delivery](0019-temple-assets-and-video.md) | accepted |
