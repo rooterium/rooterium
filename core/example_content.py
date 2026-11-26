@@ -116,7 +116,7 @@ PLACES = [
     },
     {
         "name": "Khor Virap",
-        "theme": Theme.HISTORY,
+        "theme": Theme.SYMBOLS,
         "latitude": Decimal("39.878333"),
         "longitude": Decimal("44.576111"),
         "short_description": "The monastery above the pit where, by "
@@ -124,7 +124,7 @@ PLACES = [
     },
     {
         "name": "Garni Temple",
-        "theme": Theme.HISTORY,
+        "theme": Theme.RELIGION,
         "latitude": Decimal("40.112421"),
         "longitude": Decimal("44.730277"),
         "short_description": "A colonnaded temple in the Ionic order above the "
@@ -132,7 +132,7 @@ PLACES = [
     },
     {
         "name": "Geghard Monastery",
-        "theme": Theme.MYTHS,
+        "theme": Theme.RELIGION,
         "latitude": Decimal("40.140425"),
         "longitude": Decimal("44.818511"),
         "short_description": "A monastery partly carved out of the mountain, "
@@ -148,7 +148,7 @@ PLACES = [
     },
     {
         "name": "Noratus Cemetery",
-        "theme": Theme.TRADITIONS,
+        "theme": Theme.SYMBOLS,
         "latitude": Decimal("40.373889"),
         "longitude": Decimal("45.181111"),
         "short_description": "The largest surviving field of medieval "
@@ -164,7 +164,7 @@ PLACES = [
     },
     {
         "name": "Gyumri",
-        "theme": Theme.TRADITIONS,
+        "theme": Theme.HISTORY,
         "latitude": Decimal("40.789444"),
         "longitude": Decimal("43.847500"),
         "short_description": "Armenia's second-largest city, long known as a "
@@ -176,18 +176,33 @@ PLACES = [
 RENAMED_PLACES = {"Lake Sevan": "Sevanavank"}
 
 THEME_INTROS = {
-    Theme.HISTORY: "Kingdoms, temples and monasteries: how Armenia's past "
-    "shaped the places you can still visit today.",
-    Theme.TRADITIONS: "Crafts, feasts and customs that families carried "
-    "from village to village and across the world.",
-    Theme.MYTHS: "Legends and holy relics: the stories Armenians have told "
-    "about their land for centuries.",
+    Theme.MUSIC: "From the duduk to sacred song: the sounds of Armenia.",
     Theme.SYMBOLS: "Ararat, the eternity sign and other signs that carry "
     "Armenian identity.",
-    Theme.MUSIC: "From the duduk to sacred song: the sounds of Armenia.",
+    Theme.HISTORY: "Kingdoms, fortresses and monasteries: how Armenia's past "
+    "shaped the places you can still visit today.",
+    Theme.ARTIFACTS: "Objects that survived the centuries, and what they "
+    "tell us about the people who made them.",
+    Theme.PEOPLE: "The poets, builders, musicians and saints who shaped "
+    "Armenian culture.",
+    Theme.RELIGION: "From the sacred fires of pagan Armenia to "
+    "Christianity: faith, legends and holy places.",
+}
+
+# Intros of earlier example content that the loader may replace: the
+# version 1 themes (their pages became sections, ADR 0018) and the History
+# intro that mentioned temples (the Garni story moved to Religion).
+LEGACY_THEME_INTROS = {
+    "Kingdoms, temples and monasteries: how Armenia's past shaped the "
+    "places you can still visit today.",
+    "Crafts, feasts and customs that families carried from village to "
+    "village and across the world.",
+    "Legends and holy relics: the stories Armenians have told about their "
+    "land for centuries.",
 }
 
 # --- Stories -------------------------------------------------------------
+# "category": slug of a category page in the section (core/sections.py).
 # Body blocks: ("paragraph", html), ("heading", text), ("image", key, caption).
 
 WIKI = "https://en.wikipedia.org/wiki/"
@@ -195,7 +210,7 @@ WIKI = "https://en.wikipedia.org/wiki/"
 STORIES = [
     {
         "title": "The monastery of the spear",
-        "theme": Theme.MYTHS,
+        "theme": Theme.RELIGION,
         "days_ago": 2,
         "hero": "geghard",
         "teaser": "Half church, half cave: Geghard is carved into the "
@@ -315,6 +330,7 @@ STORIES = [
     {
         "title": "The eternity sign",
         "theme": Theme.SYMBOLS,
+        "category": "eternity-and-the-sun",
         "days_ago": 22,
         "hero": "eternity-sign",
         "teaser": "A wheel of curved rays that seems to turn: one of the "
@@ -360,7 +376,7 @@ STORIES = [
     },
     {
         "title": "A temple older than Christianity in Armenia",
-        "theme": Theme.HISTORY,
+        "theme": Theme.RELIGION,
         "days_ago": 32,
         "hero": "garni",
         "teaser": "Garni is the only largely preserved Hellenistic building "
@@ -403,7 +419,8 @@ STORIES = [
     },
     {
         "title": "Khachkars, crosses carved in stone",
-        "theme": Theme.TRADITIONS,
+        "theme": Theme.SYMBOLS,
+        "category": "cross-and-khachkar",
         "days_ago": 42,
         "hero": "noratus",
         "teaser": "Memorial stones with a cross and endless ornaments: the "
@@ -454,6 +471,7 @@ STORIES = [
     {
         "title": "Ararat, the mountain on the horizon",
         "theme": Theme.SYMBOLS,
+        "category": "ararat",
         "days_ago": 52,
         "hero": "ararat",
         "teaser": "Seen from Yerevan, out of reach across the border: why a "

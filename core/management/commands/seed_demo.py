@@ -1,6 +1,8 @@
 """Seed data for the local prototype (docs/PROJECT_BRIEF.md, section 5).
 
-Creates the theme pages, five example places, three placeholder stories,
+Creates the six section pages and the Symbols categories
+(`core.sections.ensure_sections`), five example places, three placeholder
+stories,
 placeholder events and projects, and placeholder About, Imprint and Privacy
 pages (the real texts come from the editor, issue #14). Safe to run more than once: existing
 objects are left alone. No invented facts: everything that is not verified
@@ -18,13 +20,14 @@ from django.utils import timezone
 from PIL import Image as PILImage
 from wagtail.images import get_image_model
 
+from core.sections import category, ensure_sections
 from core.themes import Theme
 from events.models import Event
 from home.models import HomePage
 from pages.models import Purpose, SimplePage
 from places.models import Place
 from projects.models import Project, ProjectKind
-from stories.models import StoryPage, ThemeIndexPage
+from stories.models import StoryPage
 
 TO_BE_CHECKED = "[To be checked]"
 
@@ -116,7 +119,7 @@ PLACES = [
     },
     {
         "name": "Geghard Monastery",
-        "theme": Theme.MYTHS,
+        "theme": Theme.RELIGION,
         "latitude": Decimal("40.140556"),
         "longitude": Decimal("44.818333"),
         "short_description": "A monastery partly carved into the rock of the "
@@ -124,15 +127,21 @@ PLACES = [
     },
     {
         "name": "Gyumri",
-        "theme": Theme.TRADITIONS,
+        "theme": Theme.HISTORY,
         "latitude": Decimal("40.783333"),
         "longitude": Decimal("43.833333"),
         "short_description": "Armenia's second-largest city, in the Shirak province.",
     },
 ]
 
+# "category": slug of a category page in the section (core/sections.py).
 STORIES = [
-    {"title": "The eternity sign", "theme": Theme.SYMBOLS, "places": []},
+    {
+        "title": "The eternity sign",
+        "theme": Theme.SYMBOLS,
+        "category": "eternity-and-the-sun",
+        "places": [],
+    },
     {
         "title": "The duduk, voice of apricot wood",
         "theme": Theme.MUSIC,
@@ -140,7 +149,7 @@ STORIES = [
     },
     {
         "title": "The monastery of the spear",
-        "theme": Theme.MYTHS,
+        "theme": Theme.RELIGION,
         "places": ["Geghard Monastery"],
     },
 ]
@@ -255,9 +264,12 @@ class Command(BaseCommand):
         self.created = 0
         image = self.placeholder_image()
         places = {data["name"]: self.place(data) for data in PLACES}
-        theme_pages = self.theme_pages()
+        sections = ensure_sections()
         for data in STORIES:
-            self.story(data, theme_pages[data["theme"]], image, places)
+            parent = sections[data["theme"]]
+            if data.get("category"):
+                parent = category(data["theme"], data["category"])
+            self.story(data, parent, image, places)
         for number in range(1, 4):
             self.event(number)
         for name, kind in PROJECTS:
@@ -312,24 +324,12 @@ class Command(BaseCommand):
         HomePage.objects.get().add_child(instance=page)
         self.publish(page)
 
-    def theme_pages(self):
-        home = HomePage.objects.get()
-        pages = {}
-        for theme in Theme:
-            page = ThemeIndexPage.objects.filter(theme=theme).first()
-            if not page:
-                page = ThemeIndexPage(
-                    title=str(theme.label), theme=theme, intro="[Introduction]"
-                )
-                home.add_child(instance=page)
-                self.publish(page)
-            pages[theme] = page
-        return pages
-
     def story(self, data, parent, image, places):
-        existing = StoryPage.objects.child_of(parent).filter(title=data["title"])
+        # By title anywhere: the story may have been moved (e.g. into a
+        # category by restructure_sections or load_example_content).
+        existing = StoryPage.objects.filter(title=data["title"])
         if existing.exists():
-            story = existing.get().specific
+            story = existing.first().specific
             if story.body.raw_data and [
                 (b["type"], b["value"]) for b in story.body.raw_data
             ] == [("paragraph", OLD_PLACEHOLDER_BODY)]:

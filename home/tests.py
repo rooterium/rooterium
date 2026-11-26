@@ -25,11 +25,11 @@ class HomeMapTests(TestCase):
         from stories.tests import make_story
 
         self.home = HomePage.objects.get()
-        myths = ThemeIndexPage(title="Myths", theme=Theme.MYTHS)
-        self.home.add_child(instance=myths)
-        self.place = make_place(name="Geghard Monastery", theme=Theme.MYTHS)
+        religion = ThemeIndexPage(title="Religion", theme=Theme.RELIGION)
+        self.home.add_child(instance=religion)
+        self.place = make_place(name="Geghard Monastery", theme=Theme.RELIGION)
         make_place(name="[Draft place]", live=False)
-        self.story = make_story(myths, title="The monastery of the spear")
+        self.story = make_story(religion, title="The monastery of the spear")
         self.story.related_places.add(self.place)
         self.story.save_revision().publish()
         Event.objects.create(
@@ -58,8 +58,8 @@ class HomeMapTests(TestCase):
             if f["name"] == "Geghard Monastery"
         )
         self.assertEqual(feature["url"], self.story.url)
-        self.assertEqual(feature["category"], "myths")
-        self.assertEqual(feature["categoryLabel"], "Myths")
+        self.assertEqual(feature["category"], "religion")
+        self.assertEqual(feature["categoryLabel"], "Religion")
 
     def test_data_is_embedded_as_json_and_list_fallback_is_rendered(self):
         response = self.client.get("/")
@@ -71,7 +71,7 @@ class HomeMapTests(TestCase):
 
     def test_filters_include_themes_events_and_projects(self):
         response = self.client.get("/")
-        for value in ("all", "history", "myths", "events", "projects"):
+        for value in ("all", "history", "religion", "events", "projects"):
             self.assertContains(response, f'data-filter="{value}"')
 
     def test_without_tile_file_the_map_has_no_tiles(self):

@@ -49,12 +49,25 @@ own cover", for all six sections.
    the story sits" still holds. Symbol pages are ordinary stories (A13);
    there is no separate symbol model.
 6. **Places** keep their `theme` field with the six new values.
-7. **Data migration**: Myths → Religion, Traditions → History for every
-   stored value (theme pages and places). The example content is then
-   re-sorted explicitly as listed in `docs/TEMPLE_BRIEF.md`, section 5
-   (e.g. "The eternity sign" → Symbols / Eternity and the sun), and
-   `seed_demo` / `load_example_content` produce the same structure on a
-   fresh database.
+7. **Moving the version 1 data** (Myths → Religion, Traditions →
+   History) in two parts, because moving pages needs Wagtail's tree API,
+   which historical models in migrations do not have:
+   - the data migration `places.0004` remaps the places, including every
+     stored revision (the admin edits the latest revision);
+   - the idempotent command `restructure_sections` (`core/sections.py`)
+     turns the Myths page into the Religion page, moves the Traditions
+     stories to History and deletes the empty page, creates the missing
+     section pages and the Symbols categories. Wagtail creates redirects
+     for the changed URLs. It runs once after the migrations on every
+     database with version 1 content.
+
+   The example content is then re-sorted explicitly as listed in
+   `docs/TEMPLE_BRIEF.md`, section 5 (e.g. "The eternity sign" → Symbols /
+   Eternity and the sun): `load_example_content` moves the example stories
+   to their section and category even where it leaves their text alone,
+   and `seed_demo` / `load_example_content` produce the same structure on
+   a fresh database. Until the command has run, legacy values still render
+   (`core.themes.theme_label`).
 
 ## Consequences
 

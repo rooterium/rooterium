@@ -4,7 +4,7 @@ Current state of Rooterium and the next steps. **Every PR updates this
 file** (at least "Last updated" and whatever the PR changes). Details live in
 the linked docs; open work lives in GitHub issues.
 
-_Last updated: 2026-11-26 (PR "Add the temple assets and decisions")_
+_Last updated: 2026-11-26 (PR "Add sections, category pages and temple fields")_
 
 ## Live
 
@@ -46,12 +46,32 @@ originals, video as Wagtail documents served by Caddy).
 
 | Milestone | State |
 |---|---|
-| T1 Assets and decisions | **Done** (this PR): ADRs, `design/temple/manifest.json` (21 assets with SHA-256), `build_temple_assets.py` (fetch, build), grain tile `core/static/core/img/grain.png`, issues #57–#65 |
-| T2 Content model | Next. Tag `main` as `v1-map` before it merges |
-| T3 Visual layer and frame | Open |
+| T1 Assets and decisions | **Done** (PR #66): ADRs, `design/temple/manifest.json` (21 assets with SHA-256), `build_temple_assets.py` (fetch, build), grain tile `core/static/core/img/grain.png`, issues #57–#65 |
+| T2 Content model | **Done** (this PR): six sections, `CategoryPage`, section and home page temple fields, MP4 documents served directly, `places.0004`, `restructure_sections`, `load_temple_assets`, seed and example content re-sorted. Tag `v1-map` set on `66dc806` |
+| T3 Visual layer and frame | Next |
 | T4 Home journey | Open |
 | T5 Section, category and article pages | Open |
 | T6 Deploy to the test server | Open |
+
+Notes from T2:
+
+- **Not deployed**: the brief deploys the temple milestones together in
+  T6, so the live site stays on version 1 until then (live commit lags
+  `main`). At T6, after `scripts/deploy.sh` has run the migrations:
+  `restructure_sections`, `load_example_content --allow-production`, then
+  copy `design/temple/web/` and run `load_temple_assets` (runbook:
+  `deployment.md`, section 4). If an unrelated deploy happens earlier, the
+  migrations run without the restructure; pages still render (legacy
+  values get a label via `core.themes.theme_label`). Rehearsed on the local database (same content as
+  production): Myths became Religion, the Traditions story moved, Artifacts
+  and Key people and the eight Symbols categories were created, every
+  moved URL redirects (301), the videos are served with range requests.
+- The History section has no story after the re-sort (all six example
+  stories now sit in Religion, Symbols and Music, as the brief lists).
+- The site still shows the map home page and the version 1 frame; the
+  section and category pages use the old styling until T3–T5.
+- Section pages are in the page tree in creation order (Artifacts and Key
+  people after the text pages); the site orders them by the section list.
 
 Notes from T1:
 

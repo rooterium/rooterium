@@ -7,54 +7,189 @@ from django.utils import timezone
 from django.utils.html import strip_tags
 from django.utils.translation import gettext_lazy as _
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
-from wagtail.admin.panels import FieldPanel, InlinePanel
+from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.fields import StreamField
 from wagtail.models import Orderable, Page
 
 from core.seo import SeoPageMixin
-from core.themes import Theme
+from core.themes import Theme, theme_label
 
 from .blocks import StoryBodyBlock
 
 
 def theme_pages():
-    """Live theme pages in the order of the theme list."""
+    """Live section pages in the order of the section list."""
     order = {value: index for index, value in enumerate(Theme.values)}
-    return sorted(ThemeIndexPage.objects.live(), key=lambda p: order[p.theme])
+    pages = ThemeIndexPage.objects.live().filter(theme__in=Theme.values)
+    return sorted(pages, key=lambda p: order[p.theme])
+
+
+def image_field(verbose_name, help_text):
+    return models.ForeignKey(
+        settings.WAGTAILIMAGES_IMAGE_MODEL,
+        verbose_name=verbose_name,
+        help_text=help_text,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+    )
+
+
+def video_field(verbose_name, help_text):
+    """A video as a Wagtail document (MP4), served directly (ADR 0019)."""
+    return models.ForeignKey(
+        "wagtaildocs.Document",
+        verbose_name=verbose_name,
+        help_text=help_text,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+    )
 
 
 class ThemeIndexPage(SeoPageMixin, Page):
-    """One page per theme; lists its stories (ADR 0014)."""
+    """A section of the temple, shown to the editor as "section page"
+    (ADR 0018; internally still "theme"). Holds categories and stories."""
 
     theme = models.CharField(
-        _("theme"), max_length=20, choices=Theme.choices, unique=True
+        _("section"), max_length=20, choices=Theme.choices, unique=True
     )
     intro = models.TextField(_("introduction"), blank=True)
+    root_symbol = models.CharField(
+        _("root symbol"),
+        max_length=60,
+        blank=True,
+        help_text=_('Shown under the section name in the chapel, e.g. "duduk".'),
+    )
+    motto = models.CharField(
+        _("motto"),
+        max_length=200,
+        blank=True,
+        help_text=_(
+            'One line over the hall image, e.g. "Symbols are the language of memory."'
+        ),
+    )
+    hall_image = image_field(
+        _("hall image"),
+        _("Full-width header of the section page (16:9, at least 1920 px wide)."),
+    )
+    descent_video = video_field(
+        _("descent video"),
+        _(
+            "Optional MP4 played when a visitor picks this section in the "
+            "chapel; it should end on the hall image. Without it the chapel "
+            "fades into the hall image."
+        ),
+    )
+    cover_image = image_field(
+        _("chapel cover image"),
+        _("Optional small image for the section list in the chapel."),
+    )
 
-    content_panels = [*Page.content_panels, FieldPanel("theme"), FieldPanel("intro")]
+    content_panels = [
+        *Page.content_panels,
+        FieldPanel("theme"),
+        FieldPanel("intro"),
+        MultiFieldPanel(
+            [
+                FieldPanel("root_symbol"),
+                FieldPanel("motto"),
+                FieldPanel("hall_image"),
+                FieldPanel("descent_video"),
+                FieldPanel("cover_image"),
+            ],
+            heading=_("Temple hall"),
+        ),
+    ]
 
     parent_page_types = ["home.HomePage"]
-    subpage_types = ["stories.StoryPage"]
+    subpage_types = ["stories.CategoryPage", "stories.StoryPage"]
 
     class Meta:
-        verbose_name = _("theme page")
-        verbose_name_plural = _("theme pages")
+        verbose_name = _("section page")
+        verbose_name_plural = _("section pages")
 
     def get_fallback_description(self) -> str:
         return self.intro
 
+    def get_theme_display(self) -> str:
+        return theme_label(self.theme)
+
+    def categories(self):
+        return CategoryPage.objects.child_of(self).live().select_related("cover_image")
+
     def stories(self):
-        return StoryPage.objects.child_of(self).live().order_by("-date", "-pk")
+        """Live stories directly in the section (not in a category)."""
+        return (
+            StoryPage.objects.child_of(self)
+            .live()
+            .select_related("hero_image")
+            .order_by("-date", "-pk")
+        )
 
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
+        context["categories"] = self.categories()
         context["stories"] = self.stories()
         context["theme_pages"] = theme_pages()
         return context
 
 
+class CategoryPage(SeoPageMixin, Page):
+    """A group of stories inside a section, e.g. "Tree of life" in Symbols
+    (ADR 0018). Its order is the page order in the section."""
+
+    intro = models.TextField(
+        _("introduction"),
+        blank=True,
+        help_text=_("One or two sentences: what this category covers."),
+    )
+    cover_image = image_field(
+        _("cover image"),
+        _("Optional. Without one, the card shows the title on a dark card."),
+    )
+
+    content_panels = [
+        *Page.content_panels,
+        FieldPanel("intro"),
+        FieldPanel("cover_image"),
+    ]
+
+    parent_page_types = ["stories.ThemeIndexPage"]
+    subpage_types = ["stories.StoryPage"]
+
+    class Meta:
+        verbose_name = _("category page")
+        verbose_name_plural = _("category pages")
+
+    def get_fallback_description(self) -> str:
+        return self.intro
+
+    @property
+    def theme_page(self):
+        return ThemeIndexPage.objects.ancestor_of(self).first()
+
+    def stories(self):
+        return (
+            StoryPage.objects.child_of(self)
+            .live()
+            .select_related("hero_image")
+            .order_by("-date", "-pk")
+        )
+
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+        context["stories"] = self.stories()
+        context["theme_page"] = self.theme_page
+        return context
+
+
 class StoryPage(SeoPageMixin, Page):
-    """A story. Its theme is the theme of its parent page (ADR 0014)."""
+    """A story ("article" to visitors). It sits in a section or in one of
+    its categories; its section is the nearest section page above it
+    (ADR 0018)."""
 
     date = models.DateField(
         _("date"), default=timezone.localdate, help_text=_("Shown on the story.")
@@ -88,7 +223,7 @@ class StoryPage(SeoPageMixin, Page):
         FieldPanel("related_places", widget=forms.CheckboxSelectMultiple),
     ]
 
-    parent_page_types = ["stories.ThemeIndexPage"]
+    parent_page_types = ["stories.ThemeIndexPage", "stories.CategoryPage"]
     subpage_types: list[str] = []
 
     class Meta:
@@ -99,17 +234,28 @@ class StoryPage(SeoPageMixin, Page):
         return self.teaser
 
     @property
-    def theme(self) -> str | None:
-        parent = self.get_parent()
-        return getattr(parent.specific, "theme", None) if parent else None
-
-    def get_theme_display(self) -> str:
-        return Theme(self.theme).label if self.theme else ""
+    def theme_page(self):
+        """The section page this story belongs to (nearest above it)."""
+        if not hasattr(self, "_theme_page"):
+            self._theme_page = ThemeIndexPage.objects.ancestor_of(self).first()
+        return self._theme_page
 
     @property
-    def theme_page(self):
+    def theme(self) -> str | None:
+        return self.theme_page.theme if self.theme_page else None
+
+    def get_theme_display(self) -> str:
+        return theme_label(self.theme)
+
+    @property
+    def category(self):
+        """The category page the story sits in, or None."""
         parent = self.get_parent()
-        return parent.specific if parent else None
+        return (
+            parent.specific
+            if parent and parent.specific_class is CategoryPage
+            else None
+        )
 
     @property
     def reading_time(self) -> int:
@@ -119,10 +265,13 @@ class StoryPage(SeoPageMixin, Page):
         return max(1, math.ceil(words / 220))
 
     def more_stories(self, limit=2):
-        """Other live stories of the same theme, newest first."""
+        """Other live stories of the same section, newest first."""
+        if not self.theme_page:
+            return StoryPage.objects.none()
         return (
             StoryPage.objects.live()
-            .sibling_of(self, inclusive=False)
+            .descendant_of(self.theme_page)
+            .exclude(pk=self.pk)
             .select_related("hero_image")
             .order_by("-date", "-pk")[:limit]
         )

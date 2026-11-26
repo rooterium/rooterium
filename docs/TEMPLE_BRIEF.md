@@ -253,7 +253,7 @@ T1. **Assets and decisions** (done, PR "Add the temple assets and decisions"): d
     served by Caddy; six sections). Copy the handoff package to
     `docs/handoff/` (done by the maintainer before T1) and update
     `design/README.md`. Issues for everything in section 10.
-T2. **Content model**: sections, section page fields, category page,
+T2. **Content model** (done, PR "Add sections, category pages and temple fields"): sections, section page fields, category page,
     story parent rules, home page journey fields, data migration, updated
     `seed_demo` / `example_content`, `load_temple_assets`.
 T3. **Visual layer and frame**: tokens (gold retired), grain, header,
